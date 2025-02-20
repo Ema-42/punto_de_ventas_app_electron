@@ -23,7 +23,7 @@ Este proyecto es una aplicación de punto de venta (POS) para un local de comida
    ```
 2. Navega al directorio del proyecto:
    ```bash
-   cd punto_de_ventas_app
+   cd punto_de_venta_app
    ```
 3. Instala las dependencias:
    ```bash
@@ -37,7 +37,7 @@ Este proyecto es una aplicación de punto de venta (POS) para un local de comida
    ```
 5. Inicia la aplicación:
    ```bash
-   npm start
+   npm run dev
    ```
 
 ### Contribución
@@ -45,6 +45,7 @@ Este proyecto es una aplicación de punto de venta (POS) para un local de comida
 Si deseas contribuir, por favor abre un issue o envía un pull request.
 
 ### Autores
+
 ### Autores
 
 - **[Emanuel](https://github.com/Ema-42)** ![GitHub](https://img.shields.io/badge/GitHub-181717?style=flat&logo=github&logoColor=white)
