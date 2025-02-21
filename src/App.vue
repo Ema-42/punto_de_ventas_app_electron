@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<!-- <script setup lang="ts">
 import HelloWorld from "./components/HelloWorld.vue";
 import { onMounted, ref } from "vue";
 
@@ -34,13 +34,13 @@ onMounted(async () => {
   <HelloWorld msg="Hola judith" />
 
   <div class="bg-white rounded-lg shadow-md p-6">
-    <!-- Loading state -->
+    
     <div v-if="loading" class="text-gray-500">Cargando productos...</div>
 
-    <!-- Error state -->
+    
     <div v-if="error" class="text-red-500">{{ error }}</div>
 
-    <!-- Productos -->
+ 
     <div v-if="!loading && !error">
       <div class="flex items-center space-x-4 mb-6">
         <button
@@ -74,3 +74,17 @@ onMounted(async () => {
     </div>
   </div>
 </template>
+ -->
+
+ <template>
+  <div>
+    <Navbar />
+    <router-view/>
+    <!-- <Sidebar /> -->
+  </div>
+</template>
+
+<script setup lang="ts">
+import Navbar from "./components/Navbar.vue";
+//import Sidebar from "./components/Sidebar.vue";
+</script>
