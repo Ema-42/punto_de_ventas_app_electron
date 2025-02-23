@@ -1,8 +1,64 @@
 <template>
-    <aside class="bg-gray-800 text-white w-64 h-screen p-4 fixed">
-      <h2 class="text-xl font-bold mb-4">Menú</h2>
-      <ul>
-        <li><router-link to="/productos" class="hover:underline">Productos</router-link></li>
-      </ul>
-    </aside>
-  </template>
+  <div class="flex">
+    <!-- Sidebar -->
+    <div
+      :class="[
+        'h-screen bg-red-600 text-white transition-all duration-300',
+        isOpen ? 'w-64' : 'w-16'
+      ]"
+    >
+      <div class="p-4 flex justify-between items-center">
+        <button @click="toggleSidebar">
+          <img :src="menuicon" alt="Menú" class="w-6 h-6" />
+        </button>
+      </div>
+
+      <nav class="mt-4">
+        <ul>
+          <li
+            v-for="item in menuItems"
+            :key="item.text"
+            class="p-2 flex items-center space-x-4"
+          >
+            <router-link
+              :to="item.route"
+              class="flex items-center space-x-4 w-full p-2"
+            >
+              <img :src="item.icon" :alt="item.text" class="w-6 h-6" />
+              <span v-if="isOpen" class="transition-opacity duration-300">
+                {{ item.text }}
+              </span>
+            </router-link>
+          </li>
+        </ul>
+      </nav>
+    </div>
+
+    
+  </div>
+</template>
+
+<script setup>
+import { ref } from "vue";
+import menuicon from '../assets/iconos/menu.svg'
+import inicio from '../assets/iconos/inicio.svg'
+import vender from '../assets/iconos/vender.svg'
+import producto from '../assets/iconos/producto.svg'
+
+
+const isOpen = ref(false);
+
+const menuItems = [
+  { text: "Inicio", icon: inicio , route:"/"},
+  { text: "Vender", icon: vender ,route:"/" },
+  { text: "Productos", icon: producto, route:"/productos" },
+];
+
+const toggleSidebar = () => {
+  isOpen.value = !isOpen.value;
+};
+</script>
+
+<style scoped>
+/* Puedes agregar estilos personalizados aquí si lo necesitas */
+</style>

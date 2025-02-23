@@ -11,9 +11,13 @@ const obtenerProductos = async () => {
         nombre: true,
         precio: true,
         imagen_url: true,
-        categoria: true
+        categoria: true,
+        stock: true,
+        fecha_creacion: true,
+        maneja_stock: true
       }
     });
+    console.log("productos", productos);
     return productos.map((p) => ({
       ...p,
       precio: p.precio.toFixed(2)

@@ -18,6 +18,8 @@ onMounted(async () => {
   try {
     // Usamos la API expuesta desde el preload
     productos.value = await (window as any)["api"].getProductos();
+    console.log('desde app ',productos.value);
+    
   } catch (err) {
     error.value = "Error al cargar los productos";
     console.error(err);
@@ -34,13 +36,10 @@ onMounted(async () => {
   <HelloWorld msg="Hola judith" />
 
   <div class="bg-white rounded-lg shadow-md p-6">
-    
     <div v-if="loading" class="text-gray-500">Cargando productos...</div>
 
-    
     <div v-if="error" class="text-red-500">{{ error }}</div>
 
- 
     <div v-if="!loading && !error">
       <div class="flex items-center space-x-4 mb-6">
         <button
@@ -73,18 +72,28 @@ onMounted(async () => {
       </table>
     </div>
   </div>
-</template>
- -->
+</template> -->
+
 
  <template>
-  <div>
-    <Navbar />
-    <router-view/>
-    <!-- <Sidebar /> -->
+  <div class="flex h-screen">
+ 
+    <Sidebar />
+
+   
+    <div class="flex flex-col w-full transition-all duration-300">
+     
+      <Navbar />
+
+      <main class="p-6">
+        <router-view />
+      </main>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import Sidebar from "./components/Sidebar.vue";
 import Navbar from "./components/Navbar.vue";
-//import Sidebar from "./components/Sidebar.vue";
 </script>
+ 
