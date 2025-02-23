@@ -15,13 +15,26 @@ declare namespace NodeJS {
      * │
      * ```
      */
-    APP_ROOT: string
+    APP_ROOT: string;
     /** /dist/ or /public/ */
-    VITE_PUBLIC: string
+    VITE_PUBLIC: string;
   }
 }
 
 // Used in Renderer process, expose in `preload.ts`
 interface Window {
-  ipcRenderer: import('electron').IpcRenderer
+  api: {
+    getProductos: () => Promise<any>;
+    createProducto: (data: any) => Promise<any>;
+    editProductoById: (id: number, data: any) => Promise<any>;
+    getOneProductoById: (id: number) => Promise<any>;
+    deleteProductoById: (id: number) => Promise<any>;
+    //categorias
+    getCategorias: () => Promise<any>;
+    createCategoria: (categoriaData: any) => Promise<any>;
+    editCategoriaById: (id: number, categoriaData: any) => Promise<any>;
+    getOneCategoriaById: (id: number) => Promise<any>;
+    deleteCategoriaById: (id: number) => Promise<any>;
+  };
+  ipcRenderer: import("electron").IpcRenderer;
 }
