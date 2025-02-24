@@ -1,10 +1,9 @@
-import { app, BrowserWindow, ipcMain } from "electron";
+import { app, BrowserWindow } from "electron";
 /* import { createRequire } from 'node:module' */
 import { fileURLToPath } from "node:url";
 import path from "node:path";
 import ipcProductos from "./main/ipc-main-process/productos";
-import { obtenerProductos } from "./main/modules/productos/productos";
-
+import ipcCategoriaProductos from "./main/ipc-main-process/categorias-productos";
 
 /* const require = createRequire(import.meta.url) */
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -39,6 +38,7 @@ function createWindow() {
     },
   });
 
+  win.maximize(); // Maximize the window
   // Test active push message to Renderer-process.
   win.webContents.on("did-finish-load", () => {
     win?.webContents.send("main-process-message", new Date().toLocaleString());
@@ -70,11 +70,12 @@ app.on("window-all-closed", () => {
   }
 }); */
 
-ipcMain.handle("get-productos", async () => {
+/* ipcMain.handle("get-productos", async () => {
   return await obtenerProductos();
-});
+}); */
 
 app.whenReady().then(() => {
   createWindow();
-  ipcProductos;
+  ipcProductos();
+  ipcCategoriaProductos();
 });
