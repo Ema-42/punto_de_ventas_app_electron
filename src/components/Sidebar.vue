@@ -3,7 +3,7 @@
     <!-- Sidebar -->
     <div
       :class="[
-        'h-screen bg-red-600 text-white transition-all duration-300',
+        'h-screen bg-red-600 text-white',
         isOpen ? 'w-64' : 'w-16'
       ]"
     >

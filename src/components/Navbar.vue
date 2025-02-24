@@ -31,7 +31,6 @@
 import { ref } from "vue";
 
 const userName = ref("Judith Robles"); // Nombre de usuario
-const currentPage = ref("Vender"); // Página actual
 const menuOpen = ref(false);
 
 const toggleMenu = () => {
