@@ -2,6 +2,7 @@
 import {
   CategoriaProducto,
   Producto,
+  Mesa,
 } from "../electron/main/modules/interfaces";
 import { onMounted, ref } from "vue";
 
@@ -24,28 +25,36 @@ onMounted(async () => {
 const crearProducto = async () => {
   try {
     const nuevoProducto: Producto = {
-      nombre: "Producto de prueba",
-      precio: 199.99,
+      nombre: "ssdas de dss",
+      precio: 1929.99,
       imagen_url: "https://via.placeholder.com/150",
       maneja_stock: true,
       stock: 50,
       categoria_id: 1,
       fecha_creacion: new Date(),
     };
-    prod_test.value = await window.api.createProducto(nuevoProducto);
-    console.log("Producto creado: ", prod_test.value);
+    const result = await window.api.createProducto(nuevoProducto);
+    if (result instanceof Error) {
+      prod_test.value = result.toString();
+      throw result;
+    }
+    prod_test.value = result;
   } catch (err) {
-    error.value = "Error al crear el producto";
+    alert(err);
     console.error(err);
   }
 };
 const obtenerProductoPorId = async (id: number) => {
   try {
-    prod_test.value = await window.api.getOneProductoById(id);
-    console.log("Producto obtenido: ", prod_test.value);
+    const result = await window.api.getOneProductoById(id);
+    if (result instanceof Error) {
+      prod_test.value = result.toString();
+      throw result;
+    }
+    prod_test.value = result;
     return prod_test.value;
   } catch (err) {
-    error.value = "Error al obtener el producto";
+    alert(err);
     console.error(err);
     return null;
   }
@@ -53,13 +62,17 @@ const obtenerProductoPorId = async (id: number) => {
 
 const editarProducto = async (id: number, newData: Partial<Producto>) => {
   try {
-    prod_test.value = await window.api.editProductoById(id, newData);
-    console.log("Producto editado: ", prod_test.value);
+    const result = await window.api.editProductoById(id, newData);
+    if (result instanceof Error) {
+      prod_test.value = result.toString();
+      throw result;
+    }
+    prod_test.value = result;
+
     return prod_test.value;
   } catch (err) {
-    error.value = "Error al editar el producto";
+    alert(err);
     console.error(err);
-    return null;
   }
 };
 
@@ -88,23 +101,30 @@ const getAllCategorias = async () => {
 
 const createCategoria = async (data: CategoriaProducto) => {
   try {
-    categorias.value = await window.api.createCategoria(data);
-    console.log("Categoría creada: ", categorias.value);
+    const result = await window.api.createCategoria(data);
+    if (result instanceof Error) {
+      categorias.value = result.toString();
+      throw result;
+    }
+    categorias.value = result;
     return categorias.value;
   } catch (err) {
-    error.value = "Error al crear la categoría";
+    alert(err);
     console.error(err);
-    return null;
   }
 };
 
 const getOneCategoriaById = async (id: number) => {
   try {
-    categorias.value = await window.api.getOneCategoriaById(id);
-    console.log("Categoría obtenida: ", categorias.value);
+    const result = await window.api.getOneCategoriaById(id);
+    if (result instanceof Error) {
+      categorias.value = result.toString();
+      throw result;
+    }
+    categorias.value = result;
     return categorias.value;
   } catch (err) {
-    error.value = "Error al obtener la categoría";
+    alert(err);
     console.error(err);
     return null;
   }
@@ -115,13 +135,19 @@ const editCategoriaById = async (
   newData: Partial<CategoriaProducto>
 ) => {
   try {
-    categorias.value = await window.api.editCategoriaById(id, newData);
-    console.log("Categoría editada: ", categorias.value);
+    const result = (categorias.value = await window.api.editCategoriaById(
+      id,
+      newData
+    ));
+    if (result instanceof Error) {
+      categorias.value = result.toString();
+      throw result;
+    }
+    categorias.value = result;
     return categorias.value;
   } catch (err) {
-    error.value = "Error al editar la categoría";
+    alert(err);
     console.error(err);
-    return null;
   }
 };
 
@@ -134,6 +160,143 @@ const deleteCategoriaById = async (id: number) => {
     console.error(err);
   }
 };
+
+//MESAS
+
+const mesas = ref([]);
+const getAllMesas = async () => {
+  try {
+    mesas.value = await window.api.getMesas();
+    return mesas.value;
+  } catch (err) {
+    error.value = "Error al obtener las mesas";
+    console.error(err);
+  }
+};
+
+const createMesa = async (data: Mesa) => {
+  try {
+    const result = await window.api.createMesa(data);
+    if (result instanceof Error) {
+      mesas.value = result.toString();
+      throw result;
+    }
+    mesas.value = result;
+    return mesas.value;
+  } catch (err) {
+    alert(err);
+    console.error(err);
+  }
+};
+
+const getOneMesaById = async (id: number) => {
+  try {
+    const result = await window.api.getOneMesaById(id);
+    if (result instanceof Error) {
+      mesas.value = result.toString();
+      throw result;
+    }
+    mesas.value = result;
+    return mesas.value;
+  } catch (err) {
+    alert(err);
+    console.error(err);
+    return null;
+  }
+};
+
+const editMesaById = async (id: number, newData: Partial<Mesa>) => {
+  try {
+    const result = await window.api.editMesaById(id, newData);
+    if (result instanceof Error) {
+      mesas.value = result.toString();
+      throw result;
+    }
+    mesas.value = result;
+    return mesas.value;
+  } catch (err) {
+    alert(err);
+    console.error(err);
+  }
+};
+
+const deleteMesaById = async (id: number) => {
+  try {
+    mesas.value = await window.api.deleteMesaById(id);
+  } catch (err) {
+    alert(err);
+    console.error(err);
+  }
+};
+
+//USUARIOS
+
+const usuarios = ref([]);
+
+const getAllUsuarios = async () => {
+  try {
+    usuarios.value = await window.api.getUsuarios();
+    return usuarios.value;
+  } catch (err) {
+    error.value = "Error al obtener los usuarios";
+    console.error(err);
+  }
+};
+
+const createUsuario = async (data: any) => {
+  try {
+    const result = await window.api.createUsuario(data);
+    if (result instanceof Error) {
+      usuarios.value = result.toString();
+      throw result;
+    }
+    usuarios.value = result;
+    return usuarios.value;
+  } catch (err) {
+    alert(err);
+    console.error(err);
+  }
+};
+
+const getOneUsuarioById = async (id: number) => {
+  try {
+    const result = await window.api.getOneUsuarioById(id);
+    if (result instanceof Error) {
+      usuarios.value = result.toString();
+      throw result;
+    }
+    usuarios.value = result;
+    return usuarios.value;
+  } catch (err) {
+    alert(err);
+    console.error(err);
+    return null;
+  }
+};
+
+const editUsuarioById = async (id: number, newData: any) => {
+  try {
+    const result = await window.api.editUsuarioById(id, newData);
+    if (result instanceof Error) {
+      usuarios.value = result.toString();
+      throw result;
+    }
+    usuarios.value = result;
+    return usuarios.value;
+  } catch (err) {
+    alert(err);
+    console.error(err);
+  }
+};
+
+const deleteUsuarioById = async (id: number) => {
+  try {
+    usuarios.value = await window.api.deleteUsuarioById(id);
+  } catch (err) {
+    alert(err);
+    console.error(err);
+  }
+};
 </script>
 
 <template>
@@ -143,81 +306,171 @@ const deleteCategoriaById = async (id: number) => {
     <div v-if="error" class="text-red-500">{{ error }}</div>
 
     <div v-if="!loading && !error">
-      <div class="flex items-center space-x-4 mb-6">
-        <button
-          class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition duration-300"
-          @click="crearProducto"
-        >
-          crear
-        </button>
-        <span id="count" class="text-lg font-semibold">{{ prod_test }}</span>
-        <button
-          class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition duration-300"
-          @click="obtenerProductoPorId(1)"
-        >
-          get one
-        </button>
-        <span id="count" class="text-lg font-semibold">{{ prod_test }}</span>
-        <button
-          class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition duration-300"
-          @click="
-            editarProducto(1, {
-              nombre: 'Producto 22',
-              precio: 299.99,
-              categoria_id: 1,
-              imagen_url: 'https://hola',
-              maneja_stock: true,
-              stock: 100,
-            })
-          "
-        >
-          Editar
-        </button>
-        <span id="count" class="text-lg font-semibold">{{ prod_test }}</span>
-        <button
-          class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition duration-300"
-          @click="deleteProductoById(1)"
-        >
-          Delete
-        </button>
-        <span id="count" class="text-lg font-semibold">{{ prod_test }}</span>
-        <button
-          class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition duration-300"
-          @click="getAllCategorias"
-        >
-          get all categoria
-        </button>
-        <span id="count" class="text-lg font-semibold">{{ categorias }}</span>
+      <div class="">
+        <h2>Productos</h2>
+        <div>
+          <button
+            class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition duration-300"
+            @click="crearProducto"
+          >
+            crear
+          </button>
 
-        <button
-          class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition duration-300"
-          @click="createCategoria({ nombre: 'Categoria 1' })"
-        >
-          crear categoria
-        </button>
-        <span id="count" class="text-lg font-semibold">{{ categorias }}</span>
+          <button
+            class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition duration-300"
+            @click="obtenerProductoPorId(1)"
+          >
+            get one
+          </button>
 
-        <button
-          class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition duration-300"
-          @click="getOneCategoriaById(1)"
-        >
-          get one categoria
-        </button>
-        <span id="count" class="text-lg font-semibold">{{ categorias }}</span>
-        <button
-          class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition duration-300"
-          @click="editCategoriaById(1, { nombre: 'EDITADO 2' })"
-        >
-          editar categoria
-        </button>
-        <span id="count" class="text-lg font-semibold">{{ categorias }}</span>
-        <button
-          class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition duration-300"
-          @click="deleteCategoriaById(1)"
-        >
-          eliminar categoria
-        </button>
-        <span id="count" class="text-lg font-semibold">{{ categorias }}</span>
+          <button
+            class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition duration-300"
+            @click="
+              editarProducto(1, {
+                nombre: 'Producto 22d',
+                precio: 299.99,
+                categoria_id: 1,
+                imagen_url: 'https://hola',
+                maneja_stock: true,
+                stock: 100,
+              })
+            "
+          >
+            Editar
+          </button>
+
+          <button
+            class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition duration-300"
+            @click="deleteProductoById(1)"
+          >
+            Delete
+          </button>
+          <pre id="count" class="text-sm font-semibold block">{{
+            JSON.stringify(prod_test, null, 2)
+          }}</pre>
+        </div>
+        <h2>Categorias</h2>
+        <div>
+          <button
+            class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition duration-300"
+            @click="getAllCategorias"
+          >
+            get all categoria
+          </button>
+
+          <button
+            class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition duration-300"
+            @click="createCategoria({ nombre: 'Handcrafts' })"
+          >
+            crear categoria
+          </button>
+
+          <button
+            class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition duration-300"
+            @click="getOneCategoriaById(121)"
+          >
+            get one categoria
+          </button>
+
+          <button
+            class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition duration-300"
+            @click="editCategoriaById(1, { nombre: 'Toys & Games' })"
+          >
+            editar categoria
+          </button>
+
+          <button
+            class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition duration-300"
+            @click="deleteCategoriaById(1)"
+          >
+            eliminar categoria
+          </button>
+          <pre id="count" class="text-sm font-semibold block">{{
+            JSON.stringify(categorias, null, 2)
+          }}</pre>
+        </div>
+
+        <h2>Mesas</h2>
+        <div>
+          <button
+            class="bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition duration-300"
+            @click="getAllMesas"
+          >
+            get all mesa
+          </button>
+          <button
+            class="bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition duration-300"
+            @click="getOneMesaById(211)"
+          >
+            get one mesa
+          </button>
+
+          <button
+            class="bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition duration-300"
+            @click="createMesa({ numero: 8 })"
+          >
+            crear mesa
+          </button>
+
+          <button
+            class="bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition duration-300"
+            @click="editMesaById(1, { numero: 8 })"
+          >
+            editar mesa
+          </button>
+
+          <button
+            class="bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition duration-300"
+            @click="deleteMesaById(1)"
+          >
+            eliminar mesa
+          </button>
+          <pre id="count" class="text-sm font-semibold block">{{
+            JSON.stringify(mesas, null, 2)
+          }}</pre>
+        </div>
+
+        <h2>USUARIOS</h2>
+        <div>
+          <button
+            class="bg-indigo-700 text-white px-4 py-2 rounded-lg hover:bg-indigo-300 transition duration-300"
+            @click="getAllUsuarios"
+          >
+            get all usuarios
+          </button>
+          <button
+            class="bg-indigo-700 text-white px-4 py-2 rounded-lg hover:bg-indigo-300 transition duration-300"
+            @click="getOneUsuarioById(1)"
+          >
+            get one usuarios
+          </button>
+
+          <button
+            class="bg-indigo-700 text-white px-4 py-2 rounded-lg hover:bg-indigo-300 transition duration-300"
+            @click="
+              createUsuario({ nombre: 'emanuel', rol_id: 1, password: '123' })
+            "
+          >
+            crear usuarios
+          </button>
+
+          <button
+            class="bg-indigo-700 text-white px-4 py-2 rounded-lg hover:bg-indigo-300 transition duration-300"
+            @click="editUsuarioById(1, { nombre: 'emanuel' })"
+          >
+            editar usuarios
+          </button>
+
+          <button
+            class="bg-indigo-700 text-white px-4 py-2 rounded-lg hover:bg-indigo-300 transition duration-300"
+            @click="deleteUsuarioById(1)"
+          >
+            eliminar usuarios
+          </button>
+          <pre id="count" class="text-sm font-semibold block">{{
+            JSON.stringify(usuarios, null, 2)
+          }}</pre>
+        </div>
       </div>
       <h2 class="text-xl font-bold text-gray-800 mb-4">Productos</h2>
       <table id="productos-table" class="w-full text-left">
@@ -226,7 +479,6 @@ const deleteCategoriaById = async (id: number) => {
             <th class="p-3">ID</th>
             <th class="p-3">Nombre</th>
             <th class="p-3">Precio</th>
-            <th class="p-3">Imagen</th>
             <th class="p-3">Maneja Stock</th>
             <th class="p-3">Stock</th>
             <th class="p-3">Categoría</th>
@@ -238,7 +490,6 @@ const deleteCategoriaById = async (id: number) => {
             <td class="p-3">{{ producto.id }}</td>
             <td class="p-3">{{ producto.nombre }}</td>
             <td class="p-3">{{ producto.precio }}</td>
-            <td class="p-3">{{ producto.imagen_url }}</td>
             <td class="p-3">{{ producto.maneja_stock }}</td>
             <td class="p-3">{{ producto.stock }}</td>
             <td class="p-3">{{ producto.categoria?.nombre }}</td>

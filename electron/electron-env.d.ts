@@ -35,6 +35,12 @@ interface Window {
     editCategoriaById: (id: number, categoriaData: any) => Promise<any>;
     getOneCategoriaById: (id: number) => Promise<any>;
     deleteCategoriaById: (id: number) => Promise<any>;
+    //mesas
+    getMesas: () => Promise<any>;
+    createMesa: (mesaData: any) => Promise<any>;
+    editMesaById: (id: number, mesaData: any) => Promise<any>;
+    getOneMesaById: (id: number) => Promise<any>;
+    deleteMesaById: (id: number) => Promise<any>;
   };
   ipcRenderer: import("electron").IpcRenderer;
 }

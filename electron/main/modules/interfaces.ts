@@ -5,29 +5,23 @@ export interface Rol {
 }
 
 export interface Usuario {
-  id: number;
+  id?: number;
   nombre: string;
   password: string;
   rol_id: number;
-  rol: Rol;
-  cajeroPedidos: Pedido[];
-  meseroPedidos: Pedido[];
-  ingresos: Ingreso[];
 }
 
 export interface Mesa {
-  id: number;
+  id?: number;
   numero: number;
-  estado: string;
+  estado?: string;
   eliminado?: boolean;
-  pedidos: Pedido[];
 }
 
 export interface CategoriaProducto {
   id?: number;
   nombre: string;
   eliminado?: boolean;
-
 }
 
 export interface Producto {

@@ -6,8 +6,6 @@ const prisma = new PrismaClient();
 // Obtener todos los productos
 const obtenerProductos = async () => {
   try {
-    //const { PrismaClient } = await import("@prisma/client"); // 🔥 Importación dinámica evita problemas con prisma , la otra opcion esta en vite config
-    //const prisma = new PrismaClient();
     const productos = await prisma.producto.findMany({
       where: { eliminado: false },
       select: {
@@ -20,6 +18,9 @@ const obtenerProductos = async () => {
         fecha_creacion: true,
         maneja_stock: true,
       },
+      orderBy: {
+        fecha_creacion: 'desc',
+      },
     });
     return productos.map((p) => ({
       ...p,
@@ -30,10 +31,15 @@ const obtenerProductos = async () => {
     return error;
   }
 };
-
 const crearProducto = async (data: Producto) => {
   try {
-    console.log("Producto data:", data);
+    const existingProducto = await prisma.producto.findFirst({
+      where: { nombre: data.nombre, eliminado: false },
+    });
+
+    if (existingProducto) {
+      throw new Error("Ya existe un producto con ese nombre");
+    }
 
     const nuevoProducto = await prisma.producto.create({
       data: {
@@ -45,8 +51,6 @@ const crearProducto = async (data: Producto) => {
         stock: data.maneja_stock ? data.stock ?? 0 : undefined,
       },
     });
-    console.log("Producto creado:", nuevoProducto);
-
     return JSON.parse(JSON.stringify(nuevoProducto));
   } catch (error) {
     console.error("Error al crear producto:", error);
@@ -56,6 +60,17 @@ const crearProducto = async (data: Producto) => {
 
 const editarProducto = async (id: number, productoData: Partial<Producto>) => {
   try {
+    const existing = await prisma.producto.findMany({
+      where: { nombre: productoData.nombre, eliminado: false },
+    });
+
+    if (
+      existing.length > 1 ||
+      (existing.length === 1 && existing[0].id !== id)
+    ) {
+      throw new Error("Ya existe un producto con ese nombre");
+    }
+
     const productoActualizado = await prisma.producto.update({
       where: { id: id },
       data: {
@@ -67,7 +82,7 @@ const editarProducto = async (id: number, productoData: Partial<Producto>) => {
         stock: productoData.maneja_stock ? productoData.stock ?? 0 : undefined,
       },
     });
-    console.log("Producto actualizado:", productoActualizado);
+
     return JSON.parse(JSON.stringify(productoActualizado));
   } catch (error) {
     console.error("Error al actualizar producto:", error);

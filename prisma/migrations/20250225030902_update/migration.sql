@@ -1,0 +1,5 @@
+-- AlterTable
+ALTER TABLE "CategoriaProducto" ADD COLUMN "fecha_creacion" DATETIME DEFAULT CURRENT_TIMESTAMP;
+
+-- AlterTable
+ALTER TABLE "Usuario" ADD COLUMN "fecha_creacion" DATETIME DEFAULT CURRENT_TIMESTAMP;

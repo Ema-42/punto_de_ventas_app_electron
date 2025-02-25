@@ -35,12 +35,19 @@ export const getCategoriaProductoById = async (id: number) => {
 
 export const createCategoriaProducto = async (data: CategoriaProducto) => {
   try {
+    const existingCategoria = await prisma.categoriaProducto.findFirst({
+      where: { nombre: data.nombre, eliminado: false },
+    });
+
+    if (existingCategoria) {
+      throw new Error("Ya existe una categoria con ese nombre");
+    }
     const newCategoria = await prisma.categoriaProducto.create({
       data: data,
     });
     return newCategoria;
   } catch (error) {
-    console.error("Error al crear una ategorias:", error);
+    console.error("Error al crear una categoria:", error);
     return error;
   }
 };
@@ -50,13 +57,22 @@ export const updateCategoriaProducto = async (
   categoriaData: Partial<CategoriaProducto>
 ) => {
   try {
+    const existing = await prisma.categoriaProducto.findMany({
+      where: { nombre: categoriaData.nombre, eliminado: false },
+    });
+    if (
+      existing.length > 1 ||
+      (existing.length === 1 && existing[0].id !== id)
+    ) {
+      throw new Error("Ya existe un producto con ese nombre");
+    }
     const updatedCategoria = await prisma.categoriaProducto.update({
       where: { id },
       data: categoriaData,
     });
     return updatedCategoria;
   } catch (error) {
-    console.error("Error al actualizar una ategoria:", error);
+    console.error("Error al actualizar producto:", error);
     return error;
   }
 };

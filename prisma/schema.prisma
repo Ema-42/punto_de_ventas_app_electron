@@ -15,11 +15,12 @@ model Rol {
 }
 
 model Usuario {
-  id        Int      @id @default(autoincrement())
-  nombre    String
-  password  String
-  rol_id    Int
-  eliminado Boolean? @default(false)
+  id             Int       @id @default(autoincrement())
+  nombre         String
+  password       String
+  rol_id         Int
+  eliminado      Boolean?  @default(false)
+  fecha_creacion DateTime? @default(now())
 
   rol           Rol       @relation(fields: [rol_id], references: [id])
   cajeroPedidos Pedido[]  @relation("CajeroRelation")
@@ -28,18 +29,20 @@ model Usuario {
 }
 
 model Mesa {
-  id        Int      @id @default(autoincrement())
-  numero    Int
-  estado    String   @default("LIBRE") // "LIBRE" o "OCUPADA"
-  eliminado Boolean? @default(false)
-  pedidos   Pedido[]
+  id             Int       @id @default(autoincrement())
+  numero         Int
+  estado         String    @default("LIBRE") // "LIBRE" o "OCUPADA"
+  eliminado      Boolean?  @default(false)
+  fecha_creacion DateTime? @default(now())
+  pedidos        Pedido[]
 }
 
 model CategoriaProducto {
-  id        Int        @id @default(autoincrement())
-  nombre    String
-  eliminado Boolean?   @default(false)
-  productos Producto[]
+  id             Int        @id @default(autoincrement())
+  nombre         String
+  eliminado      Boolean?   @default(false)
+  fecha_creacion DateTime?  @default(now())
+  productos      Producto[]
 }
 
 model Producto {

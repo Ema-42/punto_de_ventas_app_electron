@@ -23,4 +23,18 @@ contextBridge.exposeInMainWorld("api", {
     ipcRenderer.invoke("get-one-categoria", id),
   deleteCategoriaById: (id: number) =>
     ipcRenderer.invoke("delete-categoria", id),
+  //MESAS
+  getMesas: () => ipcRenderer.invoke("get-mesas"),
+  createMesa: (mesaData: any) => ipcRenderer.invoke("create-mesa", mesaData),
+  editMesaById: (id: number, mesaData: any) =>
+    ipcRenderer.invoke("edit-mesa", { id, mesaData }),
+  getOneMesaById: (id: number) => ipcRenderer.invoke("get-one-mesa", id),
+  deleteMesaById: (id: number) => ipcRenderer.invoke("delete-mesa", id),
+  //USUARIOS
+  getUsuarios: () => ipcRenderer.invoke("get-usuarios"),
+  createUsuario: (usuarioData: any) => ipcRenderer.invoke("create-usuario", usuarioData),
+  editUsuarioById: (id: number, usuarioData: any) =>
+    ipcRenderer.invoke("edit-usuario", { id, usuarioData }),
+  getOneUsuarioById: (id: number) => ipcRenderer.invoke("get-one-usuario", id),
+  deleteUsuarioById: (id: number) => ipcRenderer.invoke("delete-usuario", id)
 });

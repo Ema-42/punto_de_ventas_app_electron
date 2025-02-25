@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "Mesa" ADD COLUMN "fecha_creacion" DATETIME DEFAULT CURRENT_TIMESTAMP;

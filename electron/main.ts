@@ -2,21 +2,12 @@ import { app, BrowserWindow } from "electron";
 /* import { createRequire } from 'node:module' */
 import { fileURLToPath } from "node:url";
 import path from "node:path";
-import ipcProductos from "./main/ipc-main-process/productos";
-import ipcCategoriaProductos from "./main/ipc-main-process/categorias-productos";
+import ipcMainModules from "./main/ipc-main-process/ipcMainModules";
+import { screen } from "electron";
 
 /* const require = createRequire(import.meta.url) */
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-// The built directory structure
-//
-// ├─┬─┬ dist
-// │ │ └── index.html
-// │ │
-// │ ├─┬ dist-electron
-// │ │ ├── main.js
-// │ │ └── preload.mjs
-// │
 process.env.APP_ROOT = path.join(__dirname, "..");
 
 // 🚧 Use ['ENV_NAME'] avoid vite:define plugin - Vite@2.x
@@ -37,7 +28,15 @@ function createWindow() {
       preload: path.join(__dirname, "preload.mjs"),
     },
   });
+  /*   win.setSize(1000, 800);
+  const primaryDisplay = screen.getPrimaryDisplay();
+  const allDisplays = screen.getAllDisplays();
+  const secondaryDisplay = allDisplays.find(display => display.id !== primaryDisplay.id);
 
+  if (secondaryDisplay) {
+    const { x, y } = secondaryDisplay.bounds;
+    win?.setBounds({ x, y, width: secondaryDisplay.bounds.width, height: 900 });
+  } */
   win.maximize(); // Maximize the window
   // Test active push message to Renderer-process.
   win.webContents.on("did-finish-load", () => {
@@ -52,9 +51,6 @@ function createWindow() {
   }
 }
 
-// Quit when all windows are closed, except on macOS. There, it's common
-// for applications and their menu bar to stay active until the user quits
-// explicitly with Cmd + Q.
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") {
     app.quit();
@@ -62,20 +58,7 @@ app.on("window-all-closed", () => {
   }
 });
 
-/* app.on("activate", () => {
-  // On OS X it's common to re-create a window in the app when the
-  // dock icon is clicked and there are no other windows open.
-  if (BrowserWindow.getAllWindows().length === 0) {
-    createWindow();
-  }
-}); */
-
-/* ipcMain.handle("get-productos", async () => {
-  return await obtenerProductos();
-}); */
-
 app.whenReady().then(() => {
   createWindow();
-  ipcProductos();
-  ipcCategoriaProductos();
+  ipcMainModules();
 });
