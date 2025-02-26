@@ -1,4 +1,4 @@
-<!-- <script setup lang="ts">
+<script setup lang="ts">
 import {
   CategoriaProducto,
   Producto,
@@ -552,9 +552,9 @@ const saveFile = async (file: File) => {
       </table>
     </div>
   </div>
-</template> -->
+</template>
 
- <template>
+<!--  <template>
   <div class="flex h-screen ">
  
     <Sidebar />
@@ -574,4 +574,4 @@ const saveFile = async (file: File) => {
 <script setup lang="ts">
 import Sidebar from "./components/Sidebar.vue";
 import Navbar from "./components/Navbar.vue";
-</script>
+</script> -->
