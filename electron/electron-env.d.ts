@@ -1,5 +1,7 @@
 /// <reference types="vite-plugin-electron/electron-env" />
 
+
+
 declare namespace NodeJS {
   interface ProcessEnv {
     /**
@@ -29,6 +31,7 @@ interface Window {
     editProductoById: (id: number, data: any) => Promise<any>;
     getOneProductoById: (id: number) => Promise<any>;
     deleteProductoById: (id: number) => Promise<any>;
+    uploadFile: (fileData: any) => Promise<any>;
     //categorias
     getCategorias: () => Promise<any>;
     createCategoria: (categoriaData: any) => Promise<any>;
@@ -41,6 +44,14 @@ interface Window {
     editMesaById: (id: number, mesaData: any) => Promise<any>;
     getOneMesaById: (id: number) => Promise<any>;
     deleteMesaById: (id: number) => Promise<any>;
+    //usuarios
+    getUsuarios: () => Promise<any>;
+    createUsuario: (usuarioData: any) => Promise<any>;
+    editUsuarioById: (id: number, usuarioData: any) => Promise<any>;
+    getOneUsuarioById: (id: number) => Promise<any>;
+    deleteUsuarioById: (id: number) => Promise<any>;
+    authenticateUsuario: (usuario: string, password: string) => Promise<any>;
+
   };
   ipcRenderer: import("electron").IpcRenderer;
 }

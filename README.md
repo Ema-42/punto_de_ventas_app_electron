@@ -2,6 +2,24 @@
 
 Este proyecto es una aplicación de punto de venta (POS) para un local de comida, desarrollada con Electron.js y utilizando SQLite a través de Prisma.
 
+### Actualización del Proyecto (CUANDO SE HACE GIT PULL DE MAIN U OTRA RAMA ADELANTADA)
+
+Para actualizar tu proyecto con los últimos cambios del repositorio, sigue estos pasos:
+
+1. Trae los cambios del repositorio remoto:
+   ```bash
+   git pull origin main
+   ```
+2. Instala las nuevas dependencias que puedan haber sido añadidas:
+   ```bash
+   npm install
+   ```
+3. Aplica las migraciones de la base de datos para reflejar los cambios más recientes:
+   ```bash
+   npx prisma migrate dev
+   ```
+   si la bd se queda sin registros por los cambio en las tablas , ejecutar las importaciones con el archivo comapartido por WathsApp
+
 ### Características
 
 - Gestión de productos

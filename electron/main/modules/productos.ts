@@ -1,7 +1,13 @@
 import { PrismaClient } from "@prisma/client";
-import { Producto } from "./interfaces";
-
+import { FileData, Producto } from "./interfaces";
+import { writeFile, mkdir } from "fs/promises";
+//import path, { join } from "path";
+//import { fileURLToPath } from "url";
+//const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const prisma = new PrismaClient();
+
+import { app } from "electron";
+import { join } from "path";
 
 // Obtener todos los productos
 const obtenerProductos = async () => {
@@ -19,7 +25,7 @@ const obtenerProductos = async () => {
         maneja_stock: true,
       },
       orderBy: {
-        fecha_creacion: 'desc',
+        fecha_creacion: "desc",
       },
     });
     return productos.map((p) => ({
@@ -131,10 +137,44 @@ const eliminarProducto = async (id: number) => {
   }
 };
 
+const uploadFile = async (fileData: FileData) => {
+  const { name, size, buffer } = fileData;
+  const fileBuffer = Buffer.from(buffer);
+
+  // Definir directorio seguro en la carpeta de usuario
+  const uploadsDir = join(app.getPath("userData"), "uploads");
+
+  // Crear un nombre único para la imagen
+  const uniqueName = `${new Date()
+    .toISOString()
+    .replace(/[:.]/g, "-")}-${name}`;
+  const filePath = join(uploadsDir, uniqueName);
+
+  try {
+    // Asegurar que el directorio existe
+    await mkdir(uploadsDir, { recursive: true });
+
+    // Guardar la imagen
+    await writeFile(filePath, fileBuffer);
+    console.log("Imagen guardada en:", filePath);
+
+    return {
+      message: "File received successfully",
+      path: filePath,
+      name,
+      size,
+    };
+  } catch (error) {
+    console.error("Error al guardar la imagen:", error);
+    throw new Error("Error al guardar la imagen");
+  }
+};
+
 export {
   obtenerProductos,
   crearProducto,
   editarProducto,
   obtenerOneProducto,
   eliminarProducto,
+  uploadFile,
 };

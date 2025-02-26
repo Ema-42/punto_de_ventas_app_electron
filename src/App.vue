@@ -1,15 +1,16 @@
-<!-- <script setup lang="ts">
+<script setup lang="ts">
 import {
   CategoriaProducto,
   Producto,
   Mesa,
+  FileData,
 } from "../electron/main/modules/interfaces";
 import { onMounted, ref } from "vue";
 
 const productos = ref<Producto[]>([]);
 const loading = ref(true);
 const error = ref<string | null>(null);
-const prod_test = ref({});
+const prod_test = ref();
 
 onMounted(async () => {
   try {
@@ -40,7 +41,7 @@ const crearProducto = async () => {
     }
     prod_test.value = result;
   } catch (err) {
-    alert(err);
+    //alert(err);
     console.error(err);
   }
 };
@@ -54,7 +55,7 @@ const obtenerProductoPorId = async (id: number) => {
     prod_test.value = result;
     return prod_test.value;
   } catch (err) {
-    alert(err);
+    //alert(err);
     console.error(err);
     return null;
   }
@@ -71,7 +72,7 @@ const editarProducto = async (id: number, newData: Partial<Producto>) => {
 
     return prod_test.value;
   } catch (err) {
-    alert(err);
+    //alert(err);
     console.error(err);
   }
 };
@@ -87,7 +88,7 @@ const deleteProductoById = async (id: number) => {
 };
 
 //categorias
-const categorias = ref([]);
+const categorias = ref();
 
 const getAllCategorias = async () => {
   try {
@@ -109,7 +110,7 @@ const createCategoria = async (data: CategoriaProducto) => {
     categorias.value = result;
     return categorias.value;
   } catch (err) {
-    alert(err);
+    //alert(err);
     console.error(err);
   }
 };
@@ -124,7 +125,7 @@ const getOneCategoriaById = async (id: number) => {
     categorias.value = result;
     return categorias.value;
   } catch (err) {
-    alert(err);
+    //alert(err);
     console.error(err);
     return null;
   }
@@ -146,7 +147,7 @@ const editCategoriaById = async (
     categorias.value = result;
     return categorias.value;
   } catch (err) {
-    alert(err);
+    //alert(err);
     console.error(err);
   }
 };
@@ -163,7 +164,7 @@ const deleteCategoriaById = async (id: number) => {
 
 //MESAS
 
-const mesas = ref([]);
+const mesas = ref();
 const getAllMesas = async () => {
   try {
     mesas.value = await window.api.getMesas();
@@ -184,7 +185,7 @@ const createMesa = async (data: Mesa) => {
     mesas.value = result;
     return mesas.value;
   } catch (err) {
-    alert(err);
+    //alert(err);
     console.error(err);
   }
 };
@@ -199,7 +200,7 @@ const getOneMesaById = async (id: number) => {
     mesas.value = result;
     return mesas.value;
   } catch (err) {
-    alert(err);
+    //alert(err);
     console.error(err);
     return null;
   }
@@ -215,7 +216,7 @@ const editMesaById = async (id: number, newData: Partial<Mesa>) => {
     mesas.value = result;
     return mesas.value;
   } catch (err) {
-    alert(err);
+    //alert(err);
     console.error(err);
   }
 };
@@ -224,14 +225,14 @@ const deleteMesaById = async (id: number) => {
   try {
     mesas.value = await window.api.deleteMesaById(id);
   } catch (err) {
-    alert(err);
+    //alert(err);
     console.error(err);
   }
 };
 
 //USUARIOS
 
-const usuarios = ref([]);
+const usuarios = ref();
 
 const getAllUsuarios = async () => {
   try {
@@ -253,7 +254,7 @@ const createUsuario = async (data: any) => {
     usuarios.value = result;
     return usuarios.value;
   } catch (err) {
-    alert(err);
+    //alert(err);
     console.error(err);
   }
 };
@@ -268,7 +269,7 @@ const getOneUsuarioById = async (id: number) => {
     usuarios.value = result;
     return usuarios.value;
   } catch (err) {
-    alert(err);
+    //alert(err);
     console.error(err);
     return null;
   }
@@ -284,7 +285,7 @@ const editUsuarioById = async (id: number, newData: any) => {
     usuarios.value = result;
     return usuarios.value;
   } catch (err) {
-    alert(err);
+    //alert(err);
     console.error(err);
   }
 };
@@ -293,13 +294,50 @@ const deleteUsuarioById = async (id: number) => {
   try {
     usuarios.value = await window.api.deleteUsuarioById(id);
   } catch (err) {
-    alert(err);
+    //alert(err);
     console.error(err);
+  }
+};
+
+//metodos para almacenar la imagen
+//maneja la accion de cargar la imagen
+const handleFileUpload = async (event: Event) => {
+  const target = event.target as HTMLInputElement;
+  if (target.files && target.files.length > 0) {
+    const file = target.files[0];
+    //aqui se llama a la funcion que guarda la imagen y se le pasa el archivo
+    //nose devuelve la url de la imagen guardada
+    const imagenGuardada = await saveFile(file);
+    console.log(imagenGuardada.path);
+    console.log(imagenGuardada.name);
+  }
+};
+
+const saveFile = async (file: File) => {
+  try {
+    const arrayBuffer = await file.arrayBuffer(); // Convertir a ArrayBuffer
+    const fileData: FileData = {
+      name: file.name,
+      type: file.type,
+      size: file.size,
+      buffer: Array.from(new Uint8Array(arrayBuffer)), // Convertir a array de bytes
+    };
+
+    const dataImage = await window.api.uploadFile(fileData);
+
+    if (dataImage instanceof Error) {
+      throw dataImage;
+    }
+    //AQUI SE DEVUELVE LOS DATOS DE LA IMAGEN GUARDAD EN UPLOADS
+    return dataImage;
+  } catch (err) {
+    console.error("Error uploading file", err);
   }
 };
 </script>
 
 <template>
+  <!-- <Login /> -->
   <div class="bg-white rounded-lg shadow-md p-6">
     <div v-if="loading" class="text-gray-500">Cargando productos...</div>
 
@@ -349,6 +387,13 @@ const deleteUsuarioById = async (id: number) => {
             JSON.stringify(prod_test, null, 2)
           }}</pre>
         </div>
+
+        <input
+          type="file"
+          accept="image/png, image/jpeg, image/jpg"
+          class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition duration-300"
+          @change="handleFileUpload"
+        />
         <h2>Categorias</h2>
         <div>
           <button
@@ -440,7 +485,7 @@ const deleteUsuarioById = async (id: number) => {
           </button>
           <button
             class="bg-indigo-700 text-white px-4 py-2 rounded-lg hover:bg-indigo-300 transition duration-300"
-            @click="getOneUsuarioById(1)"
+            @click="getOneUsuarioById(1111)"
           >
             get one usuarios
           </button>
@@ -448,7 +493,7 @@ const deleteUsuarioById = async (id: number) => {
           <button
             class="bg-indigo-700 text-white px-4 py-2 rounded-lg hover:bg-indigo-300 transition duration-300"
             @click="
-              createUsuario({ nombre: 'emanuel', rol_id: 1, password: '123' })
+              createUsuario({ nombre: 'ema', rol_id: 1, password: '123' })
             "
           >
             crear usuarios
@@ -456,7 +501,7 @@ const deleteUsuarioById = async (id: number) => {
 
           <button
             class="bg-indigo-700 text-white px-4 py-2 rounded-lg hover:bg-indigo-300 transition duration-300"
-            @click="editUsuarioById(1, { nombre: 'emanuel' })"
+            @click="editUsuarioById(4, { nombre: 'ema', password: 'admin' })"
           >
             editar usuarios
           </button>
@@ -481,6 +526,7 @@ const deleteUsuarioById = async (id: number) => {
             <th class="p-3">Precio</th>
             <th class="p-3">Maneja Stock</th>
             <th class="p-3">Stock</th>
+            <th class="p-3">Imagen</th>
             <th class="p-3">Categoría</th>
             <th class="p-3">Fecha creacion</th>
           </tr>
@@ -492,6 +538,14 @@ const deleteUsuarioById = async (id: number) => {
             <td class="p-3">{{ producto.precio }}</td>
             <td class="p-3">{{ producto.maneja_stock }}</td>
             <td class="p-3">{{ producto.stock }}</td>
+            <td class="p-3">
+              <img 
+                :src="'local://'+producto.imagen_url" 
+                alt="Producto Imagen" 
+                class="w-28 h-28 rounded-sm transition-transform duration-300 hover:scale-150"
+              />
+
+            </td>
             <td class="p-3">{{ producto.categoria?.nombre }}</td>
             <td class="p-3">{{ producto.fecha_creacion }}</td>
           </tr>
@@ -499,9 +553,9 @@ const deleteUsuarioById = async (id: number) => {
       </table>
     </div>
   </div>
-</template> -->
+</template>
 
- <template>
+<!--  <template>
   <div class="flex h-screen ">
  
     <Sidebar />
@@ -521,4 +575,4 @@ const deleteUsuarioById = async (id: number) => {
 <script setup lang="ts">
 import Sidebar from "./components/Sidebar.vue";
 import Navbar from "./components/Navbar.vue";
-</script>
+</script> -->

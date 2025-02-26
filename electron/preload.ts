@@ -1,5 +1,5 @@
 import { ipcRenderer, contextBridge } from "electron";
-import { Producto } from "./main/modules/interfaces";
+import { FileData, Producto } from "./main/modules/interfaces";
 import { CategoriaProducto } from "@prisma/client";
 
 // --------- Expose some API to the Renderer process ---------
@@ -32,9 +32,14 @@ contextBridge.exposeInMainWorld("api", {
   deleteMesaById: (id: number) => ipcRenderer.invoke("delete-mesa", id),
   //USUARIOS
   getUsuarios: () => ipcRenderer.invoke("get-usuarios"),
-  createUsuario: (usuarioData: any) => ipcRenderer.invoke("create-usuario", usuarioData),
+  createUsuario: (usuarioData: any) =>
+    ipcRenderer.invoke("create-usuario", usuarioData),
   editUsuarioById: (id: number, usuarioData: any) =>
     ipcRenderer.invoke("edit-usuario", { id, usuarioData }),
   getOneUsuarioById: (id: number) => ipcRenderer.invoke("get-one-usuario", id),
-  deleteUsuarioById: (id: number) => ipcRenderer.invoke("delete-usuario", id)
+  deleteUsuarioById: (id: number) => ipcRenderer.invoke("delete-usuario", id),
+  authenticateUsuario: (usuario: string, password: string) =>
+    ipcRenderer.invoke("authenticate-usuario", { usuario, password }),
+  uploadFile: (fileData: FileData) =>
+    ipcRenderer.invoke("upload-file", fileData),
 });

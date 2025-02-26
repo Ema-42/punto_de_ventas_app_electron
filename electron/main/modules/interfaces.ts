@@ -11,6 +11,12 @@ export interface Usuario {
   rol_id: number;
 }
 
+export interface FileData {
+  name: string;
+  type: string;
+  size: number;
+  buffer: number[];
+}
 export interface Mesa {
   id?: number;
   numero: number;

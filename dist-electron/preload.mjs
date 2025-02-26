@@ -24,5 +24,7 @@ electron.contextBridge.exposeInMainWorld("api", {
   createUsuario: (usuarioData) => electron.ipcRenderer.invoke("create-usuario", usuarioData),
   editUsuarioById: (id, usuarioData) => electron.ipcRenderer.invoke("edit-usuario", { id, usuarioData }),
   getOneUsuarioById: (id) => electron.ipcRenderer.invoke("get-one-usuario", id),
-  deleteUsuarioById: (id) => electron.ipcRenderer.invoke("delete-usuario", id)
+  deleteUsuarioById: (id) => electron.ipcRenderer.invoke("delete-usuario", id),
+  authenticateUsuario: (usuario, password) => electron.ipcRenderer.invoke("authenticate-usuario", { usuario, password }),
+  uploadFile: (fileData) => electron.ipcRenderer.invoke("upload-file", fileData)
 });

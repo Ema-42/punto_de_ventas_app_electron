@@ -1,9 +1,10 @@
-import { app, BrowserWindow } from "electron";
+import { app, BrowserWindow, protocol } from "electron";
 /* import { createRequire } from 'node:module' */
 import { fileURLToPath } from "node:url";
-import path from "node:path";
+import path, { join } from "node:path";
 import ipcMainModules from "./main/ipc-main-process/ipcMainModules";
 import { screen } from "electron";
+import { readFile } from "node:fs/promises";
 
 /* const require = createRequire(import.meta.url) */
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -28,16 +29,18 @@ function createWindow() {
       preload: path.join(__dirname, "preload.mjs"),
     },
   });
-  /*   win.setSize(1000, 800);
+  win.setSize(1000, 800);
   const primaryDisplay = screen.getPrimaryDisplay();
   const allDisplays = screen.getAllDisplays();
-  const secondaryDisplay = allDisplays.find(display => display.id !== primaryDisplay.id);
+  const secondaryDisplay = allDisplays.find(
+    (display) => display.id !== primaryDisplay.id
+  );
 
   if (secondaryDisplay) {
     const { x, y } = secondaryDisplay.bounds;
     win?.setBounds({ x, y, width: secondaryDisplay.bounds.width, height: 900 });
-  } */
-  win.maximize(); // Maximize the window
+  }
+  //win.maximize(); // Maximize the window
   // Test active push message to Renderer-process.
   win.webContents.on("did-finish-load", () => {
     win?.webContents.send("main-process-message", new Date().toLocaleString());

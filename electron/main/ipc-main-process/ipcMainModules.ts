@@ -1,10 +1,11 @@
-import { ipcMain } from "electron";
+import { ipcMain, protocol } from "electron";
 import {
   crearProducto,
   editarProducto,
   eliminarProducto,
   obtenerOneProducto,
   obtenerProductos,
+  uploadFile,
 } from "../modules/productos";
 import {
   createCategoriaProducto,
@@ -21,12 +22,15 @@ import {
   updateMesa,
 } from "../modules/mesas";
 import {
+  authenticateUsuario,
   createUsuario,
   deleteUsuario,
   getUsuarioById,
   getUsuarios,
   updateUsuario,
 } from "../modules/usuarios";
+import { readFile } from "node:fs/promises";
+import path from "node:path";
 
 export default () => {
   //productos
@@ -93,5 +97,37 @@ export default () => {
   });
   ipcMain.handle("delete-usuario", async (_, id) => {
     return await deleteUsuario(id);
+  });
+  ipcMain.handle("authenticate-usuario", async (_, { usuario, password }) => {
+    return await authenticateUsuario(usuario, password);
+  });
+  ipcMain.handle("upload-file", async (_, fileData) => {
+    return await uploadFile(fileData);
+  });
+
+
+  //leer imagenes locales
+  protocol.handle("local", async (request) => {
+    const url = new URL(request.url);
+    const filePath = url.pathname;
+
+    try {
+      const fileBuffer = await readFile(filePath);
+      const ext = path.extname(filePath).toLowerCase();
+      let contentType = "application/octet-stream";
+
+      if (ext === ".png") {
+        contentType = "image/png";
+      } else if (ext === ".jpeg" || ext === ".jpg") {
+        contentType = "image/jpeg";
+      }
+
+      return new Response(fileBuffer, {
+        headers: { "Content-Type": contentType },
+      });
+    } catch (error) {
+      console.error("Error al cargar la imagen:", error);
+      return new Response("Archivo no encontrado", { status: 404 });
+    }
   });
 };

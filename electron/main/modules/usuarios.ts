@@ -1,5 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import { Usuario } from "./interfaces";
+import bcrypt from "bcryptjs";
 
 const prisma = new PrismaClient();
 
@@ -43,6 +44,9 @@ export const createUsuario = async (data: Usuario) => {
       throw new Error("Ya existe un usuario con ese nombre");
     }
 
+    const hashedPassword = await bcrypt.hash(data.password, 10);
+    data.password = hashedPassword;
+
     const newUsuario = await prisma.usuario.create({
       data: data,
     });
@@ -58,6 +62,10 @@ export const updateUsuario = async (
   usuarioData: Partial<Usuario>
 ) => {
   try {
+    if (usuarioData.password) {
+      usuarioData.password = await bcrypt.hash(usuarioData.password, 10);
+    }
+
     const existing = await prisma.usuario.findMany({
       where: { nombre: usuarioData.nombre, eliminado: false },
     });
@@ -67,6 +75,7 @@ export const updateUsuario = async (
     ) {
       throw new Error("Ya existe un usuario con ese nombre");
     }
+
     const updatedUsuario = await prisma.usuario.update({
       where: { id },
       data: usuarioData,
@@ -87,6 +96,36 @@ export const deleteUsuario = async (id: number) => {
     return deletedUsuario;
   } catch (error) {
     console.error("Error al eliminar un usuario:", error);
+    return error;
+  }
+};
+
+export const authenticateUsuario = async (
+  usuario: string,
+  password: string
+) => {
+  try {
+    const usuarioEncontrado = await prisma.usuario.findFirst({
+      where: { nombre: usuario, eliminado: false },
+    });
+    if (!usuarioEncontrado) {
+      throw new Error("Usuario no encontrado");
+    }
+    const isPasswordValid = await bcrypt.compare(
+      password,
+      usuarioEncontrado.password
+    );
+
+    if (!isPasswordValid) {
+      throw new Error("Usuario o contraseña incorrectos");
+    }
+
+    return {
+      message: "Acceso correcto",
+      data: { nombre: usuarioEncontrado.nombre },
+    };
+  } catch (error) {
+    console.error("Error en la autenticación del usuario:", error);
     return error;
   }
 };
