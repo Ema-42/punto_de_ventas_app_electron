@@ -6,10 +6,10 @@ import { mkdir, writeFile } from "fs/promises";
 import { join } from "path";
 import nodeCrypto from "crypto";
 import { readFile } from "node:fs/promises";
-const prisma$3 = new PrismaClient();
+const prisma$5 = new PrismaClient();
 const obtenerProductos = async () => {
   try {
-    const productos = await prisma$3.producto.findMany({
+    const productos = await prisma$5.producto.findMany({
       where: { eliminado: false },
       select: {
         id: true,
@@ -37,13 +37,13 @@ const obtenerProductos = async () => {
 };
 const crearProducto = async (data) => {
   try {
-    const existingProducto = await prisma$3.producto.findFirst({
+    const existingProducto = await prisma$5.producto.findFirst({
       where: { nombre: data.nombre, eliminado: false }
     });
     if (existingProducto) {
       throw new Error("Ya existe un producto con ese nombre");
     }
-    const nuevoProducto = await prisma$3.producto.create({
+    const nuevoProducto = await prisma$5.producto.create({
       data: {
         nombre: data.nombre,
         precio: data.precio,
@@ -61,13 +61,13 @@ const crearProducto = async (data) => {
 };
 const editarProducto = async (id, productoData) => {
   try {
-    const existing = await prisma$3.producto.findMany({
+    const existing = await prisma$5.producto.findMany({
       where: { nombre: productoData.nombre, eliminado: false }
     });
     if (existing.length > 1 || existing.length === 1 && existing[0].id !== id) {
       throw new Error("Ya existe un producto con ese nombre");
     }
-    const productoActualizado = await prisma$3.producto.update({
+    const productoActualizado = await prisma$5.producto.update({
       where: { id },
       data: {
         nombre: productoData.nombre,
@@ -86,7 +86,7 @@ const editarProducto = async (id, productoData) => {
 };
 const obtenerOneProducto = async (id) => {
   try {
-    const producto = await prisma$3.producto.findUnique({
+    const producto = await prisma$5.producto.findUnique({
       where: { id },
       select: {
         id: true,
@@ -110,7 +110,7 @@ const obtenerOneProducto = async (id) => {
 };
 const eliminarProducto = async (id) => {
   try {
-    const productoEliminado = await prisma$3.producto.update({
+    const productoEliminado = await prisma$5.producto.update({
       where: { id },
       data: { eliminado: true }
     });
@@ -142,11 +142,11 @@ const uploadFile = async (fileData) => {
     throw new Error("Error al guardar la imagen");
   }
 };
-const prisma$2 = new PrismaClient();
+const prisma$4 = new PrismaClient();
 const getCategoriasProductos = async () => {
   console.log("getCategoriasProductos");
   try {
-    const categorias = await prisma$2.categoriaProducto.findMany({
+    const categorias = await prisma$4.categoriaProducto.findMany({
       where: { eliminado: false }
     });
     return categorias;
@@ -157,7 +157,7 @@ const getCategoriasProductos = async () => {
 };
 const getCategoriaProductoById = async (id) => {
   try {
-    const categoria = await prisma$2.categoriaProducto.findUnique({
+    const categoria = await prisma$4.categoriaProducto.findUnique({
       where: { id }
     });
     console.log("Categoria encontrada:", categoria);
@@ -172,13 +172,13 @@ const getCategoriaProductoById = async (id) => {
 };
 const createCategoriaProducto = async (data) => {
   try {
-    const existingCategoria = await prisma$2.categoriaProducto.findFirst({
+    const existingCategoria = await prisma$4.categoriaProducto.findFirst({
       where: { nombre: data.nombre, eliminado: false }
     });
     if (existingCategoria) {
       throw new Error("Ya existe una categoria con ese nombre");
     }
-    const newCategoria = await prisma$2.categoriaProducto.create({
+    const newCategoria = await prisma$4.categoriaProducto.create({
       data
     });
     return newCategoria;
@@ -189,13 +189,13 @@ const createCategoriaProducto = async (data) => {
 };
 const updateCategoriaProducto = async (id, categoriaData) => {
   try {
-    const existing = await prisma$2.categoriaProducto.findMany({
+    const existing = await prisma$4.categoriaProducto.findMany({
       where: { nombre: categoriaData.nombre, eliminado: false }
     });
     if (existing.length > 1 || existing.length === 1 && existing[0].id !== id) {
       throw new Error("Ya existe un producto con ese nombre");
     }
-    const updatedCategoria = await prisma$2.categoriaProducto.update({
+    const updatedCategoria = await prisma$4.categoriaProducto.update({
       where: { id },
       data: categoriaData
     });
@@ -207,7 +207,7 @@ const updateCategoriaProducto = async (id, categoriaData) => {
 };
 const deleteCategoriaProducto = async (id) => {
   try {
-    const deletedCategoria = await prisma$2.categoriaProducto.update({
+    const deletedCategoria = await prisma$4.categoriaProducto.update({
       where: { id },
       data: { eliminado: true }
     });
@@ -217,10 +217,10 @@ const deleteCategoriaProducto = async (id) => {
     return error;
   }
 };
-const prisma$1 = new PrismaClient();
+const prisma$3 = new PrismaClient();
 const getMesas = async () => {
   try {
-    const mesas = await prisma$1.mesa.findMany({
+    const mesas = await prisma$3.mesa.findMany({
       where: { eliminado: false }
     });
     return mesas;
@@ -231,7 +231,7 @@ const getMesas = async () => {
 };
 const getMesaById = async (id) => {
   try {
-    const mesa = await prisma$1.mesa.findUnique({
+    const mesa = await prisma$3.mesa.findUnique({
       where: { id }
     });
     if (!mesa) {
@@ -245,13 +245,13 @@ const getMesaById = async (id) => {
 };
 const createMesa = async (data) => {
   try {
-    const existingMesa = await prisma$1.mesa.findFirst({
+    const existingMesa = await prisma$3.mesa.findFirst({
       where: { numero: data.numero }
     });
     if (existingMesa) {
       throw new Error("Ya existe una mesa con ese numero");
     }
-    const newMesa = await prisma$1.mesa.create({
+    const newMesa = await prisma$3.mesa.create({
       data
     });
     return newMesa;
@@ -262,13 +262,13 @@ const createMesa = async (data) => {
 };
 const updateMesa = async (id, mesaData) => {
   try {
-    const existing = await prisma$1.mesa.findMany({
+    const existing = await prisma$3.mesa.findMany({
       where: { numero: mesaData.numero, eliminado: false }
     });
     if (existing.length > 1 || existing.length === 1 && existing[0].id !== id) {
       throw new Error("Ya existe una mesa con ese numero");
     }
-    const updatedMesa = await prisma$1.mesa.update({
+    const updatedMesa = await prisma$3.mesa.update({
       where: { id },
       data: mesaData
     });
@@ -280,7 +280,7 @@ const updateMesa = async (id, mesaData) => {
 };
 const deleteMesa = async (id) => {
   try {
-    const deletedMesa = await prisma$1.mesa.update({
+    const deletedMesa = await prisma$3.mesa.update({
       where: { id },
       data: { eliminado: true }
     });
@@ -2010,10 +2010,10 @@ const bcrypt = {
   encodeBase64,
   decodeBase64
 };
-const prisma = new PrismaClient();
+const prisma$2 = new PrismaClient();
 const getUsuarios = async () => {
   try {
-    const usuarios = await prisma.usuario.findMany({
+    const usuarios = await prisma$2.usuario.findMany({
       where: { eliminado: false },
       select: { nombre: true, rol: true }
     });
@@ -2025,7 +2025,7 @@ const getUsuarios = async () => {
 };
 const getUsuarioById = async (id) => {
   try {
-    const usuario = await prisma.usuario.findUnique({
+    const usuario = await prisma$2.usuario.findUnique({
       where: { id, eliminado: false },
       select: { nombre: true, rol: true }
     });
@@ -2040,7 +2040,7 @@ const getUsuarioById = async (id) => {
 };
 const createUsuario = async (data) => {
   try {
-    const existingUsuario = await prisma.usuario.findFirst({
+    const existingUsuario = await prisma$2.usuario.findFirst({
       where: { nombre: data.nombre }
     });
     if (existingUsuario) {
@@ -2048,7 +2048,7 @@ const createUsuario = async (data) => {
     }
     const hashedPassword = await bcrypt.hash(data.password, 10);
     data.password = hashedPassword;
-    const newUsuario = await prisma.usuario.create({
+    const newUsuario = await prisma$2.usuario.create({
       data
     });
     return newUsuario;
@@ -2062,13 +2062,13 @@ const updateUsuario = async (id, usuarioData) => {
     if (usuarioData.password) {
       usuarioData.password = await bcrypt.hash(usuarioData.password, 10);
     }
-    const existing = await prisma.usuario.findMany({
+    const existing = await prisma$2.usuario.findMany({
       where: { nombre: usuarioData.nombre, eliminado: false }
     });
     if (existing.length > 1 || existing.length === 1 && existing[0].id !== id) {
       throw new Error("Ya existe un usuario con ese nombre");
     }
-    const updatedUsuario = await prisma.usuario.update({
+    const updatedUsuario = await prisma$2.usuario.update({
       where: { id },
       data: usuarioData
     });
@@ -2080,7 +2080,7 @@ const updateUsuario = async (id, usuarioData) => {
 };
 const deleteUsuario = async (id) => {
   try {
-    const deletedUsuario = await prisma.usuario.update({
+    const deletedUsuario = await prisma$2.usuario.update({
       where: { id },
       data: { eliminado: true }
     });
@@ -2092,7 +2092,7 @@ const deleteUsuario = async (id) => {
 };
 const authenticateUsuario = async (usuario, password) => {
   try {
-    const usuarioEncontrado = await prisma.usuario.findFirst({
+    const usuarioEncontrado = await prisma$2.usuario.findFirst({
       where: { nombre: usuario, eliminado: false }
     });
     if (!usuarioEncontrado) {
@@ -2111,6 +2111,257 @@ const authenticateUsuario = async (usuario, password) => {
     };
   } catch (error) {
     console.error("Error en la autenticación del usuario:", error);
+    return error;
+  }
+};
+const prisma$1 = new PrismaClient();
+const getRoles = async () => {
+  try {
+    const roles = await prisma$1.rol.findMany({
+      where: { eliminado: false },
+      select: { id: true, nombre: true }
+    });
+    return roles;
+  } catch (error) {
+    console.error("Error al obtener roles:", error);
+    return error;
+  }
+};
+const getRolById = async (id) => {
+  try {
+    const rol = await prisma$1.rol.findUnique({
+      where: { id, eliminado: false },
+      select: { id: true, nombre: true }
+    });
+    if (!rol) {
+      throw new Error("Rol no encontrado");
+    }
+    return rol;
+  } catch (error) {
+    console.error("Error al obtener un rol:", error);
+    return error;
+  }
+};
+const prisma = new PrismaClient();
+const getPedidos = async () => {
+  try {
+    const pedidos = await prisma.pedido.findMany({
+      where: { eliminado: false },
+      select: {
+        id: true,
+        pedido_padre_id: true,
+        mesa: {
+          select: {
+            id: true,
+            numero: true
+          }
+        },
+        mesera: {
+          select: {
+            id: true,
+            nombre: true
+          }
+        },
+        cajero: {
+          select: {
+            id: true,
+            nombre: true
+          }
+        },
+        estado: true,
+        fecha_creacion: true,
+        fecha_concluido: true,
+        total: true,
+        detalles: {
+          select: {
+            id: true,
+            pedido_id: true,
+            producto: {
+              select: {
+                id: true,
+                nombre: true,
+                imagen_url: true
+              }
+            },
+            cantidad: true,
+            precio_unitario: true
+          }
+        }
+      }
+    });
+    return pedidos.map((p) => {
+      var _a;
+      return {
+        ...p,
+        total: (_a = p.total) == null ? void 0 : _a.toFixed(2),
+        // Convierte Decimal a string con 2 decimales
+        detalles: p.detalles.map((d) => {
+          var _a2;
+          return {
+            ...d,
+            precio_unitario: (_a2 = d.precio_unitario) == null ? void 0 : _a2.toFixed(2)
+            // Convierte Decimal a string con 2 decimales
+          };
+        })
+      };
+    });
+  } catch (error) {
+    console.error("Error en pedidos:", error);
+    return error;
+  }
+};
+const gePedidoById = async (id) => {
+  var _a;
+  try {
+    const pedido = await prisma.pedido.findUnique({
+      where: { id, eliminado: false },
+      select: {
+        id: true,
+        pedido_padre_id: true,
+        mesa: {
+          select: {
+            id: true,
+            numero: true
+          }
+        },
+        mesera: {
+          select: {
+            id: true,
+            nombre: true
+          }
+        },
+        cajero: {
+          select: {
+            id: true,
+            nombre: true
+          }
+        },
+        estado: true,
+        fecha_creacion: true,
+        fecha_concluido: true,
+        total: true,
+        detalles: {
+          select: {
+            id: true,
+            pedido_id: true,
+            producto: {
+              select: {
+                id: true,
+                nombre: true,
+                imagen_url: true
+              }
+            },
+            cantidad: true,
+            precio_unitario: true
+          }
+        }
+      }
+    });
+    if (!pedido) {
+      throw new Error("Pedido no encontrado");
+    }
+    return {
+      ...pedido,
+      total: (_a = pedido.total) == null ? void 0 : _a.toFixed(2),
+      // Convierte Decimal a string con 2 decimales
+      detalles: pedido.detalles.map((d) => {
+        var _a2;
+        return {
+          ...d,
+          precio_unitario: (_a2 = d.precio_unitario) == null ? void 0 : _a2.toFixed(2)
+          // Convierte Decimal a string con 2 decimales
+        };
+      })
+    };
+  } catch (error) {
+    console.error("Error al obtener pedido:", error);
+    return error;
+  }
+};
+const crearPedido = async (data) => {
+  try {
+    const nuevoPedido = await prisma.pedido.create({
+      data: {
+        pedido_padre_id: data.pedido_padre_id,
+        mesa_id: data.mesa_id,
+        mesera_id: data.mesera_id,
+        cajero_id: data.cajero_id,
+        estado: data.estado ?? "EN ATENCION",
+        fecha_concluido: data.fecha_concluido,
+        total: data.total ?? 0
+      }
+    });
+    return JSON.parse(JSON.stringify(nuevoPedido));
+  } catch (error) {
+    console.error("Error al crear pedido:", error);
+    return error;
+  }
+};
+const crearPedidoConDetalles = async (data) => {
+  if (!data.detalles || data.detalles.length === 0) {
+    throw new Error("No se puede crear un pedido sin detalles.");
+  }
+  return await prisma.$transaction(async (tx) => {
+    const nuevoPedido = await tx.pedido.create({
+      data: {
+        pedido_padre_id: data.pedido_padre_id,
+        mesa_id: data.mesa_id,
+        mesera_id: data.mesera_id,
+        cajero_id: data.cajero_id,
+        estado: data.estado ?? "EN_ATENCION",
+        fecha_concluido: data.fecha_concluido,
+        total: 0
+        // Inicialmente 0, se actualizará después
+      }
+    });
+    const detalles = data.detalles.map((detalle) => ({
+      pedido_id: nuevoPedido.id,
+      producto_id: detalle.producto_id,
+      cantidad: detalle.cantidad,
+      precio_unitario: detalle.precio_unitario
+    }));
+    await tx.detallePedido.createMany({ data: detalles });
+    const totalPedido = detalles.reduce(
+      (total, detalle) => total + detalle.cantidad * detalle.precio_unitario,
+      0
+    );
+    await tx.pedido.update({
+      where: { id: nuevoPedido.id },
+      data: { total: totalPedido }
+    });
+    return { ...nuevoPedido, total: totalPedido, detalles };
+  });
+};
+const editarPedido = async (id, pedidoData) => {
+  try {
+    const pedidoActualizado = await prisma.pedido.update({
+      where: { id },
+      data: {
+        pedido_padre_id: pedidoData.pedido_padre_id,
+        mesa_id: pedidoData.mesa_id,
+        mesera_id: pedidoData.mesera_id,
+        cajero_id: pedidoData.cajero_id,
+        estado: pedidoData.estado,
+        fecha_concluido: pedidoData.fecha_concluido,
+        total: pedidoData.total
+      }
+    });
+    return JSON.parse(JSON.stringify(pedidoActualizado));
+  } catch (error) {
+    console.error("Error al actualizar pedido:", error);
+    return error;
+  }
+};
+const eliminarPedido = async (id) => {
+  try {
+    const pedidoEliminado = await prisma.pedido.update({
+      where: { id },
+      data: { eliminado: true }
+    });
+    console.log("Pedido eliminado:", pedidoEliminado);
+    return JSON.parse(JSON.stringify(pedidoEliminado));
+  } catch (error) {
+    console.error("Error al eliminar pedido:", error);
     return error;
   }
 };
@@ -2181,6 +2432,30 @@ const ipcMainModules = () => {
   ipcMain.handle("upload-file", async (_, fileData) => {
     return await uploadFile(fileData);
   });
+  ipcMain.handle("get-roles", async () => {
+    return await getRoles();
+  });
+  ipcMain.handle("get-one-role", async (_, id) => {
+    return await getRolById(id);
+  });
+  ipcMain.handle("get-pedidos", async () => {
+    return await getPedidos();
+  });
+  ipcMain.handle("get-one-pedido", async (_, id) => {
+    return await gePedidoById(id);
+  });
+  ipcMain.handle("create-pedido", async (_, pedido) => {
+    return await crearPedido(pedido);
+  });
+  ipcMain.handle("edit-pedido", async (_, { id, pedidoData }) => {
+    return await editarPedido(id, pedidoData);
+  });
+  ipcMain.handle("delete-pedido", async (_, id) => {
+    return await eliminarPedido(id);
+  });
+  ipcMain.handle("crear-pedido-con-detalles", async (_, data) => {
+    return await crearPedidoConDetalles(data);
+  });
   protocol.handle("local", async (request) => {
     const url = new URL(request.url);
     const filePath = url.pathname;
@@ -2226,9 +2501,7 @@ function createWindow() {
     const { x, y } = secondaryDisplay.bounds;
     win == null ? void 0 : win.setBounds({ x, y, width: secondaryDisplay.bounds.width, height: 900 });
   }
-  win.webContents.on("did-finish-load", () => {
-    win == null ? void 0 : win.webContents.send("main-process-message", (/* @__PURE__ */ new Date()).toLocaleString());
-  });
+  win.setIcon(path.join(process.env.VITE_PUBLIC, "icono-logo.png"));
   if (VITE_DEV_SERVER_URL) {
     win.loadURL(VITE_DEV_SERVER_URL);
   } else {

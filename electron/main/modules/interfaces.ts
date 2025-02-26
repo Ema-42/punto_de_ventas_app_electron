@@ -43,22 +43,39 @@ export interface Producto {
   categoria?: { id: number; nombre: string };
 }
 
+export interface CrearPedidoConDetalles {
+  pedido_padre_id?: number;
+  mesa_id?: number;
+  mesera_id: number;
+  cajero_id: number;
+  estado?: string; // "EN_ATENCION" o "CONCLUIDO"
+  fecha_concluido?: Date;
+  detalles: {
+    producto_id: number;
+    cantidad: number;
+    precio_unitario: number;
+  }[];
+}
+
+
+export interface PedidoEditData {
+  pedido_padre_id?: number;
+  mesa_id?: number;
+  mesera_id?: number;
+  cajero_id?: number;
+  estado?: string;
+  fecha_concluido?: Date;
+}
 export interface Pedido {
-  id: number;
+  id?: number;
   pedido_padre_id?: number;
   mesa_id?: number;
   mesera_id: number;
   cajero_id: number;
   estado?: string;
-  fecha_creacion: Date;
+  fecha_creacion?: Date;
   fecha_concluido?: Date;
   total?: number;
-  pedido_padre?: Pedido;
-  pedidos_hijos: Pedido[];
-  mesa?: Mesa;
-  mesera: Usuario;
-  cajero: Usuario;
-  detalles: DetallePedido[];
 }
 
 export interface DetallePedido {

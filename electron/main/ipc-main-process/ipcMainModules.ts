@@ -31,6 +31,15 @@ import {
 } from "../modules/usuarios";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
+import { getRolById, getRoles } from "../modules/roles";
+import {
+  crearPedido,
+  crearPedidoConDetalles,
+  editarPedido,
+  eliminarPedido,
+  gePedidoById,
+  getPedidos,
+} from "../modules/pedido";
 
 export default () => {
   //productos
@@ -104,8 +113,37 @@ export default () => {
   ipcMain.handle("upload-file", async (_, fileData) => {
     return await uploadFile(fileData);
   });
+  //roles
+  ipcMain.handle("get-roles", async () => {
+    return await getRoles();
+  });
+  ipcMain.handle("get-one-role", async (_, id) => {
+    return await getRolById(id);
+  });
+  //pedidos
 
+  ipcMain.handle("get-pedidos", async () => {
+    return await getPedidos();
+  });
 
+  ipcMain.handle("get-one-pedido", async (_, id) => {
+    return await gePedidoById(id);
+  });
+
+  ipcMain.handle("create-pedido", async (_, pedido) => {
+    return await crearPedido(pedido);
+  });
+
+  ipcMain.handle("edit-pedido", async (_, { id, pedidoData }) => {
+    return await editarPedido(id, pedidoData);
+  });
+
+  ipcMain.handle("delete-pedido", async (_, id) => {
+    return await eliminarPedido(id);
+  });
+  ipcMain.handle("crear-pedido-con-detalles", async (_, data) => {
+    return await crearPedidoConDetalles(data);
+  });
   //leer imagenes locales
   protocol.handle("local", async (request) => {
     const url = new URL(request.url);

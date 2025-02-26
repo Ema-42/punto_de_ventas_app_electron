@@ -1,5 +1,9 @@
 import { ipcRenderer, contextBridge } from "electron";
-import { FileData, Producto } from "./main/modules/interfaces";
+import {
+  CrearPedidoConDetalles,
+  FileData,
+  Producto,
+} from "./main/modules/interfaces";
 import { CategoriaProducto } from "@prisma/client";
 
 // --------- Expose some API to the Renderer process ---------
@@ -42,4 +46,17 @@ contextBridge.exposeInMainWorld("api", {
     ipcRenderer.invoke("authenticate-usuario", { usuario, password }),
   uploadFile: (fileData: FileData) =>
     ipcRenderer.invoke("upload-file", fileData),
+  //roles
+  getRoles: () => ipcRenderer.invoke("get-roles"),
+  getOneRoleById: (id: number) => ipcRenderer.invoke("get-one-role", id),
+  //pedidos
+  getPedidos: () => ipcRenderer.invoke("get-pedidos"),
+  createPedido: (pedidoData: any) =>
+    ipcRenderer.invoke("create-pedido", pedidoData),
+  editPedidoById: (id: number, pedidoData: any) =>
+    ipcRenderer.invoke("edit-pedido", { id, pedidoData }),
+  getOnePedidoById: (id: number) => ipcRenderer.invoke("get-one-pedido", id),
+  deletePedidoById: (id: number) => ipcRenderer.invoke("delete-pedido", id),
+  crearPedidoConDetalles: (data: CrearPedidoConDetalles) =>
+    ipcRenderer.invoke("crear-pedido-con-detalles", data),
 });

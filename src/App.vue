@@ -4,6 +4,9 @@ import {
   Producto,
   Mesa,
   FileData,
+  Pedido,
+  PedidoEditData,
+  CrearPedidoConDetalles,
 } from "../electron/main/modules/interfaces";
 import { onMounted, ref } from "vue";
 
@@ -334,6 +337,116 @@ const saveFile = async (file: File) => {
     console.error("Error uploading file", err);
   }
 };
+
+//ROLES
+const roles = ref();
+
+const getRoles = async () => {
+  try {
+    roles.value = await window.api.getRoles();
+    return roles.value;
+  } catch (err) {
+    error.value = "Error al obtener los roles";
+    console.error(err);
+  }
+};
+
+const getOneRoleById = async (id: number) => {
+  try {
+    const result = await window.api.getOneRoleById(id);
+    if (result instanceof Error) {
+      roles.value = result.toString();
+      throw result;
+    }
+    roles.value = result;
+    return roles.value;
+  } catch (err) {
+    console.error(err);
+    return null;
+  }
+};
+
+//PEDIDOS
+const pedidos = ref();
+
+const getAllPedidos = async () => {
+  try {
+    pedidos.value = await window.api.getPedidos();
+    console.log(pedidos.value);
+
+    return pedidos.value;
+  } catch (err) {
+    error.value = "Error al obtener los pedidos";
+    console.error(err);
+  }
+};
+
+const createPedido = async (pedidoData: Pedido) => {
+  try {
+    const result = await window.api.createPedido(pedidoData);
+    if (result instanceof Error) {
+      pedidos.value = result.toString();
+      throw result;
+    }
+    pedidos.value = result;
+    return pedidos.value;
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+const getOnePedidoById = async (id: number) => {
+  try {
+    const result = await window.api.getOnePedidoById(id);
+    if (result instanceof Error) {
+      pedidos.value = result.toString();
+      throw result;
+    }
+    pedidos.value = result;
+    return pedidos.value;
+  } catch (err) {
+    console.error(err);
+    return null;
+  }
+};
+
+const editPedidoById = async (id: number, pedidoData: PedidoEditData) => {
+  try {
+    const result = await window.api.editPedidoById(id, pedidoData);
+    if (result instanceof Error) {
+      pedidos.value = result.toString();
+      throw result;
+    }
+    pedidos.value = result;
+    return pedidos.value;
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+const deletePedidoById = async (id: number) => {
+  try {
+    pedidos.value = await window.api.deletePedidoById(id);
+    console.log(`Pedido con ID ${id} eliminado`);
+  } catch (err) {
+    error.value = "Error al eliminar el pedido";
+    console.error(err);
+  }
+};
+
+const crearPedidoConDetalles = async (data: CrearPedidoConDetalles) => {
+  try {
+    const result = await window.api.crearPedidoConDetalles(data);
+    if (result instanceof Error) {
+      pedidos.value = result.toString();
+      throw result;
+    }
+    pedidos.value = result;
+    return pedidos.value;
+  } catch (err) {
+    console.error(err);
+  }
+};
 </script>
 
 <template>
@@ -515,6 +628,101 @@ const saveFile = async (file: File) => {
             JSON.stringify(usuarios, null, 2)
           }}</pre>
         </div>
+
+        <h2>ROLES</h2>
+        <div>
+          <button
+            class="bg-green-700 text-white px-4 py-2 rounded-lg hover:bg-indigo-300 transition duration-300"
+            @click="getRoles"
+          >
+            get all roles
+          </button>
+          <button
+            class="bg-green-700 text-white px-4 py-2 rounded-lg hover:bg-indigo-300 transition duration-300"
+            @click="getOneRoleById(2)"
+          >
+            get one rol
+          </button>
+          <pre id="count" class="text-sm font-semibold block">{{
+            JSON.stringify(roles, null, 2)
+          }}</pre>
+        </div>
+
+        <h2>PEDIDOS</h2>
+        <div>
+          <button
+            class="bg-sky-700 text-white px-4 py-2 rounded-lg hover:bg-indigo-300 transition duration-300"
+            @click="getAllPedidos"
+          >
+            get all pedidos
+          </button>
+          <button
+            class="bg-sky-700 text-white px-4 py-2 rounded-lg hover:bg-indigo-300 transition duration-300"
+            @click="getOnePedidoById(1)"
+          >
+            get one pedido
+          </button>
+          <button
+            class="bg-sky-700 text-white px-4 py-2 rounded-lg hover:bg-indigo-300 transition duration-300"
+            @click="deletePedidoById(1)"
+          >
+            Eliminar pedido
+          </button>
+          <button
+            class="bg-sky-700 text-white px-4 py-2 rounded-lg hover:bg-indigo-300 transition duration-300"
+            @click="
+              createPedido({
+                mesa_id: 1,
+                cajero_id: 1,
+                mesera_id: 1,
+                total: 21.45,
+              })
+            "
+          >
+            Crear pedido
+          </button>
+          <button
+            class="bg-sky-700 text-white px-4 py-2 rounded-lg hover:bg-indigo-300 transition duration-300"
+            @click="
+              crearPedidoConDetalles({
+                mesa_id: 3,
+                mesera_id: 2,
+                cajero_id: 1,
+                estado: 'EN ATENCION',
+                detalles: [
+                  {
+                    producto_id: 1,
+                    cantidad: 2,
+                    precio_unitario: 10.50,
+                  },
+                  {
+                    producto_id: 2,
+                    cantidad: 1,
+                    precio_unitario: 20.70,
+                  },
+                ],
+              })
+            "
+          >
+            Crear pedido con detalles
+          </button>
+          <button
+            class="bg-sky-700 text-white px-4 py-2 rounded-lg hover:bg-indigo-300 transition duration-300"
+            @click="
+              editPedidoById(1, {
+                mesa_id: 1,
+                cajero_id: 3,
+                mesera_id: 1,
+                estado: 'TERMINADO',
+              })
+            "
+          >
+            Editar pedido
+          </button>
+          <pre id="count" class="text-sm font-semibold block">{{
+            JSON.stringify(pedidos, null, 2)
+          }}</pre>
+        </div>
       </div>
       <h2 class="text-xl font-bold text-gray-800 mb-4">Productos</h2>
       <table id="productos-table" class="w-full text-left">
@@ -538,12 +746,11 @@ const saveFile = async (file: File) => {
             <td class="p-3">{{ producto.maneja_stock }}</td>
             <td class="p-3">{{ producto.stock }}</td>
             <td class="p-3">
-              <img 
-                :src="'local://'+producto.imagen_url" 
-                alt="Producto Imagen" 
+              <img
+                :src="'local://' + producto.imagen_url"
+                alt="Producto Imagen"
                 class="w-28 h-28 rounded-sm transition-transform duration-300 hover:scale-150"
               />
-
             </td>
             <td class="p-3">{{ producto.categoria?.nombre }}</td>
             <td class="p-3">{{ producto.fecha_creacion }}</td>

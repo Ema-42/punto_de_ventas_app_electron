@@ -1,6 +1,6 @@
 /// <reference types="vite-plugin-electron/electron-env" />
 
-
+const CrearPedidoConDetalles = require("./main/modules/interfaces");
 
 declare namespace NodeJS {
   interface ProcessEnv {
@@ -51,7 +51,16 @@ interface Window {
     getOneUsuarioById: (id: number) => Promise<any>;
     deleteUsuarioById: (id: number) => Promise<any>;
     authenticateUsuario: (usuario: string, password: string) => Promise<any>;
-
+    //roles
+    getRoles: () => Promise<any>;
+    getOneRoleById: (id: number) => Promise<any>;
+    //pedidos
+    getPedidos: () => Promise<any>;
+    createPedido: (pedidoData: any) => Promise<any>;
+    editPedidoById: (id: number, pedidoData: any) => Promise<any>;
+    getOnePedidoById: (id: number) => Promise<any>;
+    deletePedidoById: (id: number) => Promise<any>;
+    crearPedidoConDetalles: (data: CrearPedidoConDetalles) => Promise<any>;
   };
   ipcRenderer: import("electron").IpcRenderer;
 }
