@@ -36,6 +36,7 @@ import {
   crearPedido,
   crearPedidoConDetalles,
   editarPedido,
+  editarPedidoConDetalles,
   eliminarPedido,
   gePedidoById,
   getPedidos,
@@ -143,6 +144,9 @@ export default () => {
   });
   ipcMain.handle("crear-pedido-con-detalles", async (_, data) => {
     return await crearPedidoConDetalles(data);
+  });
+  ipcMain.handle("editar-pedido-con-detalles", async (_, data) => {
+    return await editarPedidoConDetalles(data);
   });
   //leer imagenes locales
   protocol.handle("local", async (request) => {

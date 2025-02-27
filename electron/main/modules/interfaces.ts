@@ -56,7 +56,22 @@ export interface CrearPedidoConDetalles {
     precio_unitario: number;
   }[];
 }
-
+export interface EditarPedidoConDetalles {
+  id: number;
+  pedido_padre_id?: number;
+  mesa_id?: number;
+  mesera_id: number;
+  cajero_id: number;
+  estado?: string;
+  fecha_concluido?: Date;
+  detalles: {
+    id?: number; // Si existe, se actualiza; si no, se crea
+    producto_id: number;
+    cantidad: number;
+    precio_unitario: number;
+    eliminado?: boolean; // Si es `true`, se elimina
+  }[];
+}
 
 export interface PedidoEditData {
   pedido_padre_id?: number;

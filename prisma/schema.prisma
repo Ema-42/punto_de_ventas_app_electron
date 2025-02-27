@@ -67,6 +67,7 @@ model Pedido {
   mesa_id         Int?
   mesera_id       Int
   cajero_id       Int
+  num_pedido_dia  Int?
   estado          String? // "EN_ATENCION" o "CONCLUIDO"
   fecha_creacion  DateTime  @default(now())
   fecha_concluido DateTime?

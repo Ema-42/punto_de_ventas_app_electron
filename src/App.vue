@@ -7,6 +7,7 @@ import {
   Pedido,
   PedidoEditData,
   CrearPedidoConDetalles,
+  EditarPedidoConDetalles,
 } from "../electron/main/modules/interfaces";
 import { onMounted, ref } from "vue";
 
@@ -434,9 +435,24 @@ const deletePedidoById = async (id: number) => {
   }
 };
 
+//USAR ESTOS METODOS PARA CREAR Y EDITAR PEDIDOS - los de arriba seran para otra cosa, hola judith
 const crearPedidoConDetalles = async (data: CrearPedidoConDetalles) => {
   try {
     const result = await window.api.crearPedidoConDetalles(data);
+    if (result instanceof Error) {
+      pedidos.value = result.toString();
+      throw result;
+    }
+    pedidos.value = result;
+    return pedidos.value;
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+const editarPedidoConDetalles = async (data: EditarPedidoConDetalles) => {
+  try {
+    const result = await window.api.editarPedidoConDetalles(data);
     if (result instanceof Error) {
       pedidos.value = result.toString();
       throw result;
@@ -693,12 +709,12 @@ const crearPedidoConDetalles = async (data: CrearPedidoConDetalles) => {
                   {
                     producto_id: 1,
                     cantidad: 2,
-                    precio_unitario: 10.50,
+                    precio_unitario: 10.5,
                   },
                   {
                     producto_id: 2,
                     cantidad: 1,
-                    precio_unitario: 20.70,
+                    precio_unitario: 20.7,
                   },
                 ],
               })
@@ -718,6 +734,36 @@ const crearPedidoConDetalles = async (data: CrearPedidoConDetalles) => {
             "
           >
             Editar pedido
+          </button>
+          <button
+            class="bg-sky-700 text-white px-4 py-2 rounded-lg hover:bg-indigo-300 transition duration-300"
+            @click="
+              editarPedidoConDetalles({
+                id: 1,
+                mesa_id: 1,
+                mesera_id: 1,
+                cajero_id: 2,
+                estado: 'CONCLUIDO',
+                detalles: [
+                  {
+                    id: 40,
+                    producto_id: 1,
+                    cantidad: 5,
+                    precio_unitario: 2.4,
+                  }, // Se actualiza
+                  {
+                    id: 43,
+                    producto_id: 2,
+                    cantidad: 1,
+                    precio_unitario: 10.6,
+                    //eliminado: true,
+                  }, // Se elimina
+                  //{ producto_id: 1, cantidad: 2, precio_unitario: 10 }, // Se crea
+                ],
+              })
+            "
+          >
+            Editar pedido con detalles
           </button>
           <pre id="count" class="text-sm font-semibold block">{{
             JSON.stringify(pedidos, null, 2)
