@@ -2,6 +2,7 @@ import { ipcRenderer, contextBridge } from "electron";
 import {
   CrearPedidoConDetalles,
   EditarPedidoConDetalles,
+  EstadoPedido,
   FileData,
   Producto,
 } from "./main/modules/interfaces";
@@ -52,10 +53,8 @@ contextBridge.exposeInMainWorld("api", {
   getOneRoleById: (id: number) => ipcRenderer.invoke("get-one-role", id),
   //pedidos
   getPedidos: () => ipcRenderer.invoke("get-pedidos"),
-  createPedido: (pedidoData: any) =>
-    ipcRenderer.invoke("create-pedido", pedidoData),
-  editPedidoById: (id: number, pedidoData: any) =>
-    ipcRenderer.invoke("edit-pedido", { id, pedidoData }),
+  editEstadoPedidoById: (id: number, estado: EstadoPedido) =>
+    ipcRenderer.invoke("edit-estado-pedido", { id, estado }),
   getOnePedidoById: (id: number) => ipcRenderer.invoke("get-one-pedido", id),
   deletePedidoById: (id: number) => ipcRenderer.invoke("delete-pedido", id),
   crearPedidoConDetalles: (data: CrearPedidoConDetalles) =>

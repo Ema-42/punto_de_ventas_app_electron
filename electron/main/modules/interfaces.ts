@@ -56,6 +56,13 @@ export interface CrearPedidoConDetalles {
     precio_unitario: number;
   }[];
 }
+
+export enum EstadoPedido {
+  EN_PREPARACION = "EN PREPARACION",
+  COMPLETADO = "COMPLETADO",
+  CANCELADO = "CANCELADO",
+}
+
 export interface EditarPedidoConDetalles {
   id: number;
   pedido_padre_id?: number;
@@ -80,27 +87,6 @@ export interface PedidoEditData {
   cajero_id?: number;
   estado?: string;
   fecha_concluido?: Date;
-}
-export interface Pedido {
-  id?: number;
-  pedido_padre_id?: number;
-  mesa_id?: number;
-  mesera_id: number;
-  cajero_id: number;
-  estado?: string;
-  fecha_creacion?: Date;
-  fecha_concluido?: Date;
-  total?: number;
-}
-
-export interface DetallePedido {
-  id: number;
-  pedido_id: number;
-  pedido: Pedido;
-  producto_id: number;
-  producto: Producto;
-  cantidad: number;
-  precio_unitario: number;
 }
 
 export interface Ingreso {

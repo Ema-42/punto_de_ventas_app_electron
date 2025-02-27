@@ -2142,6 +2142,12 @@ const getRolById = async (id) => {
     return error;
   }
 };
+var EstadoPedido = /* @__PURE__ */ ((EstadoPedido2) => {
+  EstadoPedido2["EN_PREPARACION"] = "EN PREPARACION";
+  EstadoPedido2["COMPLETADO"] = "COMPLETADO";
+  EstadoPedido2["CANCELADO"] = "CANCELADO";
+  return EstadoPedido2;
+})(EstadoPedido || {});
 const prisma = new PrismaClient();
 const getPedidos = async () => {
   try {
@@ -2182,7 +2188,8 @@ const getPedidos = async () => {
               select: {
                 id: true,
                 nombre: true,
-                imagen_url: true
+                imagen_url: true,
+                maneja_stock: true
               }
             },
             cantidad: true,
@@ -2252,7 +2259,8 @@ const gePedidoById = async (id) => {
               select: {
                 id: true,
                 nombre: true,
-                imagen_url: true
+                imagen_url: true,
+                maneja_stock: true
               }
             },
             cantidad: true,
@@ -2300,152 +2308,234 @@ const getNumeroPedidoDia = async () => {
     return 0;
   }
 };
-const crearPedido = async (data) => {
+const cambiarEstadoPedido = async (id, estado) => {
   try {
-    const num_pedido_dia = await getNumeroPedidoDia();
-    const nuevoPedido = await prisma.pedido.create({
-      data: {
-        pedido_padre_id: data.pedido_padre_id,
-        mesa_id: data.mesa_id,
-        mesera_id: data.mesera_id,
-        cajero_id: data.cajero_id,
-        estado: data.estado ?? "EN ATENCION",
-        fecha_concluido: data.fecha_concluido,
-        total: data.total ?? 0,
-        num_pedido_dia
-      }
-    });
-    return JSON.parse(JSON.stringify(nuevoPedido));
-  } catch (error) {
-    console.error("Error al crear pedido:", error);
-    return error;
-  }
-};
-const editarPedido = async (id, pedidoData) => {
-  try {
-    const pedidoActualizado = await prisma.pedido.update({
+    await prisma.pedido.update({
       where: { id },
-      data: {
-        pedido_padre_id: pedidoData.pedido_padre_id,
-        mesa_id: pedidoData.mesa_id,
-        mesera_id: pedidoData.mesera_id,
-        cajero_id: pedidoData.cajero_id,
-        estado: pedidoData.estado,
-        fecha_concluido: pedidoData.fecha_concluido,
-        total: pedidoData.total
-      }
-    });
-    return JSON.parse(JSON.stringify(pedidoActualizado));
-  } catch (error) {
-    console.error("Error al actualizar pedido:", error);
-    return error;
-  }
-};
-const crearPedidoConDetalles = async (data) => {
-  if (!data.detalles || data.detalles.length === 0) {
-    throw new Error("No se puede crear un pedido sin detalles.");
-  }
-  return await prisma.$transaction(async (tx) => {
-    const num_pedido_dia = await getNumeroPedidoDia();
-    const nuevoPedido = await tx.pedido.create({
-      data: {
-        pedido_padre_id: data.pedido_padre_id,
-        mesa_id: data.mesa_id,
-        mesera_id: data.mesera_id,
-        cajero_id: data.cajero_id,
-        estado: data.estado ?? "EN_ATENCION",
-        fecha_concluido: data.fecha_concluido,
-        num_pedido_dia,
-        total: 0
-        // Inicialmente 0, se actualizará después
-      }
-    });
-    const detalles = data.detalles.map((detalle) => ({
-      pedido_id: nuevoPedido.id,
-      producto_id: detalle.producto_id,
-      cantidad: detalle.cantidad,
-      precio_unitario: detalle.precio_unitario
-    }));
-    await tx.detallePedido.createMany({ data: detalles });
-    const totalPedido = detalles.reduce(
-      (total, detalle) => total + detalle.cantidad * detalle.precio_unitario,
-      0
-    );
-    await tx.pedido.update({
-      where: { id: nuevoPedido.id },
-      data: { total: totalPedido }
+      data: { estado }
     });
     return {
       success: true,
-      message: "Pedido creado correctamente"
+      message: `Pedido con ID ${id} ha sido actualizado al estado ${estado}`
     };
-  });
+  } catch (error) {
+    console.error("Error al actualizar el estado del pedido:", error);
+    return {
+      success: false,
+      message: "Error al actualizar el estado del pedido"
+    };
+  }
+};
+function validarDetallesUnicos(detalles) {
+  const productoIds = detalles.map((detalle) => detalle.producto_id);
+  const tieneDuplicados = new Set(productoIds).size !== productoIds.length;
+  if (tieneDuplicados) {
+    throw new Error(
+      "No se puede crear un pedido con detalles duplicados (mismo producto)."
+    );
+  }
+}
+const crearPedidoConDetalles = async (data) => {
+  try {
+    if (!data.detalles || data.detalles.length === 0) {
+      throw new Error("No se puede crear un pedido sin detalles.");
+    }
+    validarDetallesUnicos(data.detalles);
+    return await prisma.$transaction(async (tx) => {
+      const num_pedido_dia = await getNumeroPedidoDia();
+      const nuevoPedido = await tx.pedido.create({
+        data: {
+          pedido_padre_id: data.pedido_padre_id,
+          mesa_id: data.mesa_id,
+          mesera_id: data.mesera_id,
+          cajero_id: data.cajero_id,
+          estado: data.estado ?? EstadoPedido.EN_PREPARACION,
+          fecha_concluido: data.fecha_concluido,
+          num_pedido_dia,
+          total: 0
+          // Inicialmente 0, se actualizará después
+        }
+      });
+      const productoIds = data.detalles.map((detalle) => detalle.producto_id);
+      const productos = await tx.producto.findMany({
+        where: { id: { in: productoIds } },
+        select: { id: true, maneja_stock: true, stock: true, nombre: true }
+      });
+      const detalles = [];
+      for (const detalle of data.detalles) {
+        const producto = productos.find((p) => p.id === detalle.producto_id);
+        if (!producto) {
+          throw new Error(
+            `Producto con ID ${detalle.producto_id} no encontrado.`
+          );
+        }
+        if (producto.maneja_stock) {
+          if (producto.stock < detalle.cantidad) {
+            throw new Error(
+              `Stock insuficiente para el producto ID ${producto.id} , ${producto.nombre}.`
+            );
+          }
+          await tx.producto.update({
+            where: { id: producto.id },
+            data: { stock: { decrement: detalle.cantidad } }
+          });
+        }
+        detalles.push({
+          pedido_id: nuevoPedido.id,
+          producto_id: detalle.producto_id,
+          cantidad: detalle.cantidad,
+          precio_unitario: detalle.precio_unitario
+        });
+      }
+      await tx.detallePedido.createMany({ data: detalles });
+      const totalPedido = detalles.reduce(
+        (total, detalle) => total + detalle.cantidad * detalle.precio_unitario,
+        0
+      );
+      await tx.pedido.update({
+        where: { id: nuevoPedido.id },
+        data: { total: totalPedido }
+      });
+      return {
+        success: true,
+        message: "Pedido creado correctamente"
+      };
+    });
+  } catch (error) {
+    return error;
+  }
 };
 const editarPedidoConDetalles = async (data) => {
-  if (!data.detalles || data.detalles.length === 0) {
-    throw new Error("No se puede guardar un pedido sin detalles.");
+  try {
+    if (!data.detalles || data.detalles.length === 0) {
+      throw new Error("No se puede guardar un pedido sin detalles.");
+    }
+    validarDetallesUnicos(data.detalles);
+    console.log(data.detalles);
+    return await prisma.$transaction(async (tx) => {
+      const pedidoExistente = await tx.pedido.findUnique({
+        where: { id: data.id },
+        include: {
+          detalles: {
+            include: {
+              producto: {
+                select: {
+                  id: true,
+                  maneja_stock: true,
+                  stock: true,
+                  nombre: true
+                }
+              }
+            }
+          }
+        }
+      });
+      if (!pedidoExistente) {
+        throw new Error("Pedido no encontrado.");
+      }
+      await tx.pedido.update({
+        where: { id: data.id },
+        data: {
+          pedido_padre_id: data.pedido_padre_id,
+          mesa_id: data.mesa_id,
+          mesera_id: data.mesera_id,
+          cajero_id: data.cajero_id,
+          estado: data.estado ?? "EN_ATENCION",
+          fecha_concluido: data.fecha_concluido
+        }
+      });
+      for (const detalle of data.detalles) {
+        if (detalle.eliminado && detalle.id) {
+          const detalleExistente = pedidoExistente.detalles.find(
+            (d) => d.id === detalle.id
+          );
+          if (detalleExistente == null ? void 0 : detalleExistente.producto.maneja_stock) {
+            await tx.producto.update({
+              where: { id: detalleExistente.producto.id },
+              data: { stock: { increment: detalleExistente.cantidad } }
+            });
+          }
+          await tx.detallePedido.delete({ where: { id: detalle.id } });
+        } else if (detalle.id) {
+          const detalleExistente = pedidoExistente.detalles.find(
+            (d) => d.id === detalle.id
+          );
+          if (!detalleExistente) {
+            throw new Error(`Detalle con ID ${detalle.id} no encontrado`);
+          }
+          if (detalleExistente.producto.id !== detalle.producto_id) {
+            throw new Error(
+              "No se puede modificar el producto en un detalle existente"
+            );
+          }
+          const diferencia = detalle.cantidad - detalleExistente.cantidad;
+          if (detalleExistente.producto.maneja_stock) {
+            if (detalleExistente.producto.stock < diferencia) {
+              throw new Error(
+                `Stock insuficiente para ${detalleExistente.producto.nombre}`
+              );
+            }
+            await tx.producto.update({
+              where: { id: detalleExistente.producto.id },
+              data: { stock: { decrement: diferencia } }
+            });
+          }
+          await tx.detallePedido.update({
+            where: { id: detalle.id },
+            data: {
+              cantidad: detalle.cantidad,
+              precio_unitario: detalle.precio_unitario
+            }
+          });
+        } else {
+          const producto = await tx.producto.findUnique({
+            where: { id: detalle.producto_id },
+            select: { maneja_stock: true, stock: true, nombre: true }
+          });
+          if (!producto) {
+            throw new Error(
+              `Producto con ID ${detalle.producto_id} no encontrado`
+            );
+          }
+          if (producto.maneja_stock && producto.stock < detalle.cantidad) {
+            throw new Error(`Stock insuficiente para ${producto.nombre}`);
+          }
+          if (producto.maneja_stock) {
+            await tx.producto.update({
+              where: { id: detalle.producto_id },
+              data: { stock: { decrement: detalle.cantidad } }
+            });
+          }
+          await tx.detallePedido.create({
+            data: {
+              pedido_id: data.id,
+              producto_id: detalle.producto_id,
+              cantidad: detalle.cantidad,
+              precio_unitario: detalle.precio_unitario
+            }
+          });
+        }
+      }
+      const detallesActualizados = await tx.detallePedido.findMany({
+        where: { pedido_id: data.id },
+        include: { producto: true }
+      });
+      const totalPedido = detallesActualizados.reduce(
+        (total, detalle) => total + detalle.cantidad * Number(detalle.precio_unitario),
+        0
+      );
+      await tx.pedido.update({
+        where: { id: data.id },
+        data: { total: totalPedido }
+      });
+      return {
+        success: true,
+        message: "Pedido actualizado correctamente"
+      };
+    });
+  } catch (error) {
+    return error;
   }
-  return await prisma.$transaction(async (tx) => {
-    const pedidoExistente = await tx.pedido.findUnique({
-      where: { id: data.id },
-      include: { detalles: true }
-      // Obtener detalles actuales
-    });
-    if (!pedidoExistente) {
-      throw new Error("Pedido no encontrado.");
-    }
-    await tx.pedido.update({
-      where: { id: data.id },
-      data: {
-        pedido_padre_id: data.pedido_padre_id,
-        mesa_id: data.mesa_id,
-        mesera_id: data.mesera_id,
-        cajero_id: data.cajero_id,
-        estado: data.estado ?? "EN_ATENCION",
-        fecha_concluido: data.fecha_concluido
-      }
-    });
-    for (const detalle of data.detalles) {
-      if (detalle.eliminado && detalle.id) {
-        await tx.detallePedido.delete({
-          where: { id: detalle.id }
-        });
-      } else if (detalle.id) {
-        await tx.detallePedido.update({
-          where: { id: detalle.id },
-          data: {
-            producto_id: detalle.producto_id,
-            cantidad: detalle.cantidad,
-            precio_unitario: detalle.precio_unitario
-          }
-        });
-      } else {
-        await tx.detallePedido.create({
-          data: {
-            pedido_id: data.id,
-            producto_id: detalle.producto_id,
-            cantidad: detalle.cantidad,
-            precio_unitario: detalle.precio_unitario
-          }
-        });
-      }
-    }
-    const detallesActualizados = await tx.detallePedido.findMany({
-      where: { pedido_id: data.id }
-    });
-    const totalPedido = detallesActualizados.reduce(
-      (total, detalle) => total + Number(detalle.cantidad) * Number(detalle.precio_unitario),
-      0
-    );
-    await tx.pedido.update({
-      where: { id: data.id },
-      data: { total: totalPedido }
-    });
-    return {
-      success: true,
-      message: "Pedido actualizado correctamente"
-    };
-  });
 };
 const eliminarPedido = async (id) => {
   try {
@@ -2539,11 +2629,8 @@ const ipcMainModules = () => {
   ipcMain.handle("get-one-pedido", async (_, id) => {
     return await gePedidoById(id);
   });
-  ipcMain.handle("create-pedido", async (_, pedido) => {
-    return await crearPedido(pedido);
-  });
-  ipcMain.handle("edit-pedido", async (_, { id, pedidoData }) => {
-    return await editarPedido(id, pedidoData);
+  ipcMain.handle("edit-estado-pedido", async (_, { id, estado }) => {
+    return await cambiarEstadoPedido(id, estado);
   });
   ipcMain.handle("delete-pedido", async (_, id) => {
     return await eliminarPedido(id);

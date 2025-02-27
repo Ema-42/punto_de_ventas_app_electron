@@ -58,7 +58,7 @@ model Producto {
 
   categoria      CategoriaProducto @relation(fields: [categoria_id], references: [id])
   detallesPedido DetallePedido[]
-  ingresos       Ingreso[]
+  detalleIngreso DetalleIngreso[]
 }
 
 model Pedido {
@@ -95,12 +95,24 @@ model DetallePedido {
 
 model Ingreso {
   id            Int      @id @default(autoincrement())
-  producto_id   Int
-  cantidad      Int
   fecha_ingreso DateTime @default(now())
   usuario_id    Int
+  estado        String?
   eliminado     Boolean? @default(false)
+  total         Decimal? @default(0)
 
+  usuario  Usuario          @relation(fields: [usuario_id], references: [id])
+  detalles DetalleIngreso[]
+}
+
+model DetalleIngreso {
+  id              Int      @id @default(autoincrement())
+  ingreso_id      Int
+  producto_id     Int
+  cantidad        Int
+  precio_unitario Decimal
+  eliminado       Boolean? @default(false)
+
+  ingreso  Ingreso  @relation(fields: [ingreso_id], references: [id])
   producto Producto @relation(fields: [producto_id], references: [id])
-  usuario  Usuario  @relation(fields: [usuario_id], references: [id])
 }
