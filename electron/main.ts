@@ -1,4 +1,4 @@
-import { app, BrowserWindow } from "electron";
+import { app, BrowserWindow, protocol } from "electron";
 /* import { createRequire } from 'node:module' */
 import { fileURLToPath } from "node:url";
 import path   from "node:path";
@@ -60,6 +60,11 @@ app.on("window-all-closed", () => {
 });
 
 app.whenReady().then(() => {
+  protocol.registerFileProtocol("local", (request, callback) => {
+    const url = request.url.replace(/^local:\//, "");
+    const filePath = path.normalize(decodeURIComponent(url));
+    callback({ path: filePath });
+  });
   createWindow();
   ipcMainModules();
 });
