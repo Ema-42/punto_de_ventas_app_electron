@@ -2440,7 +2440,7 @@ const editarPedidoConDetalles = async (data) => {
           mesa_id: data.mesa_id,
           mesera_id: data.mesera_id,
           cajero_id: data.cajero_id,
-          estado: data.estado ?? "EN_ATENCION",
+          estado: data.estado ?? EstadoPedido.EN_PREPARACION,
           fecha_concluido: data.fecha_concluido
         }
       });
