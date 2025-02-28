@@ -65,6 +65,8 @@ const crearProducto = async (data: Producto) => {
 };
 
 const editarProducto = async (id: number, productoData: Partial<Producto>) => {
+  console.log('back id' ,id,'data',productoData);
+  
   try {
     const existing = await prisma.producto.findMany({
       where: { nombre: productoData.nombre, eliminado: false },
