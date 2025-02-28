@@ -32,9 +32,9 @@ electron.contextBridge.exposeInMainWorld("api", {
   getOneRoleById: (id) => electron.ipcRenderer.invoke("get-one-role", id),
   //pedidos
   getPedidos: () => electron.ipcRenderer.invoke("get-pedidos"),
-  createPedido: (pedidoData) => electron.ipcRenderer.invoke("create-pedido", pedidoData),
-  editPedidoById: (id, pedidoData) => electron.ipcRenderer.invoke("edit-pedido", { id, pedidoData }),
+  editEstadoPedidoById: (id, estado) => electron.ipcRenderer.invoke("edit-estado-pedido", { id, estado }),
   getOnePedidoById: (id) => electron.ipcRenderer.invoke("get-one-pedido", id),
   deletePedidoById: (id) => electron.ipcRenderer.invoke("delete-pedido", id),
-  crearPedidoConDetalles: (data) => electron.ipcRenderer.invoke("crear-pedido-con-detalles", data)
+  crearPedidoConDetalles: (data) => electron.ipcRenderer.invoke("crear-pedido-con-detalles", data),
+  editarPedidoConDetalles: (data) => electron.ipcRenderer.invoke("editar-pedido-con-detalles", data)
 });

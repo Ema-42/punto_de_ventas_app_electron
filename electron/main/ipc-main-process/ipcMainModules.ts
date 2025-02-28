@@ -33,9 +33,9 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { getRolById, getRoles } from "../modules/roles";
 import {
-  crearPedido,
+  cambiarEstadoPedido,
   crearPedidoConDetalles,
-  editarPedido,
+  editarPedidoConDetalles,
   eliminarPedido,
   gePedidoById,
   getPedidos,
@@ -130,12 +130,8 @@ export default () => {
     return await gePedidoById(id);
   });
 
-  ipcMain.handle("create-pedido", async (_, pedido) => {
-    return await crearPedido(pedido);
-  });
-
-  ipcMain.handle("edit-pedido", async (_, { id, pedidoData }) => {
-    return await editarPedido(id, pedidoData);
+  ipcMain.handle("edit-estado-pedido", async (_, { id, estado }) => {
+    return await cambiarEstadoPedido(id, estado);
   });
 
   ipcMain.handle("delete-pedido", async (_, id) => {
@@ -143,6 +139,9 @@ export default () => {
   });
   ipcMain.handle("crear-pedido-con-detalles", async (_, data) => {
     return await crearPedidoConDetalles(data);
+  });
+  ipcMain.handle("editar-pedido-con-detalles", async (_, data) => {
+    return await editarPedidoConDetalles(data);
   });
   //leer imagenes locales
   protocol.handle("local", async (request) => {

@@ -1,12 +1,12 @@
-<!-- <script setup lang="ts">
+<script setup lang="ts">
 import {
   CategoriaProducto,
   Producto,
   Mesa,
   FileData,
-  Pedido,
-  PedidoEditData,
   CrearPedidoConDetalles,
+  EditarPedidoConDetalles,
+  EstadoPedido,
 } from "../electron/main/modules/interfaces";
 import { onMounted, ref } from "vue";
 
@@ -381,20 +381,6 @@ const getAllPedidos = async () => {
   }
 };
 
-const createPedido = async (pedidoData: Pedido) => {
-  try {
-    const result = await window.api.createPedido(pedidoData);
-    if (result instanceof Error) {
-      pedidos.value = result.toString();
-      throw result;
-    }
-    pedidos.value = result;
-    return pedidos.value;
-  } catch (err) {
-    console.error(err);
-  }
-};
-
 const getOnePedidoById = async (id: number) => {
   try {
     const result = await window.api.getOnePedidoById(id);
@@ -410,9 +396,9 @@ const getOnePedidoById = async (id: number) => {
   }
 };
 
-const editPedidoById = async (id: number, pedidoData: PedidoEditData) => {
+const editEstadoPedidoById = async (id: number, nuevoEstado: EstadoPedido) => {
   try {
-    const result = await window.api.editPedidoById(id, pedidoData);
+    const result = await window.api.editEstadoPedidoById(id, nuevoEstado);
     if (result instanceof Error) {
       pedidos.value = result.toString();
       throw result;
@@ -434,11 +420,26 @@ const deletePedidoById = async (id: number) => {
   }
 };
 
+//USAR ESTOS METODOS PARA CREAR Y EDITAR PEDIDOS - los de arriba seran para otra cosa, hola judith
 const crearPedidoConDetalles = async (data: CrearPedidoConDetalles) => {
   try {
     const result = await window.api.crearPedidoConDetalles(data);
     if (result instanceof Error) {
-      pedidos.value = result.toString();
+      pedidos.value = result.message.toString();
+      throw result;
+    }
+    pedidos.value = result;
+    return pedidos.value;
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+const editarPedidoConDetalles = async (data: EditarPedidoConDetalles) => {
+  try {
+    const result = await window.api.editarPedidoConDetalles(data);
+    if (result instanceof Error) {
+      pedidos.value = result.message.toString();
       throw result;
     }
     pedidos.value = result;
@@ -671,34 +672,20 @@ const crearPedidoConDetalles = async (data: CrearPedidoConDetalles) => {
           <button
             class="bg-sky-700 text-white px-4 py-2 rounded-lg hover:bg-indigo-300 transition duration-300"
             @click="
-              createPedido({
-                mesa_id: 1,
-                cajero_id: 1,
-                mesera_id: 1,
-                total: 21.45,
-              })
-            "
-          >
-            Crear pedido
-          </button>
-          <button
-            class="bg-sky-700 text-white px-4 py-2 rounded-lg hover:bg-indigo-300 transition duration-300"
-            @click="
               crearPedidoConDetalles({
                 mesa_id: 3,
                 mesera_id: 2,
                 cajero_id: 1,
-                estado: 'EN ATENCION',
                 detalles: [
                   {
-                    producto_id: 1,
-                    cantidad: 2,
-                    precio_unitario: 10.50,
+                    producto_id: 3,
+                    cantidad: 1,
+                    precio_unitario: 10,
                   },
                   {
-                    producto_id: 2,
+                    producto_id: 1,
                     cantidad: 1,
-                    precio_unitario: 20.70,
+                    precio_unitario: 20,
                   },
                 ],
               })
@@ -708,16 +695,57 @@ const crearPedidoConDetalles = async (data: CrearPedidoConDetalles) => {
           </button>
           <button
             class="bg-sky-700 text-white px-4 py-2 rounded-lg hover:bg-indigo-300 transition duration-300"
+            @click="editEstadoPedidoById(1, EstadoPedido.COMPLETADO)"
+          >
+            Cambiar Estado del Pedido
+          </button>
+          <button
+            class="bg-sky-700 text-white px-4 py-2 rounded-lg hover:bg-indigo-300 transition duration-300"
             @click="
-              editPedidoById(1, {
+              editarPedidoConDetalles({
+                id: 1,
                 mesa_id: 1,
-                cajero_id: 3,
                 mesera_id: 1,
-                estado: 'TERMINADO',
+                cajero_id: 2,
+                estado: 'CONCLUIDO',
+                detalles: [
+                  {
+                    id: 40,
+                    producto_id: 1,
+                    cantidad: 10,
+                    precio_unitario: 5,
+                  }, // Se actualiza
+                  {
+                    id: 52,
+                    producto_id: 1,
+                    cantidad: 222,
+                    precio_unitario: 10,
+                    //eliminado: true,
+                  }, // Se elimina
+                  //{ producto_id: 3, cantidad: 2, precio_unitario: 10 }, // Se crea
+                ],
               })
             "
           >
-            Editar pedido
+            Editar pedido con detalles
+          </button>
+          <pre id="count" class="text-sm font-semibold block">{{
+            JSON.stringify(pedidos, null, 2)
+          }}</pre>
+        </div>
+        <h2>INGRESOS</h2>
+        <div>
+          <button
+            class="bg-pink-800 text-white px-4 py-2 rounded-lg hover:bg-indigo-300 transition duration-300"
+            @click="getAllPedidos"
+          >
+            get all ingresos
+          </button>
+          <button
+            class="bg-pink-800 text-white px-4 py-2 rounded-lg hover:bg-indigo-300 transition duration-300"
+            @click="deletePedidoById(1)"
+          >
+            Eliminar ingresos
           </button>
           <pre id="count" class="text-sm font-semibold block">{{
             JSON.stringify(pedidos, null, 2)
@@ -759,9 +787,9 @@ const crearPedidoConDetalles = async (data: CrearPedidoConDetalles) => {
       </table>
     </div>
   </div>
-</template> -->
+</template>
 
- <template>
+<!--  <template>
   <div class="flex h-screen ">
  
     <Sidebar />
@@ -781,4 +809,4 @@ const crearPedidoConDetalles = async (data: CrearPedidoConDetalles) => {
 <script setup lang="ts">
 import Sidebar from "./components/Sidebar.vue";
 import Navbar from "./components/Navbar.vue";
-</script>
+</script> -->
