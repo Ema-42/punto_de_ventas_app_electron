@@ -1,4 +1,4 @@
-import { app, ipcMain, protocol, BrowserWindow } from "electron";
+import { app, ipcMain, protocol, BrowserWindow, screen } from "electron";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
 import { PrismaClient } from "@prisma/client";
@@ -148,7 +148,11 @@ const getCategoriasProductos = async () => {
   console.log("getCategoriasProductos");
   try {
     const categorias = await prisma$4.categoriaProducto.findMany({
-      where: { eliminado: false }
+      where: { eliminado: false },
+      select: { id: true, fecha_creacion: true, nombre: true, eliminado: true },
+      orderBy: {
+        fecha_creacion: "desc"
+      }
     });
     return categorias;
   } catch (error) {
@@ -2677,8 +2681,17 @@ function createWindow() {
       preload: path.join(__dirname, "preload.mjs")
     }
   });
+  win.setSize(1e3, 800);
+  const primaryDisplay = screen.getPrimaryDisplay();
+  const allDisplays = screen.getAllDisplays();
+  const secondaryDisplay = allDisplays.find(
+    (display) => display.id !== primaryDisplay.id
+  );
+  if (secondaryDisplay) {
+    const { x, y } = secondaryDisplay.bounds;
+    win == null ? void 0 : win.setBounds({ x, y, width: secondaryDisplay.bounds.width, height: 900 });
+  }
   win.setIcon(path.join(process.env.VITE_PUBLIC, "icono-logo.png"));
-  win.maximize();
   if (VITE_DEV_SERVER_URL) {
     win.loadURL(VITE_DEV_SERVER_URL);
   } else {
@@ -2692,11 +2705,13 @@ app.on("window-all-closed", () => {
   }
 });
 app.whenReady().then(() => {
-  protocol.registerFileProtocol("local", (request, callback) => {
-    const url = request.url.replace(/^local:\//, "");
-    const filePath = path.normalize(decodeURIComponent(url));
-    callback({ path: filePath });
-  });
+  if (process.platform === "win32") {
+    protocol.registerFileProtocol("local", (request, callback) => {
+      const url = request.url.replace(/^local:\//, "");
+      const filePath = path.normalize(decodeURIComponent(url));
+      callback({ path: filePath });
+    });
+  }
   createWindow();
   ipcMainModules();
 });

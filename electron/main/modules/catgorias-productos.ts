@@ -9,6 +9,10 @@ export const getCategoriasProductos = async () => {
   try {
     const categorias = await prisma.categoriaProducto.findMany({
       where: { eliminado: false },
+      select: { id: true, fecha_creacion: true, nombre: true, eliminado: true },
+      orderBy: {
+        fecha_creacion: "desc",
+      },
     });
     return categorias;
   } catch (error) {

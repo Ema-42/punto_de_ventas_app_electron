@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<!-- <script setup lang="ts">
 import {
   CategoriaProducto,
   Producto,
@@ -787,16 +787,13 @@ const editarPedidoConDetalles = async (data: EditarPedidoConDetalles) => {
       </table>
     </div>
   </div>
-</template>
+</template> -->
 
-<!--  <template>
-  <div class="flex h-screen ">
- 
+<template>
+  <div class="flex h-screen">
     <Sidebar />
 
-   
     <div class="flex flex-col w-full transition-all duration-300">
-     
       <Navbar />
 
       <main class="p-6">
@@ -809,4 +806,4 @@ const editarPedidoConDetalles = async (data: EditarPedidoConDetalles) => {
 <script setup lang="ts">
 import Sidebar from "./components/Sidebar.vue";
 import Navbar from "./components/Navbar.vue";
-</script> -->
+</script>

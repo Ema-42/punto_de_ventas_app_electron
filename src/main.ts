@@ -3,7 +3,6 @@ import './style.css';
 import App from './App.vue';
 import router from '../src/router/index';
 
-
 const app = createApp(App); // Almacena la instancia de la app en la variable app
 app.use(router);
 app.mount('#app').$nextTick(() => {
