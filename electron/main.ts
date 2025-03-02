@@ -36,8 +36,14 @@ function createWindow() {
   );
 
   if (secondaryDisplay) {
-    const { x, y } = secondaryDisplay.bounds;
-    win?.setBounds({ x, y, width: secondaryDisplay.bounds.width, height: 900 });
+    const { x, y, width, height } = secondaryDisplay.bounds;
+
+    win?.setBounds({
+      x: x + width / 2,
+      y,
+      width: width / 2,
+      height: height,
+    });
   }
 
   win.setIcon(path.join(process.env.VITE_PUBLIC, "icono-logo.png"));

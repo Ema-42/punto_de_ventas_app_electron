@@ -226,7 +226,17 @@ const prisma$3 = new PrismaClient();
 const getMesas = async () => {
   try {
     const mesas = await prisma$3.mesa.findMany({
-      where: { eliminado: false }
+      where: { eliminado: false },
+      select: {
+        id: true,
+        numero: true,
+        estado: true,
+        eliminado: true,
+        fecha_creacion: true
+      },
+      orderBy: {
+        fecha_creacion: "desc"
+      }
     });
     return mesas;
   } catch (error) {
@@ -2688,8 +2698,13 @@ function createWindow() {
     (display) => display.id !== primaryDisplay.id
   );
   if (secondaryDisplay) {
-    const { x, y } = secondaryDisplay.bounds;
-    win == null ? void 0 : win.setBounds({ x, y, width: secondaryDisplay.bounds.width, height: 900 });
+    const { x, y, width, height } = secondaryDisplay.bounds;
+    win == null ? void 0 : win.setBounds({
+      x: x + width / 2,
+      y,
+      width: width / 2,
+      height
+    });
   }
   win.setIcon(path.join(process.env.VITE_PUBLIC, "icono-logo.png"));
   if (VITE_DEV_SERVER_URL) {

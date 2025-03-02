@@ -12,9 +12,11 @@
     "@headlessui/vue": "^1.7.23",
     "@prisma/client": "^6.4.1",
     "bcryptjs": "^3.0.2",
+    "chart.js": "^4.4.8",
     "sqlite3": "^5.1.7",
     "vue": "^3.4.21",
-    "vue-router": "^4.5.0"
+    "vue-router": "^4.5.0",
+    "vue-toastification": "^2.0.0-rc.5"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.0.4",

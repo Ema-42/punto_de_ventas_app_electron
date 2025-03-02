@@ -1,17 +1,17 @@
 <template>
   <div>
-    <CrearEditarCategoria
+    <CrearEditarMesa
       :mostrar="mostrarModalCrearEditar"
-      :categoria="categoriaEditar"
+      :mesa="mesaEditar"
       @cerrar="mostrarModalCrearEditar = false"
-      @guardar="guardarCategoria"
+      @guardar="guardarMesa"
     />
 
-    <EliminarCategoria
+    <EliminarMesa
       :mostrar="mostrarModalEliminar"
-      :categoria="categoriaEliminar"
+      :mesa="mesaEliminar"
       @cerrar="mostrarModalEliminar = false"
-      @confirmar="eliminarCategoria"
+      @confirmar="eliminarMesa"
     />
 
     <!-- Encabezado con título y buscador -->
@@ -20,7 +20,7 @@
         class="flex flex-col md:flex-row md:justify-between md:items-center gap-4"
       >
         <h1 class="text-2xl font-bold text-gray-700 flex items-center">
-          Categorías de Productos
+          Mesas
           <svg
             xmlns="http://www.w3.org/2000/svg"
             class="h-6 w-6 ml-2 text-red-500"
@@ -32,7 +32,7 @@
               stroke-linecap="round"
               stroke-linejoin="round"
               stroke-width="2"
-              d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
+              d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"
             />
           </svg>
         </h1>
@@ -43,9 +43,9 @@
             <input
               v-model="searchQuery"
               type="text"
-              placeholder="Buscar categoría..."
+              placeholder="Buscar mesa..."
               class="border p-2 rounded-lg shadow-sm w-full focus:ring-2 focus:ring-red-400 outline-none pl-10 bg-white"
-              @input="buscarCategorias"
+              @input="buscarMesas"
             />
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -63,12 +63,12 @@
             </svg>
           </div>
 
-          <!-- Botón de agregar categoría -->
+          <!-- Botón de agregar mesa -->
           <button
             @click="abrirModalCrear"
             class="bg-red-600 text-white px-4 py-2 rounded-lg shadow-md hover:bg-red-700 transition flex items-center gap-2 w-full sm:w-auto justify-center"
           >
-            Agregar Categoría
+            Agregar Mesa
             <svg
               xmlns="http://www.w3.org/2000/svg"
               class="h-5 w-5"
@@ -88,42 +88,53 @@
       </div>
     </div>
 
-    <!-- Contador de categorías -->
+    <!-- Contador de mesas -->
     <div class="mb-4 text-gray-600">
-      Total: {{ categoriasFiltradas.length }} categorías encontradas
+      Total: {{ mesasFiltradas.length }} mesas encontradas
     </div>
 
-    <!-- Tabla de categorías -->
+    <!-- Tabla de mesas -->
     <div class="overflow-x-auto bg-white shadow-lg rounded-lg">
       <table class="w-full border-collapse">
         <thead>
           <tr class="bg-gradient-to-r from-red-500 to-red-600 text-white">
             <th class="p-3 text-left rounded-tl-lg">ID</th>
-            <th class="p-3 text-left">Nombre</th>
+            <th class="p-3 text-left">N° Mesa</th>
+            <th class="p-3 text-left">Estado</th>
             <th class="p-3 text-left">Fecha de creación</th>
             <th class="p-3 text-center rounded-tr-lg">Acciones</th>
           </tr>
         </thead>
         <tbody>
           <tr
-            v-for="categoria in paginatedCategorias"
-            :key="categoria.id"
+            v-for="mesa in paginatedMesas"
+            :key="mesa.id"
             class="border-b hover:bg-gray-100 transition"
           >
             <td class="p-3">
               <span
                 class="bg-gray-200 text-gray-700 px-2 py-1 rounded-full text-xs font-bold"
               >
-                {{ categoria.id }}
+                {{ mesa.id }}
               </span>
             </td>
-            <td class="p-3 font-medium">{{ categoria.nombre }}</td>
+            <td
+              class="px-3 w-16 py-1.5 text-center font-medium bg-slate-500 text-white rounded-lg shadow-md inline-block hover:bg-gray-600 transition-colors"
+            >
+              {{ mesa.numero }}
+            </td>
+
+            <td class="p-3">
+              <span :class="getEstadoClase(mesa.estado)">
+                {{ getEstadoEtiqueta(mesa.estado) }}
+              </span>
+            </td>
             <td class="p-3 text-gray-600">
-              {{ formatearFecha(categoria.fecha_creacion) }}
+              {{ formatearFecha(mesa.fecha_creacion) }}
             </td>
             <td class="p-3 flex justify-center space-x-3">
               <button
-                @click="editarCategoria(categoria)"
+                @click="editarMesa(mesa)"
                 class="bg-blue-100 p-2 rounded-full hover:bg-blue-200 transition"
                 title="Editar"
               >
@@ -143,7 +154,7 @@
                 </svg>
               </button>
               <button
-                @click="confirmarEliminar(categoria)"
+                @click="confirmarEliminar(mesa)"
                 class="bg-red-100 p-2 rounded-full hover:bg-red-200 transition"
                 title="Eliminar"
               >
@@ -164,9 +175,9 @@
               </button>
             </td>
           </tr>
-          <tr v-if="paginatedCategorias.length === 0">
-            <td colspan="4" class="p-6 text-center text-gray-500">
-              No se encontraron categorías
+          <tr v-if="paginatedMesas.length === 0">
+            <td colspan="5" class="p-6 text-center text-gray-500">
+              No se encontraron mesas
               <div class="mt-2">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -192,8 +203,8 @@
     <!-- Paginación -->
     <div class="flex justify-between items-center mt-6">
       <div class="text-sm text-gray-600">
-        Mostrando {{ paginatedCategorias.length }} de
-        {{ categoriasFiltradas.length }} categorías
+        Mostrando {{ paginatedMesas.length }} de
+        {{ mesasFiltradas.length }} mesas
       </div>
       <div class="flex space-x-2">
         <button
@@ -246,88 +257,92 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from "vue";
-import CrearEditarCategoria from "../components/Categorias/CrearEditarCategoria.vue";
-import EliminarCategoria from "../components/Categorias/EliminarCategoria.vue";
+import CrearEditarMesa from "../components/Mesas/CrearEditarMesa.vue";
+import EliminarMesa from "../components/Mesas/EliminarMesa.vue";
+
 //para los mensajes https://vue-toastification.maronato.dev/
 import { useToast } from "vue-toastification";
 const toast = useToast();
 
-interface Categoria {
+interface Mesa {
   id: number;
-  nombre: string;
+  numero: number;
+  estado: string;
   fecha_creacion: string;
 }
 
 // Estado
-const categorias = ref<Categoria[]>([]);
-const categoriasFiltradas = ref<Categoria[]>([]);
+const mesas = ref<Mesa[]>([]);
+const mesasFiltradas = ref<Mesa[]>([]);
 const searchQuery = ref("");
 const pagina = ref(1);
-const porPagina = ref(7);
+const porPagina = ref(8);
 const mostrarModalCrearEditar = ref(false);
 const mostrarModalEliminar = ref(false);
-const categoriaEditar = ref<Categoria | null>(null);
-const categoriaEliminar = ref<Categoria | null>(null);
+const mesaEditar = ref<Mesa | null>(null);
+const mesaEliminar = ref<Mesa | null>(null);
 
 // Computed
 const totalPaginas = computed(() =>
-  Math.ceil(categoriasFiltradas.value.length / porPagina.value)
+  Math.ceil(mesasFiltradas.value.length / porPagina.value)
 );
 
-const paginatedCategorias = computed(() => {
+const paginatedMesas = computed(() => {
   const inicio = (pagina.value - 1) * porPagina.value;
   const fin = inicio + porPagina.value;
-  return categoriasFiltradas.value.slice(inicio, fin);
+  return mesasFiltradas.value.slice(inicio, fin);
 });
 
 // Métodos
-const cargarCategorias = async () => {
+const cargarMesas = async () => {
   // Aquí normalmente harías una llamada a tu API
-  const data = await window.api.getCategorias();
-  categorias.value = data;
-  categoriasFiltradas.value = data;
+  const data = await window.api.getMesas();
+  mesas.value = data;
+  mesasFiltradas.value = data;
 };
 
-const buscarCategorias = () => {
+const buscarMesas = () => {
   if (!searchQuery.value) {
-    categoriasFiltradas.value = [...categorias.value];
+    mesasFiltradas.value = [...mesas.value];
   } else {
     const query = searchQuery.value.toLowerCase();
-    categoriasFiltradas.value = categorias.value.filter((categoria) =>
-      categoria.nombre.toLowerCase().includes(query)
+    mesasFiltradas.value = mesas.value.filter(
+      (mesa) =>
+        mesa.numero.toString().includes(query) ||
+        getEstadoEtiqueta(mesa.estado).toLowerCase().includes(query)
     );
   }
-  pagina.value = 1; // Resetear a la primera página cuando se busca
+  pagina.value = 1;
 };
 
 const abrirModalCrear = () => {
-  categoriaEditar.value = null;
+  mesaEditar.value = null;
   mostrarModalCrearEditar.value = true;
 };
 
-const editarCategoria = (categoria: Categoria) => {
-  categoriaEditar.value = categoria;
+const editarMesa = (mesa: Mesa) => {
+  mesaEditar.value = mesa;
   mostrarModalCrearEditar.value = true;
 };
 
-const guardarCategoria = async () => {
-  cargarCategorias();
-  buscarCategorias();
+const guardarMesa = () => {
+  cargarMesas();
+  buscarMesas();
   mostrarModalCrearEditar.value = false;
-  categoriaEditar.value
+  mesaEditar.value
     ? toast.info("Registro Editado con éxito!")
     : toast.success("Registro Guardado con éxito!");
 };
 
-const confirmarEliminar = (categoria: Categoria) => {
-  categoriaEliminar.value = categoria;
+const confirmarEliminar = (mesa: Mesa) => {
+  mesaEliminar.value = mesa;
   mostrarModalEliminar.value = true;
 };
 
-const eliminarCategoria = () => {
+const eliminarMesa = () => {
   toast.error("Registro Eliminado con éxito!");
-  cargarCategorias();
-  buscarCategorias();
+  cargarMesas();
+  buscarMesas();
   mostrarModalEliminar.value = false;
 };
 
@@ -341,6 +356,30 @@ const formatearFecha = (fecha: string) => {
     minute: "2-digit",
     second: "2-digit",
   });
+};
+
+const getEstadoEtiqueta = (estado: string) => {
+  const estados: { [key: string]: string } = {
+    LIBRE: "LIBRE",
+    OCUPADA: "OCUPADA",
+    RESERVADA: "RESERVADA",
+    MANTENIMIENTO: "EN MANTENIMIENTO",
+  };
+  return estados[estado] || estado;
+};
+
+const getEstadoClase = (estado: string) => {
+  const clases: { [key: string]: string } = {
+    LIBRE:
+      "bg-green-100 text-green-800 px-2 py-1 rounded-full text-sm font-medium",
+    OCUPADA:
+      "bg-red-100 text-red-800 px-2 py-1 rounded-full text-sm font-medium",
+    RESERVADA:
+      "bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full text-sm font-medium",
+    MANTENIMIENTO:
+      "bg-gray-100 text-gray-800 px-2 py-1 rounded-full text-sm font-medium",
+  };
+  return clases[estado] || "";
 };
 
 const prevPage = () => {
@@ -357,6 +396,6 @@ const nextPage = () => {
 
 // Ciclo de vida
 onMounted(() => {
-  cargarCategorias();
+  cargarMesas();
 });
 </script>

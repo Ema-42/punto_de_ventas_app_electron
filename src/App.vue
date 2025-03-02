@@ -792,7 +792,6 @@ const editarPedidoConDetalles = async (data: EditarPedidoConDetalles) => {
 <template>
   <div class="flex h-screen">
     <Sidebar />
-
     <div class="flex flex-col w-full transition-all duration-300">
       <Navbar />
 
