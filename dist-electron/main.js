@@ -1,4 +1,4 @@
-import { app, ipcMain, protocol, BrowserWindow } from "electron";
+import { app, ipcMain, protocol, BrowserWindow, screen } from "electron";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
 import { PrismaClient } from "@prisma/client";
@@ -2441,7 +2441,7 @@ const editarPedidoConDetalles = async (data) => {
           mesa_id: data.mesa_id,
           mesera_id: data.mesera_id,
           cajero_id: data.cajero_id,
-          estado: data.estado ?? "EN_ATENCION",
+          estado: data.estado ?? EstadoPedido.EN_PREPARACION,
           fecha_concluido: data.fecha_concluido
         }
       });
@@ -2677,8 +2677,17 @@ function createWindow() {
       preload: path.join(__dirname, "preload.mjs")
     }
   });
+  win.setSize(1e3, 800);
+  const primaryDisplay = screen.getPrimaryDisplay();
+  const allDisplays = screen.getAllDisplays();
+  const secondaryDisplay = allDisplays.find(
+    (display) => display.id !== primaryDisplay.id
+  );
+  if (secondaryDisplay) {
+    const { x, y } = secondaryDisplay.bounds;
+    win == null ? void 0 : win.setBounds({ x, y, width: secondaryDisplay.bounds.width, height: 900 });
+  }
   win.setIcon(path.join(process.env.VITE_PUBLIC, "icono-logo.png"));
-  win.maximize();
   if (VITE_DEV_SERVER_URL) {
     win.loadURL(VITE_DEV_SERVER_URL);
   } else {
