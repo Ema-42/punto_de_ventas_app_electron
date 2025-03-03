@@ -790,13 +790,14 @@ const editarPedidoConDetalles = async (data: EditarPedidoConDetalles) => {
 </template> -->
 
 <template>
+<<<<<<< HEAD
   <div class="flex h-screen ">
  
+=======
+  <div class="flex h-screen">
+>>>>>>> 46e5988b9c50091dac1665ee6379cede57b118c0
     <Sidebar />
-
-   
     <div class="flex flex-col w-full transition-all duration-300">
-     
       <Navbar />
 
       <main class="p-6">
@@ -809,4 +810,8 @@ const editarPedidoConDetalles = async (data: EditarPedidoConDetalles) => {
 <script setup lang="ts">
 import Sidebar from "./components/Sidebar.vue";
 import Navbar from "./components/Navbar.vue";
+<<<<<<< HEAD
 </script> 
+=======
+</script>
+>>>>>>> 46e5988b9c50091dac1665ee6379cede57b118c0

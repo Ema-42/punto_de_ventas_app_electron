@@ -1,6 +1,9 @@
 import { createRouter, createWebHistory } from "vue-router";
 
 import Productos from "../views/producto.vue";
+import Categorias from "../views/categorias.vue";
+import Mesas from "../views/mesas.vue";
+import Home from "../views/home.vue";
 
 // Define the routes using the RouteRecordRaw type
 const routes = [
@@ -8,6 +11,21 @@ const routes = [
     path: "/productos",
     name: "productos",
     component: Productos, // Asegúrate de que esto apunte al componente correcto
+  },
+  {
+    path: "/categorias",
+    name: "categorias",
+    component: Categorias,
+  },
+  {
+    path: "/mesas",
+    name: "mesas",
+    component: Mesas,
+  },
+  {
+    path: "/home",
+    name: "home",
+    component: Home,
   },
 ];
 
@@ -18,3 +36,4 @@ const router = createRouter({
 });
 
 export default router;
+

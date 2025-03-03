@@ -44,14 +44,18 @@ import menuicon from '../assets/iconos/menu.svg'
 import inicio from '../assets/iconos/inicio.svg'
 import vender from '../assets/iconos/vender.svg'
 import producto from '../assets/iconos/producto.svg'
-
+import categoria from '../assets/iconos/categoria.svg'
+import mesa from '../assets/iconos/mesa.svg'
+import home from '../assets/iconos/home.svg'
 
 const isOpen = ref(false);
 
 const menuItems = [
-  { text: "Inicio", icon: inicio , route:"/"},
+  { text: "Inicio", icon: home , route:"/home"},
   { text: "Vender", icon: vender ,route:"/" },
   { text: "Productos", icon: producto, route:"/productos" },
+  { text: "Categorias de Productos", icon: categoria, route:"/categorias" },
+  { text: "Mesas", icon: mesa, route:"/mesas" },
 ];
 
 const toggleSidebar = () => {

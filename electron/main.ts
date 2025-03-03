@@ -1,10 +1,9 @@
 import { app, BrowserWindow, protocol } from "electron";
 /* import { createRequire } from 'node:module' */
 import { fileURLToPath } from "node:url";
-import path   from "node:path";
+import path from "node:path";
 import ipcMainModules from "./main/ipc-main-process/ipcMainModules";
 import { screen } from "electron";
- 
 
 /* const require = createRequire(import.meta.url) */
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -37,8 +36,14 @@ function createWindow() {
   );
 
   if (secondaryDisplay) {
-    const { x, y } = secondaryDisplay.bounds;
-    win?.setBounds({ x, y, width: secondaryDisplay.bounds.width, height: 900 });
+    const { x, y, width, height } = secondaryDisplay.bounds;
+
+    win?.setBounds({
+      x: x + width / 2,
+      y,
+      width: width / 2,
+      height: height,
+    });
   }
 
   win.setIcon(path.join(process.env.VITE_PUBLIC, "icono-logo.png"));
@@ -60,11 +65,13 @@ app.on("window-all-closed", () => {
 });
 
 app.whenReady().then(() => {
-  protocol.registerFileProtocol("local", (request, callback) => {
-    const url = request.url.replace(/^local:\//, "");
-    const filePath = path.normalize(decodeURIComponent(url));
-    callback({ path: filePath });
-  });
+  if (process.platform === "win32") {
+    protocol.registerFileProtocol("local", (request, callback) => {
+      const url = request.url.replace(/^local:\//, "");
+      const filePath = path.normalize(decodeURIComponent(url));
+      callback({ path: filePath });
+    });
+  }
   createWindow();
   ipcMainModules();
 });

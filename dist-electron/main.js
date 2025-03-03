@@ -148,7 +148,11 @@ const getCategoriasProductos = async () => {
   console.log("getCategoriasProductos");
   try {
     const categorias = await prisma$4.categoriaProducto.findMany({
-      where: { eliminado: false }
+      where: { eliminado: false },
+      select: { id: true, fecha_creacion: true, nombre: true, eliminado: true },
+      orderBy: {
+        fecha_creacion: "desc"
+      }
     });
     return categorias;
   } catch (error) {
@@ -222,7 +226,17 @@ const prisma$3 = new PrismaClient();
 const getMesas = async () => {
   try {
     const mesas = await prisma$3.mesa.findMany({
-      where: { eliminado: false }
+      where: { eliminado: false },
+      select: {
+        id: true,
+        numero: true,
+        estado: true,
+        eliminado: true,
+        fecha_creacion: true
+      },
+      orderBy: {
+        fecha_creacion: "desc"
+      }
     });
     return mesas;
   } catch (error) {
@@ -2684,8 +2698,18 @@ function createWindow() {
     (display) => display.id !== primaryDisplay.id
   );
   if (secondaryDisplay) {
+<<<<<<< HEAD
     const { x, y } = secondaryDisplay.bounds;
     win == null ? void 0 : win.setBounds({ x, y, width: secondaryDisplay.bounds.width, height: 900 });
+=======
+    const { x, y, width, height } = secondaryDisplay.bounds;
+    win == null ? void 0 : win.setBounds({
+      x: x + width / 2,
+      y,
+      width: width / 2,
+      height
+    });
+>>>>>>> 46e5988b9c50091dac1665ee6379cede57b118c0
   }
   win.setIcon(path.join(process.env.VITE_PUBLIC, "icono-logo.png"));
   if (VITE_DEV_SERVER_URL) {
@@ -2701,11 +2725,13 @@ app.on("window-all-closed", () => {
   }
 });
 app.whenReady().then(() => {
-  protocol.registerFileProtocol("local", (request, callback) => {
-    const url = request.url.replace(/^local:\//, "");
-    const filePath = path.normalize(decodeURIComponent(url));
-    callback({ path: filePath });
-  });
+  if (process.platform === "win32") {
+    protocol.registerFileProtocol("local", (request, callback) => {
+      const url = request.url.replace(/^local:\//, "");
+      const filePath = path.normalize(decodeURIComponent(url));
+      callback({ path: filePath });
+    });
+  }
   createWindow();
   ipcMainModules();
 });

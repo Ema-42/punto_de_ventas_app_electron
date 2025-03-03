@@ -7,6 +7,16 @@ export const getMesas = async () => {
   try {
     const mesas = await prisma.mesa.findMany({
       where: { eliminado: false },
+      select: {
+        id: true,
+        numero: true,
+        estado: true,
+        eliminado: true,
+        fecha_creacion: true,
+      },
+      orderBy: {
+        fecha_creacion: "desc",
+      },
     });
     return mesas;
   } catch (error) {
@@ -51,26 +61,26 @@ export const createMesa = async (data: Mesa) => {
   }
 };
 
-export const updateMesa = async (id: number, mesaData: Partial<Mesa>) => {
-    try {
-        const existing = await prisma.mesa.findMany({
-            where: { numero: mesaData.numero, eliminado: false },
-        });
-        if (
-            existing.length > 1 ||
-            (existing.length === 1 && existing[0].id !== id)
-        ) {
-            throw new Error("Ya existe una mesa con ese numero");
-        }
-        const updatedMesa = await prisma.mesa.update({
-            where: { id },
-            data: mesaData,
-        });
-        return updatedMesa;
-    } catch (error) {
-        console.error("Error al actualizar una mesa:", error);
-        return error;
+export const updateMesa = async (id: number, mesaData: Partial<Mesa>) => { 
+  try {
+    const existing = await prisma.mesa.findMany({
+      where: { numero: mesaData.numero, eliminado: false },
+    });
+    if (
+      existing.length > 1 ||
+      (existing.length === 1 && existing[0].id !== id)
+    ) {
+      throw new Error("Ya existe una mesa con ese numero");
     }
+    const updatedMesa = await prisma.mesa.update({
+      where: { id },
+      data: mesaData,
+    });
+    return updatedMesa;
+  } catch (error) {
+    console.error("Error al actualizar una mesa:", error);
+    return error;
+  }
 };
 
 export const deleteMesa = async (id: number) => {
