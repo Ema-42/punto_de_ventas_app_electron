@@ -72,11 +72,7 @@
   
   <script setup lang="ts">
   import { ref, watch } from "vue";
-  
-  interface Usuario {
-    id: number;
-    nombre: string;
-  }
+import { Usuario } from "../../../electron/main/modules/interfaces";
   
   interface Ingreso {
     id: number;

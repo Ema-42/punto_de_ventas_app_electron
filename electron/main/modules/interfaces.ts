@@ -9,6 +9,10 @@ export interface Usuario {
   nombre: string;
   password: string;
   rol_id: number;
+  rol?: {
+    id: number;
+    nombre: string;
+  };
 }
 
 export interface FileData {
@@ -117,4 +121,29 @@ export interface PedidoEditData {
   cajero_id?: number;
   estado?: string;
   fecha_concluido?: Date;
+}
+
+
+export interface ProductoIngreso {
+  id: number;
+  nombre: string;
+  imagen_url?: string;
+  maneja_stock?: boolean;
+}
+
+export interface DetalleIngreso {
+  id: number;
+  ingreso_id: number;
+  producto: ProductoIngreso;
+  cantidad: number;
+  precio_unitario: string;
+}
+
+export interface Ingreso {
+  id: number;
+  fecha_ingreso: string;
+  usuario: Usuario;
+  estado: string;
+  total: string;
+  detalles?: DetalleIngreso[];
 }
