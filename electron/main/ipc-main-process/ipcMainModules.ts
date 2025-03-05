@@ -40,6 +40,12 @@ import {
   gePedidoById,
   getPedidos,
 } from "../modules/pedido";
+import {
+  crearIngresoConDetalles,
+  editarIngresoConDetalles,
+  getIngresoById,
+  getIngresos,
+} from "../modules/ingresos";
 
 export default () => {
   //productos
@@ -143,6 +149,20 @@ export default () => {
   ipcMain.handle("editar-pedido-con-detalles", async (_, data) => {
     return await editarPedidoConDetalles(data);
   });
+  //INgresos
+  ipcMain.handle("crear-ingreso-con-detalles", async (_, data) => {
+    return await crearIngresoConDetalles(data);
+  });
+  ipcMain.handle("editar-ingreso-con-detalles", async (_, data) => {
+    return await editarIngresoConDetalles(data);
+  });
+  ipcMain.handle("get-ingresos", async () => {
+    return await getIngresos();
+  });
+  ipcMain.handle("get-one-ingreso", async (_, id) => {
+    return await getIngresoById(id);
+  });
+
   //leer imagenes locales
   protocol.handle("local", async (request) => {
     const url = new URL(request.url);

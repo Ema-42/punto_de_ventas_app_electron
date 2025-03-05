@@ -1,4 +1,5 @@
 <!-- <script setup lang="ts">
+ 
 import {
   CategoriaProducto,
   Producto,
@@ -7,6 +8,9 @@ import {
   CrearPedidoConDetalles,
   EditarPedidoConDetalles,
   EstadoPedido,
+  CrearIngresoConDetalles,
+  EstadoIngreso,
+  EditarIngresoConDetalles,
 } from "../electron/main/modules/interfaces";
 import { onMounted, ref } from "vue";
 
@@ -448,6 +452,64 @@ const editarPedidoConDetalles = async (data: EditarPedidoConDetalles) => {
     console.error(err);
   }
 };
+
+//INGRESOS
+const ingresos = ref();
+
+const getAllIngresos = async () => {
+  try {
+    ingresos.value = await window.api.getIngresos();
+    console.log(ingresos.value);
+
+    return ingresos.value;
+  } catch (err) {
+    error.value = "Error al obtener los ingresos";
+    console.error(err);
+  }
+};
+
+const getOneIngresosById = async (id: number) => {
+  try {
+    const result = await window.api.getOneIngresoById(id);
+    if (result instanceof Error) {
+      ingresos.value = result.toString();
+      throw result;
+    }
+    ingresos.value = result;
+    return ingresos.value;
+  } catch (err) {
+    console.error(err);
+    return null;
+  }
+};
+
+const crearIngresoConDetalles = async (data: CrearIngresoConDetalles) => {
+  try {
+    const result = await window.api.crearIngresoConDetalles(data);
+    if (result instanceof Error) {
+      ingresos.value = result.message.toString();
+      throw result;
+    }
+    ingresos.value = result;
+    return ingresos.value;
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+const editarIngresoConDetalles = async (data: EditarIngresoConDetalles) => {
+  try {
+    const result = await window.api.editarIngresoConDetalles(data);
+    if (result instanceof Error) {
+      ingresos.value = result.message.toString();
+      throw result;
+    }
+    ingresos.value = result;
+    return ingresos.value;
+  } catch (err) {
+    console.error(err);
+  }
+};
 </script>
 
 <template>
@@ -736,19 +798,73 @@ const editarPedidoConDetalles = async (data: EditarPedidoConDetalles) => {
         <h2>INGRESOS</h2>
         <div>
           <button
-            class="bg-pink-800 text-white px-4 py-2 rounded-lg hover:bg-indigo-300 transition duration-300"
-            @click="getAllPedidos"
+            class="bg-pink-800 text-white px-4 py-2 rounded-lg hover:bg-pink-300 transition duration-300"
+            @click="getAllIngresos"
           >
             get all ingresos
           </button>
           <button
-            class="bg-pink-800 text-white px-4 py-2 rounded-lg hover:bg-indigo-300 transition duration-300"
-            @click="deletePedidoById(1)"
+            class="bg-pink-800 text-white px-4 py-2 rounded-lg hover:bg-pink-300 transition duration-300"
+            @click="getOneIngresosById(1)"
           >
-            Eliminar ingresos
+            get one Ingreso
+          </button>
+          <button
+            class="bg-pink-800 text-white px-4 py-2 rounded-lg hover:bg-pink-300 transition duration-300"
+            @click="
+              crearIngresoConDetalles({
+                usuario_id: 1,
+                estado: EstadoIngreso.CONSOLIDADO,
+                detalles: [
+                  {
+                    producto_id: 3,
+                    cantidad: 5,
+                    precio_unitario: 10.5,
+                  },
+                  {
+                    producto_id: 4,
+                    cantidad: 3,
+                    precio_unitario: 15.75,
+                  },
+                ],
+              })
+            "
+          >
+            Crear ingresos con Detalles
+          </button>
+          <button
+            class="bg-pink-800 text-white px-4 py-2 rounded-lg hover:bg-pink-300 transition duration-300"
+            @click="
+              editarIngresoConDetalles({
+                id: 4,
+                usuario_id: 2,
+                detalles: [
+                  {
+                    producto_id: 4,
+                    cantidad: 10,
+                    precio_unitario: 10,
+                  },
+                  {
+                    id: 6,
+                    producto_id: 3,
+                    cantidad: 10,
+                    precio_unitario: 10,
+                  },
+                  {
+                    id: 6,
+                    producto_id: 3,
+                    cantidad: 10,
+                    precio_unitario: 10,
+                    eliminado: true,
+                  },
+                ],
+              })
+            "
+          >
+            Editar ingresos con Detalles
           </button>
           <pre id="count" class="text-sm font-semibold block">{{
-            JSON.stringify(pedidos, null, 2)
+            JSON.stringify(ingresos, null, 2)
           }}</pre>
         </div>
       </div>
@@ -799,7 +915,7 @@ const editarPedidoConDetalles = async (data: EditarPedidoConDetalles) => {
       </main>
     </div>
   </div>
-</template>
+</template> 
 
 <script setup lang="ts">
 import Sidebar from "./components/Sidebar.vue";

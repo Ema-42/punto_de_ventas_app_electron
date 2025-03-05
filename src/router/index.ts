@@ -6,6 +6,7 @@ import Mesas from "../views/mesas.vue";
 import Home from "../views/home.vue";
 import Usuarios from "../views/usuarios.vue";
 import Pedidos from "../views/pedidos.vue";
+import Ingresos from "../views/ingresos.vue";
 
 // Define the routes using the RouteRecordRaw type
 const routes = [
@@ -38,6 +39,11 @@ const routes = [
     path: "/pedidos",
     name: "pedidos",
     component: Pedidos,
+  },
+  {
+    path: "/ingresos",
+    name: "ingresos",
+    component: Ingresos,
   },
 ];
 

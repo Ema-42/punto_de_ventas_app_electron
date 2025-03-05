@@ -3,6 +3,8 @@
 const {
   CrearPedidoConDetalles,
   EditarPedidoConDetalles,
+  CrearIngresoConDetalles,
+  EditarIngresoConDetalles
 } = require("./main/modules/interfaces");
 
 declare namespace NodeJS {
@@ -24,6 +26,10 @@ declare namespace NodeJS {
     /** /dist/ or /public/ */
     VITE_PUBLIC: string;
   }
+}
+
+declare module 'file-saver' {
+  export function saveAs(data: Blob | string, filename?: string): void;
 }
 
 // Used in Renderer process, expose in `preload.ts`
@@ -57,6 +63,11 @@ interface Window {
     //roles
     getRoles: () => Promise<any>;
     getOneRoleById: (id: number) => Promise<any>;
+    //ingresos
+    getIngresos: () => Promise<any>;
+    getOneIngresoById: (id: number) => Promise<any>;
+    crearIngresoConDetalles: (data: CrearIngresoConDetalles) => Promise<any>;
+    editarIngresoConDetalles: (data: EditarIngresoConDetalles) => Promise<any>;
     //pedidos
     getPedidos: () => Promise<any>;
     editEstadoPedidoById: (id: number, estado: any) => Promise<any>;

@@ -1,6 +1,8 @@
 import { ipcRenderer, contextBridge } from "electron";
 import {
+  CrearIngresoConDetalles,
   CrearPedidoConDetalles,
+  EditarIngresoConDetalles,
   EditarPedidoConDetalles,
   EstadoPedido,
   FileData,
@@ -61,4 +63,11 @@ contextBridge.exposeInMainWorld("api", {
     ipcRenderer.invoke("crear-pedido-con-detalles", data),
   editarPedidoConDetalles: (data: EditarPedidoConDetalles) =>
     ipcRenderer.invoke("editar-pedido-con-detalles", data),
+  //ingresos
+  getIngresos: () => ipcRenderer.invoke("get-ingresos"),
+  getOneIngresoById: (id: number) => ipcRenderer.invoke("get-one-ingreso", id),
+  crearIngresoConDetalles: (data: CrearIngresoConDetalles) =>
+    ipcRenderer.invoke("crear-ingreso-con-detalles", data),
+  editarIngresoConDetalles: (data: EditarIngresoConDetalles) =>
+    ipcRenderer.invoke("editar-ingreso-con-detalles", data),
 });

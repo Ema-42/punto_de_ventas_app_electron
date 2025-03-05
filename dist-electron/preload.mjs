@@ -36,5 +36,10 @@ electron.contextBridge.exposeInMainWorld("api", {
   getOnePedidoById: (id) => electron.ipcRenderer.invoke("get-one-pedido", id),
   deletePedidoById: (id) => electron.ipcRenderer.invoke("delete-pedido", id),
   crearPedidoConDetalles: (data) => electron.ipcRenderer.invoke("crear-pedido-con-detalles", data),
-  editarPedidoConDetalles: (data) => electron.ipcRenderer.invoke("editar-pedido-con-detalles", data)
+  editarPedidoConDetalles: (data) => electron.ipcRenderer.invoke("editar-pedido-con-detalles", data),
+  //ingresos
+  getIngresos: () => electron.ipcRenderer.invoke("get-ingresos"),
+  getOneIngresoById: (id) => electron.ipcRenderer.invoke("get-one-ingreso", id),
+  crearIngresoConDetalles: (data) => electron.ipcRenderer.invoke("crear-ingreso-con-detalles", data),
+  editarIngresoConDetalles: (data) => electron.ipcRenderer.invoke("editar-ingreso-con-detalles", data)
 });

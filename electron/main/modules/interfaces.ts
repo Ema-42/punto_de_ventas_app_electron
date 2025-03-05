@@ -57,10 +57,25 @@ export interface CrearPedidoConDetalles {
   }[];
 }
 
+export interface CrearIngresoConDetalles {
+  usuario_id: number;
+  estado?: string;
+  total?: number;
+  detalles: {
+    producto_id: number;
+    cantidad: number;
+    precio_unitario: number;
+  }[];
+}
 export enum EstadoPedido {
   EN_PREPARACION = "EN PREPARACION",
   COMPLETADO = "COMPLETADO",
   CANCELADO = "CANCELADO",
+}
+
+export enum EstadoIngreso {
+  CONSOLIDADO = "CONSOLIDAD",
+  ELIMINADO = "ELIMINADO",
 }
 
 export interface EditarPedidoConDetalles {
@@ -80,6 +95,21 @@ export interface EditarPedidoConDetalles {
   }[];
 }
 
+export interface EditarIngresoConDetalles {
+  id: number;
+  usuario_id: number;
+  estado?: string;
+  fecha_ingreso?: Date;
+  detalles: {
+    id?: number; // Si existe, se actualiza; si no, se crea
+    producto_id: number;
+    cantidad: number;
+    precio_unitario: number;
+    eliminado?: boolean; // Si es `true`, se elimina
+  }[];
+}
+
+
 export interface PedidoEditData {
   pedido_padre_id?: number;
   mesa_id?: number;
@@ -87,14 +117,4 @@ export interface PedidoEditData {
   cajero_id?: number;
   estado?: string;
   fecha_concluido?: Date;
-}
-
-export interface Ingreso {
-  id: number;
-  producto_id: number;
-  cantidad: number;
-  fecha_ingreso: Date;
-  usuario_id: number;
-  producto: Producto;
-  usuario: Usuario;
 }

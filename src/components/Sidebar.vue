@@ -48,6 +48,7 @@ import categoria from '../assets/iconos/categoria.svg'
 import mesa from '../assets/iconos/mesa.svg'
 import home from '../assets/iconos/home.svg'
 import usuario from '../assets/iconos/usuario.svg'
+import ingreso from '../assets/iconos/ingreso.svg'
 
 const isOpen = ref(false);
 
@@ -58,6 +59,7 @@ const menuItems = [
   { text: "Categorias de Productos", icon: categoria, route:"/categorias" },
   { text: "Mesas", icon: mesa, route:"/mesas" },
   { text: "Usuarios", icon: usuario, route:"/usuarios" },
+  { text: "Ingresos", icon: ingreso, route:"/ingresos" },
 ];
 
 const toggleSidebar = () => {
