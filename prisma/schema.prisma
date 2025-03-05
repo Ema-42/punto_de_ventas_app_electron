@@ -64,6 +64,7 @@ model Producto {
 model Pedido {
   id              Int       @id @default(autoincrement())
   pedido_padre_id Int?
+  tipo_pago       String?
   mesa_id         Int?
   mesera_id       Int
   cajero_id       Int

@@ -8,7 +8,7 @@ export const getUsuarios = async () => {
   try {
     const usuarios = await prisma.usuario.findMany({
       where: { eliminado: false },
-      select: { nombre: true, rol: true },
+      select: { id: true, nombre: true, rol: true, fecha_creacion: true },
     });
     return usuarios;
   } catch (error) {

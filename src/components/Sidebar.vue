@@ -47,15 +47,17 @@ import producto from '../assets/iconos/producto.svg'
 import categoria from '../assets/iconos/categoria.svg'
 import mesa from '../assets/iconos/mesa.svg'
 import home from '../assets/iconos/home.svg'
+import usuario from '../assets/iconos/usuario.svg'
 
 const isOpen = ref(false);
 
 const menuItems = [
   { text: "Inicio", icon: home , route:"/home"},
-  { text: "Vender", icon: vender ,route:"/" },
+  { text: "Vender", icon: vender ,route:"/pedidos" },
   { text: "Productos", icon: producto, route:"/productos" },
   { text: "Categorias de Productos", icon: categoria, route:"/categorias" },
   { text: "Mesas", icon: mesa, route:"/mesas" },
+  { text: "Usuarios", icon: usuario, route:"/usuarios" },
 ];
 
 const toggleSidebar = () => {

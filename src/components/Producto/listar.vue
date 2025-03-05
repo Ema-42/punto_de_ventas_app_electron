@@ -23,18 +23,29 @@
         <div>
           <div class="flex gap-2 items-center">
             <!-- Contenedor del input con icono -->
-            <div class="relative w-64">
-              <input
-                v-model="searchQuery"
-                type="text"
-                placeholder="Buscar producto..."
-                class="border p-2 rounded-lg shadow-sm w-full focus:ring-2 focus:ring-red-400 outline-none pl-10 bg-white"
+            <div class="relative w-full sm:w-64">
+            <input
+              v-model="searchQuery"
+              type="text"
+              placeholder="Buscar productos..."
+              class="border p-2 rounded-lg shadow-sm w-full focus:ring-2 focus:ring-red-400 outline-none pl-10 bg-white"
+              @input="buscarProductos"
+            />
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-red-600"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
               />
-              <img
-                :src="buscar"
-                class="w-5 h-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-red-600"
-              />
-            </div>
+            </svg>
+          </div>
 
             <!-- Botón de agregar producto con icono -->
             <button
@@ -60,7 +71,7 @@
     <div class="overflow-x-auto bg-white shadow-lg rounded-lg">
       <table class="w-full border-collapse">
         <thead>
-          <tr class="bg-gray-400 text-white">
+          <tr class="bg-gradient-to-r from-red-500 to-red-600 text-white">
             <th class="p-3 text-left">ID</th>
             <th class="p-3 text-left">Nombre</th>
             <th class="p-3 text-left">Precio</th>
@@ -143,8 +154,8 @@ import { ref, computed, onMounted } from "vue";
 import ProductosCrear from "./crear.vue";
 import EditarCrear from "./editar.vue";
 import agregar from "../../assets/iconos/agregar.svg";
-import buscar from "../../assets/iconos/buscar.svg";
 import cubiertos from "../../assets/iconos/cubiertos.svg";
+import { useToast } from "vue-toastification";
 
 interface Categoria {
   id: number;
@@ -190,6 +201,7 @@ const eliminarProducto = (id: number) => {
 };
 
 const productos = ref<Producto[]>([]);
+const productosFiltradas = ref<Producto[]>([]);
 const searchQuery = ref("");
 const pagina = ref(1);
 const itemsPorPagina = 5;
@@ -213,12 +225,24 @@ onMounted(async () => {
 });
 
 const cargarProductos = async () => {
-  try {
-    productos.value = await window.api.getProductos(); // Recarga la lista
-  } catch (err) {
-    console.error("Error al cargar los productos", err);
-  }
+  const data = await window.api.getProductos(); // Recarga la lista
+  productos.value = data;
+  productosFiltradas.value = data;
 };
+
+
+const buscarProductos = () => {
+  if (!searchQuery.value) {
+    productosFiltradas.value = [...productos.value];
+  } else {
+    const query = searchQuery.value.toLowerCase();
+    productosFiltradas.value = productos.value.filter((producto) =>
+      producto.nombre.toLowerCase().includes(query)
+    );
+  }
+  pagina.value = 1; // Resetear a la primera página cuando se busca
+};
+
 
 const paginatedProductos = computed(() => {
   const inicio = (pagina.value - 1) * itemsPorPagina;
@@ -259,4 +283,7 @@ const getStockClass = (producto: Producto) => {
   if (producto.stock <= 0) return "bg-red-500 text-white px-2 py-1 rounded";
   return "bg-green-500 text-white px-2 py-1 rounded";
 };
+
+
+
 </script>

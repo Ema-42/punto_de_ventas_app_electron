@@ -2030,7 +2030,7 @@ const getUsuarios = async () => {
   try {
     const usuarios = await prisma$2.usuario.findMany({
       where: { eliminado: false },
-      select: { nombre: true, rol: true }
+      select: { id: true, nombre: true, rol: true, fecha_creacion: true }
     });
     return usuarios;
   } catch (error) {
@@ -2698,10 +2698,6 @@ function createWindow() {
     (display) => display.id !== primaryDisplay.id
   );
   if (secondaryDisplay) {
-<<<<<<< HEAD
-    const { x, y } = secondaryDisplay.bounds;
-    win == null ? void 0 : win.setBounds({ x, y, width: secondaryDisplay.bounds.width, height: 900 });
-=======
     const { x, y, width, height } = secondaryDisplay.bounds;
     win == null ? void 0 : win.setBounds({
       x: x + width / 2,
@@ -2709,7 +2705,6 @@ function createWindow() {
       width: width / 2,
       height
     });
->>>>>>> 46e5988b9c50091dac1665ee6379cede57b118c0
   }
   win.setIcon(path.join(process.env.VITE_PUBLIC, "icono-logo.png"));
   if (VITE_DEV_SERVER_URL) {
