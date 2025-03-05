@@ -126,7 +126,7 @@
 
             <td class="p-3">
               <span :class="getEstadoClase(mesa.estado)">
-                {{ getEstadoEtiqueta(mesa.estado) }}
+                {{mesa.estado}}
               </span>
             </td>
             <td class="p-3 text-gray-600">
@@ -309,7 +309,7 @@ const buscarMesas = () => {
     mesasFiltradas.value = mesas.value.filter(
       (mesa) =>
         mesa.numero.toString().includes(query) ||
-        getEstadoEtiqueta(mesa.estado).toLowerCase().includes(query)
+        mesa.estado.toLowerCase().includes(query)
     );
   }
   pagina.value = 1;
@@ -356,16 +356,6 @@ const formatearFecha = (fecha: string) => {
     minute: "2-digit",
     second: "2-digit",
   });
-};
-
-const getEstadoEtiqueta = (estado: string) => {
-  const estados: { [key: string]: string } = {
-    LIBRE: "LIBRE",
-    OCUPADA: "OCUPADA",
-    RESERVADA: "RESERVADA",
-    MANTENIMIENTO: "EN MANTENIMIENTO",
-  };
-  return estados[estado] || estado;
 };
 
 const getEstadoClase = (estado: string) => {

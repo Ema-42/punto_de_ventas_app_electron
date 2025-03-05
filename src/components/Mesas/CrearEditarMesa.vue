@@ -93,7 +93,10 @@
 
 <script setup lang="ts">
 import { ref, watch } from "vue";
-import { ESTADOS_MESA_ARRAY } from "../../../electron/main/modules/enums";
+import {
+  ESTADOS_MESA_ARRAY,
+  EstadosMesa,
+} from "../../../electron/main/modules/enums";
 const errorMensaje = ref("");
 
 interface Mesa {
@@ -132,7 +135,7 @@ watch(
     } else {
       formData.value = {
         numero: 1,
-        estado: "LIBRE",
+        estado: EstadosMesa.LIBRE,
       };
     }
   },

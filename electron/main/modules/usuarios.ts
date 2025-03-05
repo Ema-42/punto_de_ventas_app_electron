@@ -21,7 +21,7 @@ export const getUsuarioById = async (id: number) => {
   try {
     const usuario = await prisma.usuario.findUnique({
       where: { id, eliminado: false },
-      select: { nombre: true, rol: true },
+      select: { id: true, nombre: true, rol: true, fecha_creacion: true },
     });
 
     if (!usuario) {
