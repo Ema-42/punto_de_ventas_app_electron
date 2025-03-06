@@ -143,7 +143,7 @@
           <div class="flex gap-2">
             <button
               @click="exportarPDF"
-              class="bg-red-600 text-white px-3 py-1 rounded-lg text-sm hover:bg-red-700 transition flex items-center gap-1"
+              class="bg-red-600 text-white px-4 py-2 rounded-lg shadow-md hover:bg-red-700 transition flex items-center gap-2 w-full sm:w-auto justify-center"
               :disabled="ingresosSeleccionados.length === 0"
               :class="{
                 'opacity-50 cursor-not-allowed':
@@ -755,18 +755,25 @@ const exportarPDF = async () => {
     const ingresosCompletos = await obtenerDetallesIngresos(
       ingresosSeleccionados.value
     );
-
-    // Crear documento PDF con autoTable
     const doc = new jsPDF() as jsPDFWithAutoTableInterface;
 
     // Título
     doc.setFontSize(18);
     doc.text("Reporte de Ingresos", 14, 20);
 
-    // Fecha de generación
     doc.setFontSize(10);
-    doc.text(`Generado: ${new Date().toLocaleDateString("es-ES")}`, 14, 30);
-
+    doc.text(
+      `Generado: ${new Date().toLocaleString("es-ES", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+      })}`,
+      14,
+      30
+    );
     // Tabla de resumen
     const dataPrincipal = ingresosCompletos.map((ingreso) => [
       ingreso.id.toString(),
