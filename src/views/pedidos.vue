@@ -220,7 +220,7 @@
                     d="M5 13l4 4L19 7"
                   />
                 </svg>
-                Concluir
+                Completar
               </button>
               <button
                 @click="verDetalle(pedido)"
@@ -256,7 +256,7 @@
 
     <!-- Sección de pedidos concluidos -->
     <div class="bg-white rounded-lg shadow-md p-4">
-      <h2 class="text-lg font-semibold mb-4">Pedidos Concluidos</h2>
+      <h2 class="text-lg font-semibold mb-4">Pedidos Completados</h2>
       <div class="overflow-x-auto">
         <table class="min-w-full divide-y divide-gray-200">
           <thead class="bg-gray-50">
@@ -614,11 +614,11 @@ const cambiarEstadoPedido = async (pedido: Pedido) => {
       mostrarToastMensaje("Pedido completado con éxito!");
       cargarPedidos();
     } else {
-      throw new Error(result.message || "Error al concluir el pedido");
+      throw new Error(result.message || "Error al completar el pedido");
     }
   } catch (error: any) {
-    console.error("Error al concluir pedido:", error);
-    mostrarToastMensaje("Error al concluir el pedido: " + error.message);
+    console.error("Error al completar pedido:", error);
+    mostrarToastMensaje("Error al completar el pedido: " + error.message);
   }
 };
 
