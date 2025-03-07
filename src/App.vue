@@ -907,19 +907,30 @@ const editarIngresoConDetalles = async (data: EditarIngresoConDetalles) => {
 </template> -->
 
 <template>
-  <div class="flex h-screen overflow-hidden">
-    <Sidebar />
-    <div class="flex flex-col w-full transition-all duration-300">
-      <Navbar />
-      <main class="flex-1 overflow-auto p-6">
-        <router-view />
-      </main>
-    </div>
+  <div>
+    <template v-if="authStore.user">
+      <!-- Layout principal con sidebar y navbar -->
+      <div class="flex h-screen overflow-hidden">
+        <Sidebar />
+        <div class="flex flex-col w-full transition-all duration-300">
+          <Navbar />
+          <main class="flex-1 overflow-auto p-6">
+            <router-view />
+          </main>
+        </div>
+      </div>
+    </template>
+    <template v-else>
+      <!-- Solo muestra el router-view sin sidebar/navbar cuando no está autenticado -->
+      <router-view />
+    </template>
   </div>
-</template> 
+</template>
 
 <script setup lang="ts">
 import { useAuthStore } from './stores/auth';
 import Sidebar from "./components/Sidebar.vue";
 import Navbar from "./components/Navbar.vue";
+
+const authStore = useAuthStore();
 </script>

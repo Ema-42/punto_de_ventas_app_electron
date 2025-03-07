@@ -28,7 +28,7 @@ function createWindow() {
       preload: path.join(__dirname, "preload.mjs"),
     },
   });
-  win.setSize(1000, 800);
+/*   win.setSize(1000, 800);
   const primaryDisplay = screen.getPrimaryDisplay();
   const allDisplays = screen.getAllDisplays();
   const secondaryDisplay = allDisplays.find(
@@ -44,10 +44,10 @@ function createWindow() {
       width: width / 2,
       height: height,
     });
-  }
+  } */
 
   win.setIcon(path.join(process.env.VITE_PUBLIC, "icono-logo.png"));
-  //win.maximize(); // Maximize the window
+  win.maximize(); // Maximize the window
 
   if (VITE_DEV_SERVER_URL) {
     win.loadURL(VITE_DEV_SERVER_URL);
