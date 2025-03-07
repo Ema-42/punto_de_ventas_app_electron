@@ -108,129 +108,74 @@
     <!-- Pedidos Activos -->
     <div class="mb-6">
       <h2 class="text-lg font-semibold mb-4">Pedidos Activos</h2>
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 max-h-screen overflow-y-auto">
         <div
           v-for="pedido in pedidosFiltrados"
           :key="pedido.id"
-          class="bg-white rounded-lg shadow-md p-4 border-l-4 border-yellow-500 hover:shadow-lg transition"
+          class="bg-white rounded-lg shadow-md p-3 border-l-4 border-red-600 hover:shadow-lg transition text-sm"
         >
-          <div class="flex justify-between items-start mb-2">
+          <div class="flex justify-between items-start">
             <div>
-              <h3 class="text-lg font-semibold">
+              <h3 class="text-base font-semibold">
                 Pedido #{{ pedido.num_pedido_dia || pedido.id }}
               </h3>
-              <div class="bg-gray-100 text-center py-1 px-2 rounded-md mt-1 font-medium text-gray-800">
-                {{ pedido.mesa ? `Mesa ${pedido.mesa.numero}` : 'Sin mesa' }}
+              <div class="flex items-center gap-2 mt-1">
+                <div class="bg-red-600 text-white text-sm text-center py-1 px-2 rounded-md font-medium">
+                  {{ pedido.mesa ? `Mesa ${pedido.mesa.numero}` : 'Sin mesa' }}
+                </div>
               </div>
-              <!-- Indicador de pedidos agregados -->
-              <div v-if="pedidosHijos[pedido.id] && pedidosHijos[pedido.id].length > 0" 
-                   class="mt-1 bg-blue-100 text-blue-800 text-xs font-medium px-2 py-1 rounded-full flex items-center">
+              <div
+                v-if="pedidosHijos[pedido.id] && pedidosHijos[pedido.id].length > 0"
+                class="mt-1 bg-blue-100 text-blue-800 text-xs font-medium px-2 py-1 rounded-full flex items-center"
+              >
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5l7 7-7 7M5 5l7 7-7 7" />
                 </svg>
                 {{ pedidosHijos[pedido.id].length }} pedido(s) agregado(s)
               </div>
             </div>
-            <div>
+            <div class="flex flex-col items-end">
               <span :class="getEstadoClase(pedido.estado)">
                 {{ getEstadoEtiqueta(pedido.estado) }}
               </span>
+              <span class="text-gray-500 text-xs mt-1">
+                {{ formatearFecha(pedido.fecha_creacion) }}
+              </span>
             </div>
           </div>
-          <div class="flex justify-between text-sm mt-2">
-            <span>Mesero: {{ pedido.mesera.nombre }}</span>
-            <span class="font-medium">${{ pedido.total }}</span>
+
+          <div class="flex justify-between mt-2">
+            <span class="text-gray-600">Mesero: {{ pedido.mesera.nombre }}</span>
+            <span class="font-medium text-gray-800">${{ pedido.total }}</span>
           </div>
-          <div class="mt-2 text-sm text-gray-500">
-            {{ formatearFecha(pedido.fecha_creacion) }}
-          </div>
-          <div class="flex justify-between mt-3 pt-2 border-t border-gray-100">
-            <div class="flex gap-2">
-              <button
-                @click="agregarAPedido(pedido)"
-                class="text-green-600 hover:text-green-800 flex items-center text-sm font-medium"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="h-4 w-4 mr-1"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-                  />
-                </svg>
-                Agregar
-              </button>
-              <button
-                @click="imprimirTicketIndividual(pedido)"
-                class="text-blue-600 hover:text-blue-800 flex items-center text-sm font-medium"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="h-4 w-4 mr-1"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"
-                  />
-                </svg>
-                Imprimir
-              </button>
-            </div>
+
+          <div class="flex justify-between mt-3 pt-2 border-t border-gray-200">
+            <button
+              @click="agregarAPedido(pedido)"
+              class="text-green-600 hover:text-green-800 flex items-center text-xs font-medium"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+              </svg>
+              Agregar
+            </button>
             <div class="flex gap-2">
               <button
                 @click="cambiarEstadoPedido(pedido)"
-                class="text-green-600 hover:text-green-800 flex items-center text-sm font-medium"
+                class="text-green-600 hover:text-green-800 flex items-center text-xs font-medium"
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="h-4 w-4 mr-1"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M5 13l4 4L19 7"
-                  />
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                 </svg>
                 Concluir
               </button>
               <button
                 @click="verDetalle(pedido)"
-                class="text-blue-600 hover:text-blue-800 flex items-center text-sm font-medium"
+                class="text-blue-600 hover:text-blue-800 flex items-center text-xs font-medium"
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="h-4 w-4 mr-1"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                  />
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-                  />
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                 </svg>
                 Ver detalles
               </button>
@@ -239,6 +184,7 @@
         </div>
       </div>
     </div>
+
   
     <!-- Sección de pedidos concluidos -->
     <div class="bg-white rounded-lg shadow-md p-4">
@@ -423,15 +369,16 @@
   );
   
   const pedidosFiltrados = computed(() => {
-    if (!searchQuery.value) return pedidosActivos.value;
-  
-    const query = searchQuery.value.toLowerCase();
-    return pedidosActivos.value.filter(p => 
-      (p.mesera.nombre.toLowerCase().includes(query)) || 
-      (p.num_pedido_dia?.toString().includes(query)) ||
-      (p.id.toString().includes(query))
-    );
-  });
+  if (!searchQuery.value) return pedidosActivos.value;
+
+  const query = searchQuery.value.toLowerCase();
+  return pedidosActivos.value.filter(p => 
+    (p.mesera.nombre.toLowerCase().includes(query)) || 
+    (p.num_pedido_dia?.toString().includes(query)) ||
+    (p.id.toString().includes(query)) ||
+    (p.mesa?.numero.toString().includes(query)) // Filtrar por número de mesa
+  );
+});
   
   // Métodos
   const cargarPedidos = async () => {

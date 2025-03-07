@@ -907,11 +907,11 @@ const editarIngresoConDetalles = async (data: EditarIngresoConDetalles) => {
 </template> -->
 
 <template>
-  <div class="flex h-screen">
+  <div class="flex h-screen overflow-hidden">
     <Sidebar />
     <div class="flex flex-col w-full transition-all duration-300">
       <Navbar />
-      <main class="p-6">
+      <main class="flex-1 overflow-auto p-6">
         <router-view />
       </main>
     </div>
