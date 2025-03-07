@@ -10,6 +10,12 @@ export enum Roles {
   CAJERO = "CAJERO",
   MESERO = "MESERO",
 }
+
+export enum TipoPago {
+  EFECTIVO = "EFECTIVO",
+  TRANSFERENCIA = "TRANSFERENCIA",
+}
+
 export const ESTADOS_MESA_ARRAY = Object.entries(EstadosMesa).map(
   ([valor, etiqueta]) => ({
     valor,

@@ -244,6 +244,30 @@ const getMesas = async () => {
     return error;
   }
 };
+const getMesasByEstado = async (estado) => {
+  try {
+    const mesas = await prisma$4.mesa.findMany({
+      where: {
+        eliminado: false,
+        estado
+      },
+      select: {
+        id: true,
+        numero: true,
+        estado: true,
+        eliminado: true,
+        fecha_creacion: true
+      },
+      orderBy: {
+        fecha_creacion: "desc"
+      }
+    });
+    return mesas;
+  } catch (error) {
+    console.error("Error al obtener mesas por estado:", error);
+    return error;
+  }
+};
 const getMesaById = async (id) => {
   try {
     const mesa = await prisma$4.mesa.findUnique({
@@ -291,6 +315,21 @@ const updateMesa = async (id, mesaData) => {
   } catch (error) {
     console.error("Error al actualizar una mesa:", error);
     return error;
+  }
+};
+const cambiarEstadoMesa = async (id, nuevoEstado) => {
+  try {
+    const mesa = await prisma$4.mesa.findUnique({ where: { id } });
+    if (!mesa) {
+      throw new Error("Mesa no encontrada");
+    }
+    await prisma$4.mesa.update({
+      where: { id },
+      data: { estado: nuevoEstado }
+    });
+  } catch (error) {
+    console.error("Error al cambiar el estado de la mesa:", error);
+    throw error;
   }
 };
 const deleteMesa = async (id) => {
@@ -2173,6 +2212,19 @@ var EstadoIngreso = /* @__PURE__ */ ((EstadoIngreso2) => {
   EstadoIngreso2["ELIMINADO"] = "ELIMINADO";
   return EstadoIngreso2;
 })(EstadoIngreso || {});
+var EstadosMesa = /* @__PURE__ */ ((EstadosMesa2) => {
+  EstadosMesa2["LIBRE"] = "LIBRE";
+  EstadosMesa2["OCUPADA"] = "OCUPADA";
+  EstadosMesa2["RESERVADA"] = "RESERVADA";
+  EstadosMesa2["MANTENIMIENTO"] = "MANTENIMIENTO";
+  return EstadosMesa2;
+})(EstadosMesa || {});
+Object.entries(EstadosMesa).map(
+  ([valor, etiqueta]) => ({
+    valor,
+    etiqueta
+  })
+);
 const prisma$1 = new PrismaClient();
 const getPedidos = async () => {
   try {
@@ -2221,7 +2273,8 @@ const getPedidos = async () => {
             precio_unitario: true
           }
         }
-      }
+      },
+      orderBy: { fecha_creacion: "desc" }
     });
     return pedidos.map((p) => {
       var _a;
@@ -2335,10 +2388,15 @@ const getNumeroPedidoDia = async () => {
 };
 const cambiarEstadoPedido = async (id, estado) => {
   try {
-    await prisma$1.pedido.update({
+    const data = { estado };
+    if (estado === EstadoPedido.COMPLETADO) {
+      data.fecha_concluido = /* @__PURE__ */ new Date();
+    }
+    const pedido = await prisma$1.pedido.update({
       where: { id },
-      data: { estado }
+      data
     });
+    estado === EstadoPedido.COMPLETADO && pedido.mesa_id ? cambiarEstadoMesa(pedido.mesa_id, EstadosMesa.LIBRE) : "";
     return {
       success: true,
       message: `Pedido con ID ${id} ha sido actualizado al estado ${estado}`
@@ -2377,8 +2435,9 @@ const crearPedidoConDetalles = async (data) => {
           estado: data.estado ?? EstadoPedido.EN_PREPARACION,
           fecha_concluido: data.fecha_concluido,
           num_pedido_dia,
-          total: 0
+          total: 0,
           // Inicialmente 0, se actualizará después
+          tipo_pago: data.tipo_pago
         }
       });
       const productoIds = data.detalles.map((detalle) => detalle.producto_id);
@@ -2421,6 +2480,7 @@ const crearPedidoConDetalles = async (data) => {
         where: { id: nuevoPedido.id },
         data: { total: totalPedido }
       });
+      cambiarEstadoMesa(data.mesa_id, EstadosMesa.OCUPADA);
       return {
         success: true,
         message: "Pedido creado correctamente"
@@ -2880,6 +2940,9 @@ const ipcMainModules = () => {
   });
   ipcMain.handle("get-mesas", async () => {
     return await getMesas();
+  });
+  ipcMain.handle("get-mesas-by-estado", async (_, estado) => {
+    return await getMesasByEstado(estado);
   });
   ipcMain.handle("create-mesa", async (_, mesa) => {
     return await createMesa(mesa);

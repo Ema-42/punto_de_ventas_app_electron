@@ -4,6 +4,8 @@ import {
   EditarPedidoConDetalles,
   EstadoPedido,
 } from "./interfaces";
+import { cambiarEstadoMesa } from "./mesas";
+import { EstadosMesa } from "./enums";
 
 const prisma = new PrismaClient();
 
@@ -55,6 +57,7 @@ export const getPedidos = async () => {
           },
         },
       },
+      orderBy: { fecha_creacion: "desc" },
     });
 
     return pedidos.map((p) => ({
@@ -161,10 +164,18 @@ export const getNumeroPedidoDia = async (): Promise<number> => {
 
 export const cambiarEstadoPedido = async (id: number, estado: EstadoPedido) => {
   try {
-    await prisma.pedido.update({
-      where: { id: id },
-      data: { estado: estado },
+    const data: any = { estado };
+    if (estado === EstadoPedido.COMPLETADO) {
+      data.fecha_concluido = new Date();
+    }
+    const pedido = await prisma.pedido.update({
+      where: { id },
+      data,
     });
+    //cambiar estado de la mesa a libre si se esta completando el pedido
+    estado === EstadoPedido.COMPLETADO && pedido.mesa_id
+      ? cambiarEstadoMesa(pedido.mesa_id, EstadosMesa.LIBRE)
+      : "";
 
     return {
       success: true,
@@ -178,6 +189,7 @@ export const cambiarEstadoPedido = async (id: number, estado: EstadoPedido) => {
     };
   }
 };
+
 function validarDetallesUnicos(
   detalles: { producto_id: number; cantidad: number; precio_unitario: number }[]
 ): void {
@@ -211,6 +223,7 @@ export const crearPedidoConDetalles = async (data: CrearPedidoConDetalles) => {
           fecha_concluido: data.fecha_concluido,
           num_pedido_dia,
           total: 0, // Inicialmente 0, se actualizará después
+          tipo_pago: data.tipo_pago,
         },
       });
 
@@ -274,8 +287,8 @@ export const crearPedidoConDetalles = async (data: CrearPedidoConDetalles) => {
         where: { id: nuevoPedido.id },
         data: { total: totalPedido },
       });
-
-      /* return { ...nuevoPedido, total: totalPedido, detalles }; */
+      //cambiar estado de la mesa a ocupada
+      cambiarEstadoMesa(data.mesa_id, EstadosMesa.OCUPADA);
       return {
         success: true,
         message: "Pedido creado correctamente",
@@ -436,7 +449,6 @@ export const editarPedidoConDetalles = async (
           total + detalle.cantidad * Number(detalle.precio_unitario),
         0
       );
-
       await tx.pedido.update({
         where: { id: data.id },
         data: { total: totalPedido },

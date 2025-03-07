@@ -373,12 +373,16 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, watch } from "vue";
+import { ref, computed, onMounted } from "vue";
 import CrearEditarPedido from "../components/Pedidos/CrearEditarPedido.vue";
 import EliminarPedido from "../components/Pedidos/EliminarPedido.vue";
 import DetallePedido from "../components/Pedidos/DetallePedido.vue";
 import { EstadoPedido } from "../../electron/main/modules/interfaces";
+import { useRoute } from "vue-router";
+import { cargarMesasLibresApi, useMesaStore } from "../stores/useMesaStore";
+const mesaStore = useMesaStore();
 
+const route = useRoute();
 // Interfaces
 interface DetallePedido {
   id?: number;
@@ -442,13 +446,20 @@ const mostrarToast = ref(false);
 const mensajeToast = ref("");
 const pedidosHijos = ref<{ [key: number]: Pedido[] }>({});
 
-// Computed
 const pedidosConcluidos = computed(() =>
-  pedidos.value.filter((p) => p.estado === EstadoPedido.COMPLETADO)
+  pedidos.value
+    .filter((p) => p.estado === EstadoPedido.COMPLETADO && p.fecha_concluido)
+    .sort(
+      (a, b) =>
+        new Date(b.fecha_concluido!).getTime() -
+        new Date(a.fecha_concluido!).getTime()
+    )
 );
 
 const pedidosActivos = computed(() =>
-  pedidos.value.filter((p) => p.estado === EstadoPedido.EN_PREPARACION && !p.pedido_padre_id)
+  pedidos.value.filter(
+    (p) => p.estado === EstadoPedido.EN_PREPARACION && !p.pedido_padre_id
+  )
 );
 
 const pedidosFiltrados = computed(() => {
@@ -511,7 +522,9 @@ const buscarPedidos = () => {
   // La búsqueda se realiza automáticamente a través del computed pedidosFiltrados
 };
 
-const crearNuevoPedido = () => {
+const crearNuevoPedido = async () => {
+  const data = await cargarMesasLibresApi();
+  mesaStore.setMesas(data);
   pedidoEditar.value = {
     id: 0,
     mesa_id: null,
@@ -534,7 +547,7 @@ const agregarAPedido = (pedido: Pedido) => {
     mesa_id: pedido.mesa_id,
     mesera_id: pedido.mesera_id,
     cajero_id: pedido.cajero_id,
-    estado:EstadoPedido.EN_PREPARACION,
+    estado: EstadoPedido.EN_PREPARACION,
     fecha_creacion: new Date().toISOString(),
     mesera: { ...pedido.mesera },
     cajero: { ...pedido.cajero },
@@ -588,7 +601,7 @@ const formatearFecha = (fecha?: string) => {
 
 const getEstadoEtiqueta = (estado?: string) => {
   const estados: { [key: string]: string } = {
-    'EN PREPARACION': "En Preparación",
+    "EN PREPARACION": "En Preparación",
     COMPLETADO: "Completado",
   };
   return estados[estado || ""] || estado || "";
@@ -596,9 +609,9 @@ const getEstadoEtiqueta = (estado?: string) => {
 
 const getEstadoClase = (estado?: string) => {
   const clases: { [key: string]: string } = {
-    'EN PREPARACION':
+    "EN PREPARACION":
       "bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full text-sm font-medium",
-      COMPLETADO:
+    COMPLETADO:
       "bg-green-100 text-green-800 px-2 py-1 rounded-full text-sm font-medium",
   };
   return clases[estado || ""] || "";
@@ -750,6 +763,9 @@ const imprimirTicketIndividual = (pedido: Pedido) => {
 onMounted(() => {
   cargarPedidos();
   cargarMesas();
+  if (route.query.ejecutarMetodo === "true") {
+    crearNuevoPedido();
+  }
 });
 
 // Estilos para la animación del toast

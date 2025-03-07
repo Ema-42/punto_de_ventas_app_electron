@@ -8,8 +8,12 @@
     >
       <div class="flex justify-between items-center mb-4">
         <h2 class="text-xl font-bold text-gray-800">
-          {{ pedido?.id && !pedido.pedido_padre_id ? "Editar" : "Nuevo" }} Pedido
-          <span v-if="pedido?.pedido_padre_id" class="text-sm font-normal text-gray-500">
+          {{ pedido?.id && !pedido.pedido_padre_id ? "Editar" : "Nuevo" }}
+          Pedido
+          <span
+            v-if="pedido?.pedido_padre_id"
+            class="text-sm font-normal text-gray-500"
+          >
             (Agregado a Pedido #{{ pedido.pedido_padre_id }})
           </span>
         </h2>
@@ -22,7 +26,10 @@
         <!-- Información básica del pedido -->
         <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
           <div>
-            <label class="block text-gray-700 text-sm font-bold mb-2" for="mesa">
+            <label
+              class="block text-gray-700 text-sm font-bold mb-2"
+              for="mesa"
+            >
               Mesa
             </label>
             <select
@@ -32,7 +39,7 @@
             >
               <option :value="null">Sin mesa</option>
               <option
-                v-for="mesa in mesas"
+                v-for="mesa in mesaStore.mesas"
                 :key="mesa.id"
                 :value="mesa.id"
               >
@@ -42,7 +49,10 @@
           </div>
 
           <div>
-            <label class="block text-gray-700 text-sm font-bold mb-2" for="mesera">
+            <label
+              class="block text-gray-700 text-sm font-bold mb-2"
+              for="mesera"
+            >
               Mesero/a
             </label>
             <select
@@ -63,7 +73,10 @@
           </div>
 
           <div>
-            <label class="block text-gray-700 text-sm font-bold mb-2" for="cajero">
+            <label
+              class="block text-gray-700 text-sm font-bold mb-2"
+              for="cajero"
+            >
               Cajero/a
             </label>
             <select
@@ -143,7 +156,7 @@
           <!-- Columna izquierda: Productos -->
           <div class="w-full md:w-1/2">
             <h3 class="text-lg font-semibold mb-2">Productos</h3>
-            
+
             <!-- Categorías de productos -->
             <div class="mb-4">
               <div class="flex flex-wrap gap-2 mb-2">
@@ -154,7 +167,7 @@
                     'px-3 py-1 rounded-full text-sm font-medium transition',
                     categoriaSeleccionada === ''
                       ? 'bg-gray-700 text-white'
-                      : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                      : 'bg-gray-200 text-gray-700 hover:bg-gray-300',
                   ]"
                 >
                   Ver Todo
@@ -168,13 +181,13 @@
                     'px-3 py-1 rounded-full text-sm font-medium transition',
                     categoriaSeleccionada === categoria.id
                       ? 'bg-red-600 text-white'
-                      : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                      : 'bg-gray-200 text-gray-700 hover:bg-gray-300',
                   ]"
                 >
                   {{ categoria.nombre }}
                 </button>
               </div>
-              
+
               <div class="relative">
                 <input
                   v-model="searchProducto"
@@ -201,7 +214,9 @@
             </div>
 
             <!-- Grid de productos -->
-            <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 h-[calc(100vh-500px)] overflow-y-auto">
+            <div
+              class="grid grid-cols-2 sm:grid-cols-3 gap-3 h-[calc(100vh-500px)] overflow-y-auto"
+            >
               <div
                 v-for="producto in productosFiltrados"
                 :key="producto.id"
@@ -216,7 +231,10 @@
                       class="w-full h-full object-cover rounded-lg shadow-sm"
                       alt=""
                     />
-                    <div v-else class="w-full h-full bg-gray-200 rounded-lg flex items-center justify-center">
+                    <div
+                      v-else
+                      class="w-full h-full bg-gray-200 rounded-lg flex items-center justify-center"
+                    >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         class="h-8 w-8 text-gray-400"
@@ -234,7 +252,9 @@
                     </div>
                   </div>
                   <div class="text-center">
-                    <p class="font-medium text-sm truncate w-full">{{ producto.nombre }}</p>
+                    <p class="font-medium text-sm truncate w-full">
+                      {{ producto.nombre }}
+                    </p>
                     <p class="text-gray-600 text-xs">${{ producto.precio }}</p>
                   </div>
                 </div>
@@ -250,25 +270,39 @@
                 <table class="min-w-full divide-y divide-gray-200 table-fixed">
                   <thead class="bg-gray-50 sticky top-0">
                     <tr>
-                      <th class="w-2/5 px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      <th
+                        class="w-2/5 px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      >
                         Producto
                       </th>
-                      <th class="w-1/5 px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      <th
+                        class="w-1/5 px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      >
                         Precio
                       </th>
-                      <th class="w-1/5 px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      <th
+                        class="w-1/5 px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      >
                         Cant.
                       </th>
-                      <th class="w-1/5 px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      <th
+                        class="w-1/5 px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      >
                         Subtotal
                       </th>
-                      <th class="w-1/10 px-3 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      <th
+                        class="w-1/10 px-3 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      >
                         Acción
                       </th>
                     </tr>
                   </thead>
                   <tbody class="bg-white divide-y divide-gray-200">
-                    <tr v-for="(detalle, index) in detallesActivos" :key="index" class="hover:bg-gray-50">
+                    <tr
+                      v-for="(detalle, index) in detallesActivos"
+                      :key="index"
+                      class="hover:bg-gray-50"
+                    >
                       <td class="px-3 py-2 whitespace-nowrap">
                         <div class="flex items-center">
                           <div class="flex-shrink-0 h-8 w-8 mr-2">
@@ -278,7 +312,10 @@
                               class="h-8 w-8 rounded-full object-cover"
                               alt=""
                             />
-                            <div v-else class="h-8 w-8 rounded-full bg-gray-200 flex items-center justify-center">
+                            <div
+                              v-else
+                              class="h-8 w-8 rounded-full bg-gray-200 flex items-center justify-center"
+                            >
                               <svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 class="h-4 w-4 text-gray-400"
@@ -296,13 +333,17 @@
                             </div>
                           </div>
                           <div class="truncate max-w-[120px]">
-                            <div class="text-xs font-medium text-gray-900 truncate">
+                            <div
+                              class="text-xs font-medium text-gray-900 truncate"
+                            >
                               {{ detalle.producto?.nombre }}
                             </div>
                           </div>
                         </div>
                       </td>
-                      <td class="px-3 py-2 whitespace-nowrap text-xs text-gray-500">
+                      <td
+                        class="px-3 py-2 whitespace-nowrap text-xs text-gray-500"
+                      >
                         ${{ detalle.precio_unitario }}
                       </td>
                       <td class="px-3 py-2 whitespace-nowrap">
@@ -355,10 +396,19 @@
                           </button>
                         </div>
                       </td>
-                      <td class="px-3 py-2 whitespace-nowrap text-xs text-gray-900 font-medium">
-                        ${{ (detalle.cantidad * parseFloat(detalle.precio_unitario.toString())).toFixed(2) }}
+                      <td
+                        class="px-3 py-2 whitespace-nowrap text-xs text-gray-900 font-medium"
+                      >
+                        ${{
+                          (
+                            detalle.cantidad *
+                            parseFloat(detalle.precio_unitario.toString())
+                          ).toFixed(2)
+                        }}
                       </td>
-                      <td class="px-3 py-2 whitespace-nowrap text-center text-xs font-medium">
+                      <td
+                        class="px-3 py-2 whitespace-nowrap text-center text-xs font-medium"
+                      >
                         <button
                           type="button"
                           @click="eliminarDetalle(index)"
@@ -382,7 +432,10 @@
                       </td>
                     </tr>
                     <tr v-if="detallesActivos.length === 0">
-                      <td colspan="5" class="px-3 py-4 text-center text-gray-500 text-sm">
+                      <td
+                        colspan="5"
+                        class="px-3 py-4 text-center text-gray-500 text-sm"
+                      >
                         No hay productos agregados
                       </td>
                     </tr>
@@ -392,23 +445,36 @@
               <div class="bg-gray-50 p-4 border-t">
                 <div class="flex justify-between items-center">
                   <span class="font-bold">Total:</span>
-                  <span class="text-xl font-bold text-red-600">${{ calcularTotal() }}</span>
+                  <span class="text-xl font-bold text-red-600"
+                    >${{ calcularTotal() }}</span
+                  >
                 </div>
               </div>
             </div>
           </div>
         </div>
 
-        <div v-if="errorMensaje" class="mt-4 p-3 bg-red-100 text-red-700 rounded-lg">
+        <div
+          v-if="errorMensaje"
+          class="mt-4 p-3 bg-red-100 text-red-700 rounded-lg"
+        >
           {{ errorMensaje }}
         </div>
 
         <!-- Vista previa del ticket -->
-        <div v-if="mostrarVistaPrevia" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50">
-          <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md max-h-[90vh] overflow-y-auto">
+        <div
+          v-if="mostrarVistaPrevia"
+          class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50"
+        >
+          <div
+            class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md max-h-[90vh] overflow-y-auto"
+          >
             <div class="flex justify-between items-center mb-4">
               <h3 class="text-lg font-bold">Vista previa del ticket</h3>
-              <button @click="mostrarVistaPrevia = false" class="text-gray-500 hover:text-gray-700">
+              <button
+                @click="mostrarVistaPrevia = false"
+                class="text-gray-500 hover:text-gray-700"
+              >
                 <span class="text-2xl">&times;</span>
               </button>
             </div>
@@ -418,18 +484,34 @@
                 <p>Dirección: Calle Principal #123</p>
                 <p>Tel: (123) 456-7890</p>
               </div>
-              
+
               <div class="mb-4">
                 <p>TICKET #: {{ formData.id || "NUEVO" }}</p>
                 <p>Fecha: {{ new Date().toLocaleString() }}</p>
-                <p>Mesero: {{ meseros.find(m => m.id === formData.mesera_id)?.nombre || "" }}</p>
-                <p>Cajero: {{ cajeros.find(c => c.id === formData.cajero_id)?.nombre || "" }}</p>
+                <p>
+                  Mesero:
+                  {{
+                    meseros.find((m) => m.id === formData.mesera_id)?.nombre ||
+                    ""
+                  }}
+                </p>
+                <p>
+                  Cajero:
+                  {{
+                    cajeros.find((c) => c.id === formData.cajero_id)?.nombre ||
+                    ""
+                  }}
+                </p>
                 <p v-if="formData.mesa_id">
-                  Mesa: {{ mesas.find(m => m.id === formData.mesa_id)?.numero || "" }}
+                  Mesa:
+                  {{
+                    mesaStore.mesas.find((m) => m.id === formData.mesa_id)
+                      ?.numero || ""
+                  }}
                 </p>
                 <p>Tipo de pago: {{ formData.tipo_pago }}</p>
               </div>
-              
+
               <div class="border-t border-b border-gray-300 py-2 mb-4">
                 <div class="grid grid-cols-12 font-bold">
                   <div class="col-span-6">Producto</div>
@@ -437,27 +519,42 @@
                   <div class="col-span-4 text-right">Precio</div>
                 </div>
               </div>
-              
+
               <div class="mb-4">
-                <div v-for="(detalle, index) in detallesActivos" :key="index" class="grid grid-cols-12 mb-1">
-                  <div class="col-span-6 truncate">{{ detalle.producto?.nombre }}</div>
-                  <div class="col-span-2 text-center">{{ detalle.cantidad }}</div>
-                  <div class="col-span-4 text-right">${{ (detalle.cantidad * parseFloat(detalle.precio_unitario.toString())).toFixed(2) }}</div>
+                <div
+                  v-for="(detalle, index) in detallesActivos"
+                  :key="index"
+                  class="grid grid-cols-12 mb-1"
+                >
+                  <div class="col-span-6 truncate">
+                    {{ detalle.producto?.nombre }}
+                  </div>
+                  <div class="col-span-2 text-center">
+                    {{ detalle.cantidad }}
+                  </div>
+                  <div class="col-span-4 text-right">
+                    ${{
+                      (
+                        detalle.cantidad *
+                        parseFloat(detalle.precio_unitario.toString())
+                      ).toFixed(2)
+                    }}
+                  </div>
                 </div>
               </div>
-              
+
               <div class="border-t border-gray-300 pt-2 mb-4">
                 <div class="flex justify-between font-bold">
                   <span>TOTAL:</span>
                   <span>${{ calcularTotal() }}</span>
                 </div>
               </div>
-              
+
               <div class="text-center mt-6">
                 <p>¡Gracias por su preferencia!</p>
               </div>
             </div>
-            
+
             <div class="flex justify-end gap-2 mt-4">
               <button
                 type="button"
@@ -534,6 +631,10 @@
 
 <script setup lang="ts">
 import { ref, watch, onMounted, computed } from "vue";
+import { EstadosMesa, Roles } from "../../../electron/main/modules/enums";
+import { useMesaStore } from "../../stores/useMesaStore";
+
+const mesaStore = useMesaStore();
 
 interface DetallePedido {
   id?: number;
@@ -577,12 +678,6 @@ interface Pedido {
   detalles: DetallePedido[];
 }
 
-interface Mesa {
-  id: number;
-  numero: number;
-  estado?: string;
-}
-
 interface Usuario {
   id: number;
   nombre: string;
@@ -623,7 +718,7 @@ const emit = defineEmits<{
 // Estado
 const errorMensaje = ref("");
 const guardando = ref(false);
-const mesas = ref<Mesa[]>([]);
+
 const usuarios = ref<Usuario[]>([]);
 const productos = ref<Producto[]>([]);
 const categorias = ref<Categoria[]>([]);
@@ -642,36 +737,30 @@ const formData = ref({
   cajero_id: 0,
   tipo_pago: "EFECTIVO",
   estado: "EN_ATENCION",
-  detalles: [] as DetallePedido[]
+  detalles: [] as DetallePedido[],
 });
 
 // Computed
 const meseros = computed(() => {
-  return usuarios.value.filter(u => u.rol.nombre === "MESERO");
+  return usuarios.value.filter((u) => u.rol.nombre === Roles.MESERO);
 });
 
 const cajeros = computed(() => {
-  return usuarios.value.filter(u => u.rol.nombre === "CAJERO");
+  return usuarios.value.filter((u) => u.rol.nombre === Roles.CAJERO);
 });
 
 const detallesActivos = computed(() => {
-  return formData.value.detalles.filter(d => !d.eliminado);
-});
-
-const mesaLibre = computed(() => {
-  return mesas.value.find(m => m.estado === "LIBRE")?.id || null;
+  return formData.value.detalles.filter((d) => !d.eliminado);
 });
 
 // Métodos
 const cargarMesas = async () => {
   try {
-    if (window.api && window.api.getMesas) {
-      const data = await window.api.getMesas();
-      mesas.value = data || [];
-    }
+    const data = await window.api.getMesasByEstado(EstadosMesa.LIBRE);
+    mesaStore.setMesas(data);
   } catch (error) {
     console.error("Error al cargar mesas:", error);
-    mesas.value = [];
+    mesaStore.mesas = [];
   }
 };
 
@@ -713,29 +802,29 @@ const cargarCategorias = async () => {
 
 const filtrarProductos = () => {
   let resultado = [...productos.value];
-  
+
   // Filtrar por categoría
   if (categoriaSeleccionada.value) {
-    resultado = resultado.filter(p => p.categoria?.id === categoriaSeleccionada.value);
+    resultado = resultado.filter(
+      (p) => p.categoria?.id === categoriaSeleccionada.value
+    );
   }
-  
+
   // Filtrar por búsqueda
   if (searchProducto.value) {
     const query = searchProducto.value.toLowerCase();
-    resultado = resultado.filter(
-      p => p.nombre.toLowerCase().includes(query)
-    );
+    resultado = resultado.filter((p) => p.nombre.toLowerCase().includes(query));
   }
-  
+
   productosFiltrados.value = resultado;
 };
 
 const agregarProductoADetalle = (producto: Producto) => {
   // Verificar si el producto ya está en los detalles
   const index = formData.value.detalles.findIndex(
-    d => d.producto_id === producto.id && !d.eliminado
+    (d) => d.producto_id === producto.id && !d.eliminado
   );
-  
+
   if (index !== -1) {
     // Si ya existe, incrementar la cantidad
     formData.value.detalles[index].cantidad++;
@@ -749,8 +838,8 @@ const agregarProductoADetalle = (producto: Producto) => {
         id: producto.id,
         nombre: producto.nombre,
         imagen_url: producto.imagen_url,
-        maneja_stock: producto.maneja_stock
-      }
+        maneja_stock: producto.maneja_stock,
+      },
     });
   }
 };
@@ -766,8 +855,10 @@ const decrementarCantidad = (index: number) => {
 };
 
 const eliminarDetalle = (index: number) => {
-  const detalleReal = formData.value.detalles.findIndex(d => d === detallesActivos.value[index]);
-  
+  const detalleReal = formData.value.detalles.findIndex(
+    (d) => d === detallesActivos.value[index]
+  );
+
   // Si el detalle tiene ID (ya existe en la BD), marcarlo como eliminado
   if (formData.value.detalles[detalleReal].id) {
     formData.value.detalles[detalleReal].eliminado = true;
@@ -780,14 +871,17 @@ const eliminarDetalle = (index: number) => {
 const calcularTotal = () => {
   return detallesActivos.value
     .reduce((total, detalle) => {
-      return total + detalle.cantidad * parseFloat(detalle.precio_unitario.toString());
+      return (
+        total +
+        detalle.cantidad * parseFloat(detalle.precio_unitario.toString())
+      );
     }, 0)
     .toFixed(2);
 };
 
 const cerrar = () => {
   if (guardando.value) return;
-  
+
   errorMensaje.value = "";
   mostrarVistaPrevia.value = false;
   pedidoGuardado.value = false;
@@ -798,26 +892,26 @@ const guardar = async () => {
   try {
     errorMensaje.value = "";
     guardando.value = true;
-    
+
     // Validaciones
     if (detallesActivos.value.length === 0) {
       errorMensaje.value = "Debe agregar al menos un producto al pedido";
       guardando.value = false;
       return;
     }
-    
+
     if (!formData.value.mesera_id) {
       errorMensaje.value = "Debe seleccionar un mesero/a";
       guardando.value = false;
       return;
     }
-    
+
     if (!formData.value.cajero_id) {
       errorMensaje.value = "Debe seleccionar un cajero/a";
       guardando.value = false;
       return;
     }
-    
+
     // Preparar datos para enviar
     const pedidoData = {
       ...(formData.value.id ? { id: formData.value.id } : {}),
@@ -828,42 +922,34 @@ const guardar = async () => {
       tipo_pago: formData.value.tipo_pago,
       estado: formData.value.estado,
       detalles: formData.value.detalles
-        .filter(d => !d.eliminado || d.id) // Incluir eliminados solo si tienen ID
-        .map(d => ({
+        .filter((d) => !d.eliminado || d.id) // Incluir eliminados solo si tienen ID
+        .map((d) => ({
           ...(d.id ? { id: d.id } : {}),
           producto_id: d.producto_id,
           cantidad: d.cantidad,
           precio_unitario: parseFloat(d.precio_unitario.toString()),
-          ...(d.eliminado ? { eliminado: true } : {})
-        }))
+          ...(d.eliminado ? { eliminado: true } : {}),
+        })),
     };
-    
-    // Guardar si hay API
-    if (window.api && (window.api.editarPedidoConDetalles || window.api.crearPedidoConDetalles)) {
-      const accion = formData.value.id
-        ? window.api.editarPedidoConDetalles(pedidoData)
-        : window.api.crearPedidoConDetalles(pedidoData);
-      
-      const result = await accion;
-      
-      if (result instanceof Error) {
-        throw result;
-      }
-      
-      if (result.success) {
-        pedidoGuardado.value = true;
-        mostrarVistaPrevia.value = true;
-      } else {
-        throw new Error(result.message || "Error al guardar el pedido");
-      }
-    } else {
-      // Simulación de guardado exitoso
-      console.log("Datos a guardar:", pedidoData);
+
+    const accion = formData.value.id
+      ? window.api.editarPedidoConDetalles(pedidoData)
+      : window.api.crearPedidoConDetalles(pedidoData);
+    const result = await accion;
+
+    if (result instanceof Error) {
+      throw result;
+    }
+
+    if (result.success) {
       pedidoGuardado.value = true;
       mostrarVistaPrevia.value = true;
+    } else {
+      throw new Error(result.message || "Error al guardar el pedido");
     }
   } catch (error: any) {
-    errorMensaje.value = error.message || "Ocurrió un error al guardar el pedido";
+    errorMensaje.value =
+      error.message || "Ocurrió un error al guardar el pedido";
   } finally {
     guardando.value = false;
   }
@@ -872,16 +958,17 @@ const guardar = async () => {
 const imprimirTicket = () => {
   try {
     // Obtener el contenido del ticket
-    const ticketContent = document.getElementById('ticket-preview');
-    
+    const ticketContent = document.getElementById("ticket-preview");
+
     // Crear un iframe para imprimir
-    const printIframe = document.createElement('iframe');
-    printIframe.style.position = 'absolute';
-    printIframe.style.top = '-9999px';
+    const printIframe = document.createElement("iframe");
+    printIframe.style.position = "absolute";
+    printIframe.style.top = "-9999px";
     document.body.appendChild(printIframe);
-    
+
     // Escribir el contenido en el iframe
-    const printDocument = printIframe.contentDocument || printIframe.contentWindow?.document;
+    const printDocument =
+      printIframe.contentDocument || printIframe.contentWindow?.document;
     if (printDocument) {
       printDocument.open();
       printDocument.write(`
@@ -918,16 +1005,16 @@ const imprimirTicket = () => {
             </style>
           </head>
           <body>
-            ${ticketContent?.innerHTML || ''}
+            ${ticketContent?.innerHTML || ""}
           </body>
         </html>
       `);
       printDocument.close();
-      
+
       // Imprimir y eliminar el iframe
       printIframe.contentWindow?.focus();
       printIframe.contentWindow?.print();
-      
+
       // Eliminar el iframe después de imprimir
       setTimeout(() => {
         document.body.removeChild(printIframe);
@@ -947,24 +1034,28 @@ const seleccionarValoresAleatorios = () => {
   // Solo si es un pedido nuevo y no es un pedido hijo
   if (!props.pedido?.id && !props.pedido?.pedido_padre_id) {
     // Seleccionar una mesa aleatoria (preferiblemente libre)
-    const mesasLibres = mesas.value.filter(m => m.estado === "LIBRE");
+    const mesasLibres = mesaStore.mesas.filter((m) => m.estado === "LIBRE");
     if (mesasLibres.length > 0) {
-      const mesaAleatoria = mesasLibres[Math.floor(Math.random() * mesasLibres.length)];
+      const mesaAleatoria =
+        mesasLibres[Math.floor(Math.random() * mesasLibres.length)];
       formData.value.mesa_id = mesaAleatoria.id;
-    } else if (mesas.value.length > 0) {
-      const mesaAleatoria = mesas.value[Math.floor(Math.random() * mesas.value.length)];
+    } else if (mesaStore.mesas.length > 0) {
+      const mesaAleatoria =
+        mesaStore.mesas[Math.floor(Math.random() * mesaStore.mesas.length)];
       formData.value.mesa_id = mesaAleatoria.id;
     }
-    
+
     // Seleccionar un mesero aleatorio
     if (meseros.value.length > 0) {
-      const meseroAleatorio = meseros.value[Math.floor(Math.random() * meseros.value.length)];
+      const meseroAleatorio =
+        meseros.value[Math.floor(Math.random() * meseros.value.length)];
       formData.value.mesera_id = meseroAleatorio.id;
     }
-    
+
     // Seleccionar un cajero aleatorio
     if (cajeros.value.length > 0) {
-      const cajeroAleatorio = cajeros.value[Math.floor(Math.random() * cajeros.value.length)];
+      const cajeroAleatorio =
+        cajeros.value[Math.floor(Math.random() * cajeros.value.length)];
       formData.value.cajero_id = cajeroAleatorio.id;
     }
   }
@@ -983,12 +1074,14 @@ watch(
         cajero_id: newPedido.cajero_id,
         tipo_pago: newPedido.tipo_pago || "EFECTIVO",
         estado: newPedido.estado || "EN_ATENCION",
-        detalles: newPedido.detalles?.map(d => ({
-          ...d,
-          precio_unitario: typeof d.precio_unitario === 'string' 
-            ? parseFloat(d.precio_unitario) 
-            : d.precio_unitario
-        })) || []
+        detalles:
+          newPedido.detalles?.map((d) => ({
+            ...d,
+            precio_unitario:
+              typeof d.precio_unitario === "string"
+                ? parseFloat(d.precio_unitario)
+                : d.precio_unitario,
+          })) || [],
       };
     } else {
       formData.value = {
@@ -999,13 +1092,13 @@ watch(
         cajero_id: 0,
         tipo_pago: "EFECTIVO",
         estado: "EN_ATENCION",
-        detalles: []
+        detalles: [],
       };
-      
+
       // Seleccionar valores aleatorios para nuevo pedido
       seleccionarValoresAleatorios();
     }
-    
+
     errorMensaje.value = "";
     mostrarVistaPrevia.value = false;
     pedidoGuardado.value = false;
@@ -1024,12 +1117,13 @@ onMounted(async () => {
     cargarMesas(),
     cargarUsuarios(),
     cargarProductos(),
-    cargarCategorias()
+    cargarCategorias(),
   ]);
-  
+
   filtrarProductos();
-  
+
   // Seleccionar valores aleatorios para nuevo pedido
   seleccionarValoresAleatorios();
 });
 </script>
+

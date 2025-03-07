@@ -1,3 +1,5 @@
+import { TipoPago } from "./enums";
+
 export interface Rol {
   id: number;
   nombre: string;
@@ -56,11 +58,12 @@ export interface Producto {
 
 export interface CrearPedidoConDetalles {
   pedido_padre_id?: number;
-  mesa_id?: number;
+  mesa_id: number;
   mesera_id: number;
   cajero_id: number;
   estado?: string; // "EN_ATENCION" o "CONCLUIDO"
   fecha_concluido?: Date;
+  tipo_pago?: TipoPago
   detalles: {
     producto_id: number;
     cantidad: number;

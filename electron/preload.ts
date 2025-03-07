@@ -9,6 +9,7 @@ import {
   Producto,
 } from "./main/modules/interfaces";
 import { CategoriaProducto } from "@prisma/client";
+import { EstadosMesa } from "./main/modules/enums";
 
 // --------- Expose some API to the Renderer process ---------
 contextBridge.exposeInMainWorld("api", {
@@ -33,6 +34,8 @@ contextBridge.exposeInMainWorld("api", {
     ipcRenderer.invoke("delete-categoria", id),
   //MESAS
   getMesas: () => ipcRenderer.invoke("get-mesas"),
+  getMesasByEstado: (estado: EstadosMesa) =>
+    ipcRenderer.invoke("get-mesas-by-estado", estado),
   createMesa: (mesaData: any) => ipcRenderer.invoke("create-mesa", mesaData),
   editMesaById: (id: number, mesaData: any) =>
     ipcRenderer.invoke("edit-mesa", { id, mesaData }),

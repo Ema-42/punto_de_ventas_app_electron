@@ -1,5 +1,7 @@
 /// <reference types="vite-plugin-electron/electron-env" />
 
+const { EstadosMesa } = require("./main/modules/enums");
+
 const {
   CrearPedidoConDetalles,
   EditarPedidoConDetalles,
@@ -49,6 +51,7 @@ interface Window {
     deleteCategoriaById: (id: number) => Promise<any>;
     //mesas
     getMesas: () => Promise<any>;
+    getMesasByEstado: (estado: EstadosMesa) => Promise<any>;
     createMesa: (mesaData: any) => Promise<any>;
     editMesaById: (id: number, mesaData: any) => Promise<any>;
     getOneMesaById: (id: number) => Promise<any>;

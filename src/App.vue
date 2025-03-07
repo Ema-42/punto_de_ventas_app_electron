@@ -1,5 +1,4 @@
 <!-- <script setup lang="ts">
- 
 import {
   CategoriaProducto,
   Producto,
@@ -13,7 +12,8 @@ import {
   EditarIngresoConDetalles,
 } from "../electron/main/modules/interfaces";
 import { onMounted, ref } from "vue";
-import Login from './views/login.vue'
+import Login from "./views/login.vue";
+import { EstadosMesa } from "../electron/main/modules/enums";
 
 const productos = ref<Producto[]>([]);
 const loading = ref(true);
@@ -183,6 +183,15 @@ const getAllMesas = async () => {
   }
 };
 
+const getMesasPorEstado = async (estado: EstadosMesa) => {
+  try {
+    mesas.value = await window.api.getMesasByEstado(estado);
+    return mesas.value;
+  } catch (err) {
+    error.value = "Error al obtener las mesas";
+    console.error(err);
+  }
+};
 const createMesa = async (data: Mesa) => {
   try {
     const result = await window.api.createMesa(data);
@@ -403,7 +412,7 @@ const getOnePedidoById = async (id: number) => {
 
 const editEstadoPedidoById = async (id: number, nuevoEstado: EstadoPedido) => {
   try {
-    const result = await window.api.editEstadoPedidoById(id, nuevoEstado);
+    const result = await window.api.cambiarEstadoPedido(id, nuevoEstado);
     if (result instanceof Error) {
       pedidos.value = result.toString();
       throw result;
@@ -618,6 +627,12 @@ const editarIngresoConDetalles = async (data: EditarIngresoConDetalles) => {
             @click="getAllMesas"
           >
             get all mesa
+          </button>
+          <button
+            class="bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition duration-300"
+            @click="getMesasPorEstado(EstadosMesa.LIBRE)"
+          >
+            get mesas por estado
           </button>
           <button
             class="bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition duration-300"
@@ -909,7 +924,6 @@ const editarIngresoConDetalles = async (data: EditarIngresoConDetalles) => {
 <template>
   <div>
     <template v-if="authStore.user">
-      <!-- Layout principal con sidebar y navbar -->
       <div class="flex h-screen overflow-hidden">
         <Sidebar />
         <div class="flex flex-col w-full transition-all duration-300">
@@ -921,7 +935,6 @@ const editarIngresoConDetalles = async (data: EditarIngresoConDetalles) => {
       </div>
     </template>
     <template v-else>
-      <!-- Solo muestra el router-view sin sidebar/navbar cuando no está autenticado -->
       <router-view />
     </template>
   </div>

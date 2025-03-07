@@ -1,5 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import { Mesa } from "./interfaces";
+import { EstadosMesa } from "./enums";
 
 const prisma = new PrismaClient();
 
@@ -21,6 +22,32 @@ export const getMesas = async () => {
     return mesas;
   } catch (error) {
     console.error("Error al obtener mesas:", error);
+    return error;
+  }
+};
+
+export const getMesasByEstado = async (estado: EstadosMesa) => {
+  try {
+    const mesas = await prisma.mesa.findMany({
+      where: {
+        eliminado: false,
+        estado,
+      },
+      select: {
+        id: true,
+        numero: true,
+        estado: true,
+        eliminado: true,
+        fecha_creacion: true,
+      },
+      orderBy: {
+        fecha_creacion: "desc",
+      },
+    });
+
+    return mesas;
+  } catch (error) {
+    console.error("Error al obtener mesas por estado:", error);
     return error;
   }
 };
@@ -61,7 +88,7 @@ export const createMesa = async (data: Mesa) => {
   }
 };
 
-export const updateMesa = async (id: number, mesaData: Partial<Mesa>) => { 
+export const updateMesa = async (id: number, mesaData: Partial<Mesa>) => {
   try {
     const existing = await prisma.mesa.findMany({
       where: { numero: mesaData.numero, eliminado: false },
@@ -80,6 +107,27 @@ export const updateMesa = async (id: number, mesaData: Partial<Mesa>) => {
   } catch (error) {
     console.error("Error al actualizar una mesa:", error);
     return error;
+  }
+};
+
+export const cambiarEstadoMesa = async (
+  id: number,
+  nuevoEstado: EstadosMesa
+): Promise<void> => {
+  try {
+    const mesa = await prisma.mesa.findUnique({ where: { id } });
+
+    if (!mesa) {
+      throw new Error("Mesa no encontrada");
+    }
+
+    await prisma.mesa.update({
+      where: { id },
+      data: { estado: nuevoEstado },
+    });
+  } catch (error) {
+    console.error("Error al cambiar el estado de la mesa:", error);
+    throw error;
   }
 };
 

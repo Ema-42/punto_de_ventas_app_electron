@@ -15,6 +15,7 @@ electron.contextBridge.exposeInMainWorld("api", {
   deleteCategoriaById: (id) => electron.ipcRenderer.invoke("delete-categoria", id),
   //MESAS
   getMesas: () => electron.ipcRenderer.invoke("get-mesas"),
+  getMesasByEstado: (estado) => electron.ipcRenderer.invoke("get-mesas-by-estado", estado),
   createMesa: (mesaData) => electron.ipcRenderer.invoke("create-mesa", mesaData),
   editMesaById: (id, mesaData) => electron.ipcRenderer.invoke("edit-mesa", { id, mesaData }),
   getOneMesaById: (id) => electron.ipcRenderer.invoke("get-one-mesa", id),

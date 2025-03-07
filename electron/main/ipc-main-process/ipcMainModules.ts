@@ -19,6 +19,7 @@ import {
   deleteMesa,
   getMesaById,
   getMesas,
+  getMesasByEstado,
   updateMesa,
 } from "../modules/mesas";
 import {
@@ -46,6 +47,7 @@ import {
   getIngresoById,
   getIngresos,
 } from "../modules/ingresos";
+import { EstadosMesa } from "../modules/enums";
 
 export default () => {
   //productos
@@ -84,6 +86,9 @@ export default () => {
 
   ipcMain.handle("get-mesas", async () => {
     return await getMesas();
+  });
+  ipcMain.handle("get-mesas-by-estado", async (_, estado: EstadosMesa) => {
+    return await getMesasByEstado(estado);
   });
   ipcMain.handle("create-mesa", async (_, mesa) => {
     return await createMesa(mesa);

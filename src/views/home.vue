@@ -17,7 +17,7 @@
           />
         </div>
         <button
-          @click="abrirModalNuevoPedido"
+          @click="NuevoPedido"
           class="bg-red-600 text-white px-4 py-2 rounded-lg shadow-md hover:bg-red-700 transition flex items-center gap-2"
         >
           <svg
@@ -48,15 +48,15 @@
             <div class="text-2xl font-bold text-gray-700">
               {{ totalPedidos }}
             </div>
-            <div class="flex flex-col gap-1 w-32">
+            <div class="flex flex-col gap-1 w-36">
               <div class="bg-green-100 px-3 py-1 rounded-lg">
                 <div class="text-green-600 text-sm font-medium">
-                  {{ cantidadPedidosCompletados }} Entregados
+                  {{ cantidadPedidosCompletados }} Completados
                 </div>
               </div>
               <div class="bg-yellow-100 px-3 py-1 rounded-lg">
                 <div class="text-yellow-600 text-sm font-medium">
-                  {{ cantidadPedidosEnPreparacion }} En Prep.
+                  {{ cantidadPedidosEnPreparacion }} En Preparación.
                 </div>
               </div>
             </div>
@@ -185,7 +185,7 @@
               ]"
             >
               <div
-                class="font-medium text-xl"
+                class="font-medium text-lg"
                 :class="[
                   mesa.estado === EstadosMesa.LIBRE
                     ? 'text-green-700'
@@ -280,10 +280,7 @@ import Chart from "chart.js/auto";
 import { EstadosMesa, Roles } from "../../electron/main/modules/enums";
 import { format } from "date-fns";
 import { EstadoPedido } from "../../electron/main/modules/interfaces";
-import { useAuthStore } from "../stores/auth";
-const authStore = useAuthStore();
-
-console.log("home", authStore.user);
+import router from "../router";
 
 const mesas = ref<Mesa[]>([]);
 const meseros = ref<MeseroAtencion[]>([]);
@@ -292,6 +289,7 @@ const pedidosHoy = ref<Pedido[]>([]);
 const cantidadPedidosEnPreparacion = ref(0);
 const cantidadPedidosCompletados = ref(0);
 const totalPedidos = ref(0);
+const CantidadPedidosPorHora = ref([0]);
 
 // Interfaces
 interface Mesa {
@@ -352,16 +350,12 @@ const productosStockBajo = ref<ProductoStock[]>([
   { id: 1, nombre: "Papas fritas", stock: 5 },
   { id: 2, nombre: "Coca Cola 500ml", stock: 8 },
   { id: 3, nombre: "Pan de hamburguesa", stock: 10 },
-  { id: 4, nombre: "Queso cheddar", stock: 7 },
-  { id: 5, nombre: "Cerveza rubia", stock: 6 },
 ]);
 
 // Datos para categorías
 const categorias = ref<Categoria[]>([
   { id: 1, nombre: "Hamburguesas" },
   { id: 2, nombre: "Bebidas" },
-  { id: 3, nombre: "Postres" },
-  { id: 4, nombre: "Entradas" },
 ]);
 
 // Datos para productos más vendidos
@@ -374,7 +368,6 @@ const productosVendidos = ref<ProductoVendido[]>([
     categoriaId: 1,
   },
   { id: 2, nombre: "Refresco Cola", cantidad: 38, ranking: 2, categoriaId: 2 },
-  { id: 3, nombre: "Papas Fritas", cantidad: 36, ranking: 3, categoriaId: 4 },
   {
     id: 4,
     nombre: "Hamburguesa Doble",
@@ -383,18 +376,8 @@ const productosVendidos = ref<ProductoVendido[]>([
     categoriaId: 1,
   },
   { id: 5, nombre: "Cerveza", cantidad: 28, ranking: 5, categoriaId: 2 },
-  { id: 6, nombre: "Helado", cantidad: 25, ranking: 6, categoriaId: 3 },
   { id: 7, nombre: "Nachos", cantidad: 22, ranking: 7, categoriaId: 4 },
   { id: 8, nombre: "Agua Mineral", cantidad: 20, ranking: 8, categoriaId: 2 },
-  { id: 9, nombre: "Helado", cantidad: 25, ranking: 9, categoriaId: 3 },
-  { id: 10, nombre: "Nachos", cantidad: 22, ranking: 10, categoriaId: 4 },
-  {
-    id: 9,
-    nombre: "Tarta de Chocolate",
-    cantidad: 18,
-    ranking: 9,
-    categoriaId: 3,
-  },
 ]);
 
 // Productos filtrados por categoría
@@ -412,8 +395,8 @@ const actualizarReloj = (): void => {
   currentTime.value = new Date().toLocaleTimeString();
 };
 
-const abrirModalNuevoPedido = (): void => {
-  console.log("Abrir modal de nuevo pedido");
+const NuevoPedido = (): void => {
+  router.push({ path: "/pedidos", query: { ejecutarMetodo: "true" } });
 };
 
 const getCategoriaName = (categoriaId: number): string => {
@@ -435,11 +418,26 @@ const inicializarGraficos = (): void => {
     ventasDiaChartInstance = new Chart(canvas, {
       type: "bar",
       data: {
-        labels: ["8am", "10am", "12pm", "2pm", "4pm", "6pm", "8pm", "9pm"],
+        labels: [
+          "8am",
+          "9am",
+          "10am",
+          "11am",
+          "12pm",
+          "1pm",
+          "2pm",
+          "3pm",
+          "4pm",
+          "5pm",
+          "6pm",
+          "7pm",
+          "8pm",
+          "9pm",
+        ],
         datasets: [
           {
             label: "Ventas del Día",
-            data: [5, 8, 12, 15, 10, 7, 4, 12, 15],
+            data: CantidadPedidosPorHora.value,
             backgroundColor: "#DC2626", // Cambiado a rojo para mantener consistencia
           },
         ],
@@ -462,6 +460,36 @@ const inicializarGraficos = (): void => {
   };
 
   inicializarGraficoDiario();
+};
+
+const setCantidadPedidosPorHora = async () => {
+  const pedidosHoy = await getPedidosHoy();
+
+  const hoy = new Date();
+  hoy.setHours(0, 0, 0, 0);
+
+  CantidadPedidosPorHora.value = Array(14).fill(0);
+
+  // Filtrar pedidos con estado válido y que sean de hoy
+  const pedidosFiltrados = pedidosHoy.filter((pedido: any) => {
+    const fechaPedido = new Date(pedido.fecha_creacion);
+    fechaPedido.setHours(0, 0, 0, 0); // Eliminar la hora para comparar solo la fecha
+
+    return (
+      (pedido.estado === EstadoPedido.EN_PREPARACION ||
+        pedido.estado === EstadoPedido.COMPLETADO) &&
+      fechaPedido.getTime() === hoy.getTime()
+    );
+  });
+
+  pedidosFiltrados.forEach((pedido) => {
+    const horaPedido = new Date(pedido.fecha_creacion).getHours(); // Obtener la hora (0-23)
+    const index = horaPedido - 8; // Ajustar al índice del array (8 AM es índice 0)
+
+    if (index >= 0 && index < 14) {
+      CantidadPedidosPorHora.value[index]++;
+    }
+  });
 };
 
 const mesasEstados = reactive({
@@ -569,6 +597,7 @@ const getPedidos = async () => {
 };
 
 onMounted(async () => {
+  setCantidadPedidosPorHora();
   getMeseros();
   getMesas();
   getPedidos();
