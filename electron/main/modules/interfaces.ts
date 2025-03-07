@@ -15,6 +15,13 @@ export interface Usuario {
   };
 }
 
+export interface UsuarioAuth {
+  id?: number;
+  nombre: string;
+  password: string;
+  rol_id: number;
+}
+
 export interface FileData {
   name: string;
   type: string;

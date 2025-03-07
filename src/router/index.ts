@@ -7,13 +7,18 @@ import Home from "../views/home.vue";
 import Usuarios from "../views/usuarios.vue";
 import Pedidos from "../views/pedidos.vue";
 import Ingresos from "../views/ingresos.vue";
-
+import Login from "../views/login.vue";
 // Define the routes using the RouteRecordRaw type
 const routes = [
   {
+    path: "/login",
+    name: "login",
+    component: Login,
+  },
+  {
     path: "/productos",
     name: "productos",
-    component: Productos, // Asegúrate de que esto apunte al componente correcto
+    component: Productos,
   },
   {
     path: "/categorias",
@@ -47,7 +52,7 @@ const routes = [
   },
 ];
 
-// Create the router instance with type safety
+ 
 const router = createRouter({
   history: createWebHistory(),
   routes,

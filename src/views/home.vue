@@ -280,6 +280,10 @@ import Chart from "chart.js/auto";
 import { EstadosMesa, Roles } from "../../electron/main/modules/enums";
 import { format } from "date-fns";
 import { EstadoPedido } from "../../electron/main/modules/interfaces";
+import { useAuthStore } from "../stores/auth";
+const authStore = useAuthStore();
+
+console.log("home", authStore.user);
 
 const mesas = ref<Mesa[]>([]);
 const meseros = ref<MeseroAtencion[]>([]);
@@ -435,7 +439,7 @@ const inicializarGraficos = (): void => {
         datasets: [
           {
             label: "Ventas del Día",
-            data: [5, 8,12, 15, 10, 7, 4, 12, 15],
+            data: [5, 8, 12, 15, 10, 7, 4, 12, 15],
             backgroundColor: "#DC2626", // Cambiado a rojo para mantener consistencia
           },
         ],

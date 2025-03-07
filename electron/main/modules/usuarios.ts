@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import { Usuario } from "./interfaces";
+import { Usuario, UsuarioAuth } from "./interfaces";
 import bcrypt from "bcryptjs";
 
 const prisma = new PrismaClient();
@@ -34,7 +34,7 @@ export const getUsuarioById = async (id: number) => {
   }
 };
 
-export const createUsuario = async (data: Usuario) => {
+export const createUsuario = async (data: UsuarioAuth) => {
   try {
     const existingUsuario = await prisma.usuario.findFirst({
       where: { nombre: data.nombre },
@@ -59,7 +59,7 @@ export const createUsuario = async (data: Usuario) => {
 
 export const updateUsuario = async (
   id: number,
-  usuarioData: Partial<Usuario>
+  usuarioData: Partial<UsuarioAuth>
 ) => {
   try {
     if (usuarioData.password) {
@@ -107,6 +107,7 @@ export const authenticateUsuario = async (
   try {
     const usuarioEncontrado = await prisma.usuario.findFirst({
       where: { nombre: usuario, eliminado: false },
+      select: { nombre: true, rol: true, id: true, password: true },
     });
     if (!usuarioEncontrado) {
       throw new Error("Usuario no encontrado");
@@ -122,7 +123,11 @@ export const authenticateUsuario = async (
 
     return {
       message: "Acceso correcto",
-      data: { nombre: usuarioEncontrado.nombre },
+      data: {
+        id: usuarioEncontrado.id,
+        nombre: usuarioEncontrado.nombre,
+        rol: usuarioEncontrado.rol.nombre,
+      },
     };
   } catch (error) {
     console.error("Error en la autenticación del usuario:", error);

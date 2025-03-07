@@ -2108,7 +2108,8 @@ const deleteUsuario = async (id) => {
 const authenticateUsuario = async (usuario, password) => {
   try {
     const usuarioEncontrado = await prisma$3.usuario.findFirst({
-      where: { nombre: usuario, eliminado: false }
+      where: { nombre: usuario, eliminado: false },
+      select: { nombre: true, rol: true, id: true, password: true }
     });
     if (!usuarioEncontrado) {
       throw new Error("Usuario no encontrado");
@@ -2122,7 +2123,11 @@ const authenticateUsuario = async (usuario, password) => {
     }
     return {
       message: "Acceso correcto",
-      data: { nombre: usuarioEncontrado.nombre }
+      data: {
+        id: usuarioEncontrado.id,
+        nombre: usuarioEncontrado.nombre,
+        rol: usuarioEncontrado.rol.nombre
+      }
     };
   } catch (error) {
     console.error("Error en la autenticación del usuario:", error);

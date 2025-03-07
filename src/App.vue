@@ -13,6 +13,7 @@ import {
   EditarIngresoConDetalles,
 } from "../electron/main/modules/interfaces";
 import { onMounted, ref } from "vue";
+import Login from './views/login.vue'
 
 const productos = ref<Producto[]>([]);
 const loading = ref(true);
@@ -918,6 +919,7 @@ const editarIngresoConDetalles = async (data: EditarIngresoConDetalles) => {
 </template> 
 
 <script setup lang="ts">
+import { useAuthStore } from './stores/auth';
 import Sidebar from "./components/Sidebar.vue";
 import Navbar from "./components/Navbar.vue";
 </script>

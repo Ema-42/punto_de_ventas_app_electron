@@ -4,6 +4,7 @@ import App from "./App.vue";
 import router from "../src/router/index";
 import Toast, { PluginOptions, POSITION } from "vue-toastification";
 import "vue-toastification/dist/index.css";
+import { createPinia } from 'pinia';
 
 const app = createApp(App); // Almacena la instancia de la app en la variable app
 const options: PluginOptions = {
@@ -22,12 +23,7 @@ const options: PluginOptions = {
 
 app.use(Toast, options);
 app.use(router);
+app.use(createPinia());
 app.mount("#app").$nextTick(() => {
-  // Use contextBridge
-  /*   window.ipcRenderer.on('main-process-message', (_event, message) => {
-    console.log(message);
-  }); */
 });
-
-// Mueve esto después de crear la instancia de app
 

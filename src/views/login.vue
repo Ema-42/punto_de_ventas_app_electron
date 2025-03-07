@@ -129,10 +129,11 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, reactive } from "vue";
 import mostrar from "../assets/iconos/ver.svg";
 import nomostrar from "../assets/iconos/nover.svg";
+import { useAuthStore } from "../stores/auth";
 const showPassword = ref(false);
 const errorMessage = ref();
 const authMessage = ref();
@@ -140,7 +141,7 @@ const usuario = ref("");
 const password = ref("");
 const isLoading = ref(false);
 const login = ref(false);
-
+const authStore = useAuthStore();
 const togglePassword = () => {
   showPassword.value = !showPassword.value;
 };
@@ -166,6 +167,11 @@ const handleSubmit = async () => {
     }
     authMessage.value = response;
     login.value = true;
+
+    authStore.login(response.data.id, response.data.nombre, response.data.rol); // Establecer usuario
+    //router.push('/');
+    //console.log("home", authStore.user);
+    //authStore.logout(); // Dejar user en null
   } catch (err) {
     console.error(err);
     login.value = false;
