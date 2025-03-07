@@ -63,6 +63,8 @@ contextBridge.exposeInMainWorld("api", {
     ipcRenderer.invoke("crear-pedido-con-detalles", data),
   editarPedidoConDetalles: (data: EditarPedidoConDetalles) =>
     ipcRenderer.invoke("editar-pedido-con-detalles", data),
+  cambiarEstadoPedido: (id: number, estado: EstadoPedido) =>
+    ipcRenderer.invoke("cambiar-estado-pedido", { id, estado }),
   //ingresos
   getIngresos: () => ipcRenderer.invoke("get-ingresos"),
   getOneIngresoById: (id: number) => ipcRenderer.invoke("get-one-ingreso", id),

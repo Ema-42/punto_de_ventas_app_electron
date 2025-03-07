@@ -6,36 +6,48 @@
       @cerrar="mostrarModalCrearEditar = false"
       @guardar="guardarPedido"
     />
-  
+
     <EliminarPedido
       :mostrar="mostrarModalEliminar"
       :pedido="pedidoEliminar"
       @cerrar="mostrarModalEliminar = false"
       @confirmar="eliminarPedido"
     />
-  
+
     <DetallePedido
       :mostrar="mostrarModalDetalle"
       :pedido="pedidoDetalle"
       @cerrar="mostrarModalDetalle = false"
     />
-  
+
     <!-- Toast Notification -->
-    <div 
-      v-if="mostrarToast" 
+    <div
+      v-if="mostrarToast"
       class="fixed top-4 right-4 bg-green-100 border-l-4 border-green-500 text-green-700 p-4 rounded shadow-md z-50 animate-fade-in-out"
     >
       <div class="flex items-center">
-        <svg class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+        <svg
+          class="h-6 w-6 mr-2"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M5 13l4 4L19 7"
+          />
         </svg>
         <p>{{ mensajeToast }}</p>
       </div>
     </div>
-  
+
     <!-- Encabezado con título y buscador -->
     <div class="bg-gradient-to-r bg-gray-100 p-4 rounded-lg shadow-md mb-4">
-      <div class="flex flex-col md:flex-row md:justify-between md:items-center gap-4">
+      <div
+        class="flex flex-col md:flex-row md:justify-between md:items-center gap-4"
+      >
         <h1 class="text-2xl font-bold text-gray-700 flex items-center">
           Pedidos
           <svg
@@ -53,7 +65,7 @@
             />
           </svg>
         </h1>
-  
+
         <div class="flex flex-col sm:flex-row gap-2 items-center">
           <!-- Buscador con icono -->
           <div class="relative w-full sm:w-64">
@@ -79,7 +91,7 @@
               />
             </svg>
           </div>
-          
+
           <!-- Botón para crear nuevo pedido -->
           <button
             @click="crearNuevoPedido"
@@ -104,11 +116,13 @@
         </div>
       </div>
     </div>
-  
+
     <!-- Pedidos Activos -->
     <div class="mb-6">
       <h2 class="text-lg font-semibold mb-4">Pedidos Activos</h2>
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 max-h-screen overflow-y-auto">
+      <div
+        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 max-h-screen overflow-y-auto"
+      >
         <div
           v-for="pedido in pedidosFiltrados"
           :key="pedido.id"
@@ -120,16 +134,31 @@
                 Pedido #{{ pedido.num_pedido_dia || pedido.id }}
               </h3>
               <div class="flex items-center gap-2 mt-1">
-                <div class="bg-red-600 text-white text-sm text-center py-1 px-2 rounded-md font-medium">
-                  {{ pedido.mesa ? `Mesa ${pedido.mesa.numero}` : 'Sin mesa' }}
+                <div
+                  class="bg-red-600 text-white text-sm text-center py-1 px-2 rounded-md font-medium"
+                >
+                  {{ pedido.mesa ? `Mesa ${pedido.mesa.numero}` : "Sin mesa" }}
                 </div>
               </div>
               <div
-                v-if="pedidosHijos[pedido.id] && pedidosHijos[pedido.id].length > 0"
+                v-if="
+                  pedidosHijos[pedido.id] && pedidosHijos[pedido.id].length > 0
+                "
                 class="mt-1 bg-blue-100 text-blue-800 text-xs font-medium px-2 py-1 rounded-full flex items-center"
               >
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5l7 7-7 7M5 5l7 7-7 7" />
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-3 w-3 mr-1"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M13 5l7 7-7 7M5 5l7 7-7 7"
+                  />
                 </svg>
                 {{ pedidosHijos[pedido.id].length }} pedido(s) agregado(s)
               </div>
@@ -145,7 +174,9 @@
           </div>
 
           <div class="flex justify-between mt-2">
-            <span class="text-gray-600">Mesero: {{ pedido.mesera.nombre }}</span>
+            <span class="text-gray-600"
+              >Mesero: {{ pedido.mesera.nombre }}</span
+            >
             <span class="font-medium text-gray-800">${{ pedido.total }}</span>
           </div>
 
@@ -154,8 +185,19 @@
               @click="agregarAPedido(pedido)"
               class="text-green-600 hover:text-green-800 flex items-center text-xs font-medium"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-4 w-4 mr-1"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+                />
               </svg>
               Agregar
             </button>
@@ -164,8 +206,19 @@
                 @click="cambiarEstadoPedido(pedido)"
                 class="text-green-600 hover:text-green-800 flex items-center text-xs font-medium"
               >
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-4 w-4 mr-1"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M5 13l4 4L19 7"
+                  />
                 </svg>
                 Concluir
               </button>
@@ -173,9 +226,25 @@
                 @click="verDetalle(pedido)"
                 class="text-blue-600 hover:text-blue-800 flex items-center text-xs font-medium"
               >
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-4 w-4 mr-1"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                  />
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                  />
                 </svg>
                 Ver detalles
               </button>
@@ -185,7 +254,6 @@
       </div>
     </div>
 
-  
     <!-- Sección de pedidos concluidos -->
     <div class="bg-white rounded-lg shadow-md p-4">
       <h2 class="text-lg font-semibold mb-4">Pedidos Concluidos</h2>
@@ -193,22 +261,34 @@
         <table class="min-w-full divide-y divide-gray-200">
           <thead class="bg-gray-50">
             <tr>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th
+                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
                 N° Pedido
               </th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th
+                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
                 Mesa
               </th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th
+                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
                 Mesero
               </th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th
+                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
                 Total
               </th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th
+                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
                 Fecha
               </th>
-              <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th
+                class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
+              >
                 Acciones
               </th>
             </tr>
@@ -216,12 +296,14 @@
           <tbody class="bg-white divide-y divide-gray-200">
             <tr v-for="pedido in pedidosConcluidos" :key="pedido.id">
               <td class="px-6 py-4 whitespace-nowrap">
-                <span class="bg-gray-200 text-gray-700 px-2 py-1 rounded-full text-xs font-bold">
+                <span
+                  class="bg-gray-200 text-gray-700 px-2 py-1 rounded-full text-xs font-bold"
+                >
                   {{ pedido.num_pedido_dia || pedido.id }}
                 </span>
               </td>
               <td class="px-6 py-4 whitespace-nowrap">
-                {{ pedido.mesa ? `Mesa ${pedido.mesa.numero}` : 'Sin mesa' }}
+                {{ pedido.mesa ? `Mesa ${pedido.mesa.numero}` : "Sin mesa" }}
               </td>
               <td class="px-6 py-4 whitespace-nowrap">
                 {{ pedido.mesera.nombre }}
@@ -288,264 +370,263 @@
       </div>
     </div>
   </div>
-  </template>
-  
-  <script setup lang="ts">
-  import { ref, computed, onMounted, watch } from "vue";
-  import CrearEditarPedido from "../components/Pedidos/CrearEditarPedido.vue";
-  import EliminarPedido from "../components/Pedidos/EliminarPedido.vue";
-  import DetallePedido from "../components/Pedidos/DetallePedido.vue";
-  
-  // Interfaces
-  interface DetallePedido {
-    id?: number;
-    producto_id: number;
-    cantidad: number;
-    precio_unitario: number;
-    eliminado?: boolean;
-    producto?: {
-      id: number;
-      nombre: string;
-      imagen_url?: string;
-      maneja_stock: boolean;
-    };
-  }
-  
-  interface Pedido {
+</template>
+
+<script setup lang="ts">
+import { ref, computed, onMounted, watch } from "vue";
+import CrearEditarPedido from "../components/Pedidos/CrearEditarPedido.vue";
+import EliminarPedido from "../components/Pedidos/EliminarPedido.vue";
+import DetallePedido from "../components/Pedidos/DetallePedido.vue";
+import { EstadoPedido } from "../../electron/main/modules/interfaces";
+
+// Interfaces
+interface DetallePedido {
+  id?: number;
+  producto_id: number;
+  cantidad: number;
+  precio_unitario: number;
+  eliminado?: boolean;
+  producto?: {
     id: number;
-    pedido_padre_id?: number | null;
-    tipo_pago?: string;
-    mesa_id?: number | null;
-    mesera_id: number;
-    cajero_id: number;
-    num_pedido_dia?: number | null;
-    estado?: string;
-    fecha_creacion: string;
-    fecha_concluido?: string | null;
-    total?: number | string;
-    eliminado?: boolean;
-    mesa?: {
-      id: number;
-      numero: number;
-    };
-    mesera: {
-      id: number;
-      nombre: string;
-    };
-    cajero: {
-      id: number;
-      nombre: string;
-    };
-    detalles: DetallePedido[];
-  }
-  
-  interface Mesa {
+    nombre: string;
+    imagen_url?: string;
+    maneja_stock: boolean;
+  };
+}
+
+interface Pedido {
+  id: number;
+  pedido_padre_id?: number | null;
+  tipo_pago?: string;
+  mesa_id?: number | null;
+  mesera_id: number;
+  cajero_id: number;
+  num_pedido_dia?: number | null;
+  estado?: string;
+  fecha_creacion: string;
+  fecha_concluido?: string | null;
+  total?: number | string;
+  eliminado?: boolean;
+  mesa?: {
     id: number;
     numero: number;
-    estado?: string;
-  }
-  
-  // Estado
-  const pedidos = ref<Pedido[]>([]);
-  const mesas = ref<Mesa[]>([]);
-  const searchQuery = ref("");
-  const mostrarModalCrearEditar = ref(false);
-  const mostrarModalEliminar = ref(false);
-  const mostrarModalDetalle = ref(false);
-  const pedidoEditar = ref<Pedido | null>(null);
-  const pedidoEliminar = ref<Pedido | null>(null);
-  const pedidoDetalle = ref<Pedido | null>(null);
-  const mostrarToast = ref(false);
-  const mensajeToast = ref("");
-  const pedidosHijos = ref<{[key: number]: Pedido[]}>({});
-  
-  // Computed
-  const pedidosConcluidos = computed(() => 
-    pedidos.value.filter(p => p.estado === 'CONCLUIDO')
-  );
-  
-  const pedidosActivos = computed(() => 
-    pedidos.value.filter(p => p.estado === 'EN_ATENCION' && !p.pedido_padre_id)
-  );
-  
-  const pedidosFiltrados = computed(() => {
+  };
+  mesera: {
+    id: number;
+    nombre: string;
+  };
+  cajero: {
+    id: number;
+    nombre: string;
+  };
+  detalles: DetallePedido[];
+}
+
+interface Mesa {
+  id: number;
+  numero: number;
+  estado?: string;
+}
+
+// Estado
+const pedidos = ref<Pedido[]>([]);
+const mesas = ref<Mesa[]>([]);
+const searchQuery = ref("");
+const mostrarModalCrearEditar = ref(false);
+const mostrarModalEliminar = ref(false);
+const mostrarModalDetalle = ref(false);
+const pedidoEditar = ref<Pedido | null>(null);
+const pedidoEliminar = ref<Pedido | null>(null);
+const pedidoDetalle = ref<Pedido | null>(null);
+const mostrarToast = ref(false);
+const mensajeToast = ref("");
+const pedidosHijos = ref<{ [key: number]: Pedido[] }>({});
+
+// Computed
+const pedidosConcluidos = computed(() =>
+  pedidos.value.filter((p) => p.estado === EstadoPedido.COMPLETADO)
+);
+
+const pedidosActivos = computed(() =>
+  pedidos.value.filter((p) => p.estado === EstadoPedido.EN_PREPARACION && !p.pedido_padre_id)
+);
+
+const pedidosFiltrados = computed(() => {
   if (!searchQuery.value) return pedidosActivos.value;
 
   const query = searchQuery.value.toLowerCase();
-  return pedidosActivos.value.filter(p => 
-    (p.mesera.nombre.toLowerCase().includes(query)) || 
-    (p.num_pedido_dia?.toString().includes(query)) ||
-    (p.id.toString().includes(query)) ||
-    (p.mesa?.numero.toString().includes(query)) // Filtrar por número de mesa
+  return pedidosActivos.value.filter(
+    (p) =>
+      p.mesera.nombre.toLowerCase().includes(query) ||
+      p.num_pedido_dia?.toString().includes(query) ||
+      p.id.toString().includes(query) ||
+      p.mesa?.numero.toString().includes(query) // Filtrar por número de mesa
   );
 });
-  
-  // Métodos
-  const cargarPedidos = async () => {
-    try {
-      // Carga desde API
-      if (window.api && window.api.getPedidos) {
-        const data = await window.api.getPedidos();
-        pedidos.value = data || [];
-        cargarPedidosHijos();
-      }
-    } catch (error) {
-      console.error("Error al cargar pedidos:", error);
-      pedidos.value = [];
+
+// Métodos
+const cargarPedidos = async () => {
+  try {
+    // Carga desde API
+    if (window.api && window.api.getPedidos) {
+      const data = await window.api.getPedidos();
+      pedidos.value = data || [];
+      cargarPedidosHijos();
     }
-  };
-  
-  const cargarPedidosHijos = () => {
-    // Agrupar pedidos hijos por pedido padre
-    const hijos: {[key: number]: Pedido[]} = {};
-    
-    pedidos.value.forEach(pedido => {
-      if (pedido.pedido_padre_id) {
-        if (!hijos[pedido.pedido_padre_id]) {
-          hijos[pedido.pedido_padre_id] = [];
-        }
-        hijos[pedido.pedido_padre_id].push(pedido);
+  } catch (error) {
+    console.error("Error al cargar pedidos:", error);
+    pedidos.value = [];
+  }
+};
+
+const cargarPedidosHijos = () => {
+  // Agrupar pedidos hijos por pedido padre
+  const hijos: { [key: number]: Pedido[] } = {};
+
+  pedidos.value.forEach((pedido) => {
+    if (pedido.pedido_padre_id) {
+      if (!hijos[pedido.pedido_padre_id]) {
+        hijos[pedido.pedido_padre_id] = [];
       }
-    });
-    
-    pedidosHijos.value = hijos;
-  };
-  
-  const cargarMesas = async () => {
-    try {
-      if (window.api && window.api.getMesas) {
-        const data = await window.api.getMesas();
-        mesas.value = data || [];
-      }
-    } catch (error) {
-      console.error("Error al cargar mesas:", error);
-      mesas.value = [];
+      hijos[pedido.pedido_padre_id].push(pedido);
     }
-  };
-  
-  const buscarPedidos = () => {
-    // La búsqueda se realiza automáticamente a través del computed pedidosFiltrados
-  };
-  
-  const crearNuevoPedido = () => {
-    pedidoEditar.value = {
-      id: 0,
-      mesa_id: null,
-      mesera_id: 0,
-      cajero_id: 0,
-      estado: "EN_ATENCION",
-      fecha_creacion: new Date().toISOString(),
-      mesera: { id: 0, nombre: "" },
-      cajero: { id: 0, nombre: "" },
-      detalles: [],
-      total: 0
-    };
-    mostrarModalCrearEditar.value = true;
-  };
-  
-  const agregarAPedido = (pedido: Pedido) => {
-    pedidoEditar.value = {
-      id: 0,
-      pedido_padre_id: pedido.id,
-      mesa_id: pedido.mesa_id,
-      mesera_id: pedido.mesera_id,
-      cajero_id: pedido.cajero_id,
-      estado: "EN_ATENCION",
-      fecha_creacion: new Date().toISOString(),
-      mesera: { ...pedido.mesera },
-      cajero: { ...pedido.cajero },
-      mesa: pedido.mesa ? { ...pedido.mesa } : undefined,
-      detalles: [],
-      total: 0
-    };
-    mostrarModalCrearEditar.value = true;
-  };
-  
-  const verDetalle = (pedido: Pedido) => {
-    pedidoDetalle.value = pedido;
-    mostrarModalDetalle.value = true;
-  };
-  
-  const mostrarToastMensaje = (mensaje: string) => {
-    mensajeToast.value = mensaje;
-    mostrarToast.value = true;
-    setTimeout(() => {
-      mostrarToast.value = false;
-    }, 3000);
-  };
-  
-  const guardarPedido = () => {
-    cargarPedidos();
-    mostrarModalCrearEditar.value = false;
-    mostrarToastMensaje(pedidoEditar.value?.id ? "Pedido actualizado con éxito!" : "Pedido creado con éxito!");
-  };
-  
-  const eliminarPedido = () => {
-    mostrarToastMensaje("Pedido eliminado con éxito!");
-    cargarPedidos();
-    mostrarModalEliminar.value = false;
-  };
-  
-  const formatearFecha = (fecha?: string) => {
-    if (!fecha) return "";
-    const date = new Date(fecha);
-    return date.toLocaleDateString("es-ES", {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-  };
-  
-  const getEstadoEtiqueta = (estado?: string) => {
-    const estados: { [key: string]: string } = {
-      EN_ATENCION: "En Atención",
-      CONCLUIDO: "Concluido",
-    };
-    return estados[estado || ""] || estado || "";
-  };
-  
-  const getEstadoClase = (estado?: string) => {
-    const clases: { [key: string]: string } = {
-      EN_ATENCION:
-        "bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full text-sm font-medium",
-      CONCLUIDO:
-        "bg-green-100 text-green-800 px-2 py-1 rounded-full text-sm font-medium",
-    };
-    return clases[estado || ""] || "";
-  };
-  
-  const cambiarEstadoPedido = async (pedido: Pedido) => {
-    try {
-      const pedidoActualizado = { ...pedido, estado: "CONCLUIDO", fecha_concluido: new Date().toISOString() };
-      
-      if (window.api && window.api.editarPedidoConDetalles) {
-        const result = await window.api.editarPedidoConDetalles(pedidoActualizado);
-        
-        if (result.success) {
-          mostrarToastMensaje("Pedido concluido con éxito!");
-          cargarPedidos();
-        } else {
-          throw new Error(result.message || "Error al concluir el pedido");
-        }
-      } else {
-        // Simulación si no hay API
-        console.log("Pedido concluido:", pedidoActualizado);
-        mostrarToastMensaje("Pedido concluido con éxito!");
-        cargarPedidos();
-      }
-    } catch (error: any) {
-      console.error("Error al concluir pedido:", error);
-      mostrarToastMensaje("Error al concluir el pedido: " + error.message);
+  });
+
+  pedidosHijos.value = hijos;
+};
+
+const cargarMesas = async () => {
+  try {
+    if (window.api && window.api.getMesas) {
+      const data = await window.api.getMesas();
+      mesas.value = data || [];
     }
+  } catch (error) {
+    console.error("Error al cargar mesas:", error);
+    mesas.value = [];
+  }
+};
+
+const buscarPedidos = () => {
+  // La búsqueda se realiza automáticamente a través del computed pedidosFiltrados
+};
+
+const crearNuevoPedido = () => {
+  pedidoEditar.value = {
+    id: 0,
+    mesa_id: null,
+    mesera_id: 0,
+    cajero_id: 0,
+    estado: EstadoPedido.EN_PREPARACION,
+    fecha_creacion: new Date().toISOString(),
+    mesera: { id: 0, nombre: "" },
+    cajero: { id: 0, nombre: "" },
+    detalles: [],
+    total: 0,
   };
-  
-  const imprimirTicketIndividual = (pedido: Pedido) => {
-    try {
-      // Crear contenido del ticket
-      const ticketContent = document.createElement('div');
-      ticketContent.innerHTML = `
+  mostrarModalCrearEditar.value = true;
+};
+
+const agregarAPedido = (pedido: Pedido) => {
+  pedidoEditar.value = {
+    id: 0,
+    pedido_padre_id: pedido.id,
+    mesa_id: pedido.mesa_id,
+    mesera_id: pedido.mesera_id,
+    cajero_id: pedido.cajero_id,
+    estado:EstadoPedido.EN_PREPARACION,
+    fecha_creacion: new Date().toISOString(),
+    mesera: { ...pedido.mesera },
+    cajero: { ...pedido.cajero },
+    mesa: pedido.mesa ? { ...pedido.mesa } : undefined,
+    detalles: [],
+    total: 0,
+  };
+  mostrarModalCrearEditar.value = true;
+};
+
+const verDetalle = (pedido: Pedido) => {
+  pedidoDetalle.value = pedido;
+  mostrarModalDetalle.value = true;
+};
+
+const mostrarToastMensaje = (mensaje: string) => {
+  mensajeToast.value = mensaje;
+  mostrarToast.value = true;
+  setTimeout(() => {
+    mostrarToast.value = false;
+  }, 3000);
+};
+
+const guardarPedido = () => {
+  cargarPedidos();
+  mostrarModalCrearEditar.value = false;
+  mostrarToastMensaje(
+    pedidoEditar.value?.id
+      ? "Pedido actualizado con éxito!"
+      : "Pedido creado con éxito!"
+  );
+};
+
+const eliminarPedido = () => {
+  mostrarToastMensaje("Pedido eliminado con éxito!");
+  cargarPedidos();
+  mostrarModalEliminar.value = false;
+};
+
+const formatearFecha = (fecha?: string) => {
+  if (!fecha) return "";
+  const date = new Date(fecha);
+  return date.toLocaleDateString("es-ES", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+};
+
+const getEstadoEtiqueta = (estado?: string) => {
+  const estados: { [key: string]: string } = {
+    'EN PREPARACION': "En Preparación",
+    COMPLETADO: "Completado",
+  };
+  return estados[estado || ""] || estado || "";
+};
+
+const getEstadoClase = (estado?: string) => {
+  const clases: { [key: string]: string } = {
+    'EN PREPARACION':
+      "bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full text-sm font-medium",
+      COMPLETADO:
+      "bg-green-100 text-green-800 px-2 py-1 rounded-full text-sm font-medium",
+  };
+  return clases[estado || ""] || "";
+};
+
+const cambiarEstadoPedido = async (pedido: Pedido) => {
+  try {
+    const result = await window.api.cambiarEstadoPedido(
+      pedido.id,
+      EstadoPedido.COMPLETADO
+    );
+    if (result.success) {
+      mostrarToastMensaje("Pedido completado con éxito!");
+      cargarPedidos();
+    } else {
+      throw new Error(result.message || "Error al concluir el pedido");
+    }
+  } catch (error: any) {
+    console.error("Error al concluir pedido:", error);
+    mostrarToastMensaje("Error al concluir el pedido: " + error.message);
+  }
+};
+
+const imprimirTicketIndividual = (pedido: Pedido) => {
+  try {
+    // Crear contenido del ticket
+    const ticketContent = document.createElement("div");
+    ticketContent.innerHTML = `
         <div class="text-center mb-4">
           <p class="font-bold text-lg">RESTAURANTE EJEMPLO</p>
           <p>Dirección: Calle Principal #123</p>
@@ -557,7 +638,7 @@
           <p>Fecha: ${formatearFecha(pedido.fecha_creacion)}</p>
           <p>Mesero: ${pedido.mesera.nombre}</p>
           <p>Cajero: ${pedido.cajero.nombre}</p>
-          ${pedido.mesa ? `<p>Mesa: ${pedido.mesa.numero}</p>` : ''}
+          ${pedido.mesa ? `<p>Mesa: ${pedido.mesa.numero}</p>` : ""}
           <p>Tipo de pago: ${pedido.tipo_pago || "No especificado"}</p>
           <p>Estado: ${getEstadoEtiqueta(pedido.estado)}</p>
         </div>
@@ -571,13 +652,20 @@
         </div>
         
         <div class="mb-4">
-          ${pedido.detalles.map(detalle => `
+          ${pedido.detalles
+            .map(
+              (detalle) => `
             <div class="grid grid-cols-12 mb-1">
               <div class="col-span-6 truncate">${detalle.producto?.nombre}</div>
               <div class="col-span-2 text-center">${detalle.cantidad}</div>
-              <div class="col-span-4 text-right">$${(detalle.cantidad * parseFloat(detalle.precio_unitario.toString())).toFixed(2)}</div>
+              <div class="col-span-4 text-right">$${(
+                detalle.cantidad *
+                parseFloat(detalle.precio_unitario.toString())
+              ).toFixed(2)}</div>
             </div>
-          `).join('')}
+          `
+            )
+            .join("")}
         </div>
         
         <div class="border-t border-gray-300 pt-2 mb-4">
@@ -591,18 +679,19 @@
           <p>¡Gracias por su preferencia!</p>
         </div>
       `;
-      
-      // Crear un iframe para imprimir
-      const printIframe = document.createElement('iframe');
-      printIframe.style.position = 'absolute';
-      printIframe.style.top = '-9999px';
-      document.body.appendChild(printIframe);
-      
-      // Escribir el contenido en el iframe
-      const printDocument = printIframe.contentDocument || printIframe.contentWindow?.document;
-      if (printDocument) {
-        printDocument.open();
-        printDocument.write(`
+
+    // Crear un iframe para imprimir
+    const printIframe = document.createElement("iframe");
+    printIframe.style.position = "absolute";
+    printIframe.style.top = "-9999px";
+    document.body.appendChild(printIframe);
+
+    // Escribir el contenido en el iframe
+    const printDocument =
+      printIframe.contentDocument || printIframe.contentWindow?.document;
+    if (printDocument) {
+      printDocument.open();
+      printDocument.write(`
           <html>
             <head>
               <title>Ticket de Pedido</title>
@@ -640,32 +729,32 @@
             </body>
           </html>
         `);
-        printDocument.close();
-        
-        // Imprimir y eliminar el iframe
-        printIframe.contentWindow?.focus();
-        printIframe.contentWindow?.print();
-        
-        // Eliminar el iframe después de imprimir
-        setTimeout(() => {
-          document.body.removeChild(printIframe);
-        }, 500);
-      }
-    } catch (error) {
-      console.error("Error al imprimir ticket:", error);
-      mostrarToastMensaje("Error al imprimir el ticket");
+      printDocument.close();
+
+      // Imprimir y eliminar el iframe
+      printIframe.contentWindow?.focus();
+      printIframe.contentWindow?.print();
+
+      // Eliminar el iframe después de imprimir
+      setTimeout(() => {
+        document.body.removeChild(printIframe);
+      }, 500);
     }
-  };
-  
-  // Ciclo de vida
-  onMounted(() => {
-    cargarPedidos();
-    cargarMesas();
-  });
-  
-  // Estilos para la animación del toast
-  const style = document.createElement('style');
-  style.textContent = `
+  } catch (error) {
+    console.error("Error al imprimir ticket:", error);
+    mostrarToastMensaje("Error al imprimir el ticket");
+  }
+};
+
+// Ciclo de vida
+onMounted(() => {
+  cargarPedidos();
+  cargarMesas();
+});
+
+// Estilos para la animación del toast
+const style = document.createElement("style");
+style.textContent = `
   @keyframes fadeInOut {
     0% { opacity: 0; transform: translateY(-20px); }
     10% { opacity: 1; transform: translateY(0); }
@@ -676,5 +765,6 @@
     animation: fadeInOut 3s ease-in-out;
   }
   `;
-  document.head.appendChild(style);
-  </script>
+document.head.appendChild(style);
+</script>
+

@@ -4,7 +4,7 @@ const {
   CrearPedidoConDetalles,
   EditarPedidoConDetalles,
   CrearIngresoConDetalles,
-  EditarIngresoConDetalles
+  EditarIngresoConDetalles,
 } = require("./main/modules/interfaces");
 
 declare namespace NodeJS {
@@ -28,7 +28,7 @@ declare namespace NodeJS {
   }
 }
 
-declare module 'file-saver' {
+declare module "file-saver" {
   export function saveAs(data: Blob | string, filename?: string): void;
 }
 
@@ -70,7 +70,7 @@ interface Window {
     editarIngresoConDetalles: (data: EditarIngresoConDetalles) => Promise<any>;
     //pedidos
     getPedidos: () => Promise<any>;
-    editEstadoPedidoById: (id: number, estado: any) => Promise<any>;
+    cambiarEstadoPedido: (id: number, estado: string) => Promise<any>;
     getOnePedidoById: (id: number) => Promise<any>;
     deletePedidoById: (id: number) => Promise<any>;
     crearPedidoConDetalles: (data: CrearPedidoConDetalles) => Promise<any>;

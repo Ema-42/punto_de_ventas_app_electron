@@ -136,10 +136,9 @@ export default () => {
     return await gePedidoById(id);
   });
 
-  ipcMain.handle("edit-estado-pedido", async (_, { id, estado }) => {
+  ipcMain.handle("cambiar-estado-pedido", async (_, { id, estado }) => {
     return await cambiarEstadoPedido(id, estado);
   });
-
   ipcMain.handle("delete-pedido", async (_, id) => {
     return await eliminarPedido(id);
   });
