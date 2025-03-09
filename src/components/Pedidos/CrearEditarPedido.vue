@@ -14,7 +14,7 @@
             v-if="pedido?.pedido_padre_id"
             class="text-sm font-normal text-gray-500"
           >
-            (Agregado a Pedido #{{ pedido.pedido_padre_id }})
+            (Agregado a Pedido #{{ pedido.num_pedido_dia }})
           </span>
         </h2>
         <button @click="cerrar" class="text-gray-500 hover:text-gray-700">
@@ -34,10 +34,10 @@
             </label>
             <select
               v-model="formData.mesa_id"
+              required
               id="mesa"
               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400 bg-white"
             >
-              <option :value="null">Sin mesa</option>
               <option
                 v-for="mesa in mesaStore.mesas"
                 :key="mesa.id"
@@ -96,8 +96,7 @@
             </select>
           </div>
 
-          <!-- Tipo de pago (solo visible al editar o si es un pedido nuevo sin padre) -->
-          <div v-if="!pedido?.pedido_padre_id">
+          <div>
             <label class="block text-gray-700 text-sm font-bold mb-2">
               Tipo de Pago
             </label>
@@ -587,7 +586,9 @@
             :disabled="detallesActivos.length === 0 || guardando"
             class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            <span>{{ pedido?.id ? "Actualizar" : "Guardar" }}</span>
+            <span>{{
+              pedido?.id ? "Agregar Pedido" : "Registrar Pedido"
+            }}</span>
             <svg
               v-if="!guardando"
               xmlns="http://www.w3.org/2000/svg"
@@ -630,9 +631,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, onMounted, computed } from "vue";
-import { EstadosMesa, Roles } from "../../../electron/main/modules/enums";
+import { ref, watch, onMounted, computed, watchEffect } from "vue";
+import {
+  EstadosMesa,
+  Roles,
+  TipoPago,
+} from "../../../electron/main/modules/enums";
 import { useMesaStore } from "../../stores/useMesaStore";
+import { EstadoPedido } from "../../../electron/main/modules/interfaces";
 
 const mesaStore = useMesaStore();
 
@@ -732,7 +738,7 @@ const pedidoGuardado = ref(false);
 const formData = ref({
   id: 0,
   pedido_padre_id: null as number | null,
-  mesa_id: null as number | null,
+  mesa_id: 0,
   mesera_id: 0,
   cajero_id: 0,
   tipo_pago: "EFECTIVO",
@@ -889,30 +895,17 @@ const cerrar = () => {
 };
 
 const guardar = async () => {
+  console.log("PEDIDO", formData.value.tipo_pago);
+
   try {
     errorMensaje.value = "";
     guardando.value = true;
-
     // Validaciones
     if (detallesActivos.value.length === 0) {
       errorMensaje.value = "Debe agregar al menos un producto al pedido";
       guardando.value = false;
       return;
     }
-
-    if (!formData.value.mesera_id) {
-      errorMensaje.value = "Debe seleccionar un mesero/a";
-      guardando.value = false;
-      return;
-    }
-
-    if (!formData.value.cajero_id) {
-      errorMensaje.value = "Debe seleccionar un cajero/a";
-      guardando.value = false;
-      return;
-    }
-
-    // Preparar datos para enviar
     const pedidoData = {
       ...(formData.value.id ? { id: formData.value.id } : {}),
       pedido_padre_id: formData.value.pedido_padre_id,
@@ -932,10 +925,7 @@ const guardar = async () => {
         })),
     };
 
-    const accion = formData.value.id
-      ? window.api.editarPedidoConDetalles(pedidoData)
-      : window.api.crearPedidoConDetalles(pedidoData);
-    const result = await accion;
+    const result = await window.api.crearPedidoConDetalles(pedidoData);
 
     if (result instanceof Error) {
       throw result;
@@ -1033,26 +1023,14 @@ const imprimirTicket = () => {
 const seleccionarValoresAleatorios = () => {
   // Solo si es un pedido nuevo y no es un pedido hijo
   if (!props.pedido?.id && !props.pedido?.pedido_padre_id) {
-    // Seleccionar una mesa aleatoria (preferiblemente libre)
-    const mesasLibres = mesaStore.mesas.filter((m) => m.estado === "LIBRE");
-    if (mesasLibres.length > 0) {
-      const mesaAleatoria =
-        mesasLibres[Math.floor(Math.random() * mesasLibres.length)];
-      formData.value.mesa_id = mesaAleatoria.id;
-    } else if (mesaStore.mesas.length > 0) {
-      const mesaAleatoria =
-        mesaStore.mesas[Math.floor(Math.random() * mesaStore.mesas.length)];
-      formData.value.mesa_id = mesaAleatoria.id;
+    if (mesaStore.mesas.length > 0) {
+      formData.value.mesa_id = mesaStore.mesas[0].id;
     }
-
-    // Seleccionar un mesero aleatorio
     if (meseros.value.length > 0) {
       const meseroAleatorio =
         meseros.value[Math.floor(Math.random() * meseros.value.length)];
       formData.value.mesera_id = meseroAleatorio.id;
     }
-
-    // Seleccionar un cajero aleatorio
     if (cajeros.value.length > 0) {
       const cajeroAleatorio =
         cajeros.value[Math.floor(Math.random() * cajeros.value.length)];
@@ -1065,36 +1043,30 @@ const seleccionarValoresAleatorios = () => {
 watch(
   () => props.pedido,
   (newPedido) => {
-    if (newPedido) {
+    if (newPedido && newPedido.id !== 0) {
+      console.log("AGREGAR pedido", props.pedido);
       formData.value = {
         id: newPedido.id,
         pedido_padre_id: newPedido.pedido_padre_id || null,
-        mesa_id: newPedido.mesa_id || null,
+        mesa_id: newPedido.mesa_id || 0,
         mesera_id: newPedido.mesera_id,
         cajero_id: newPedido.cajero_id,
-        tipo_pago: newPedido.tipo_pago || "EFECTIVO",
-        estado: newPedido.estado || "EN_ATENCION",
-        detalles:
-          newPedido.detalles?.map((d) => ({
-            ...d,
-            precio_unitario:
-              typeof d.precio_unitario === "string"
-                ? parseFloat(d.precio_unitario)
-                : d.precio_unitario,
-          })) || [],
+        tipo_pago: newPedido.tipo_pago || TipoPago.EFECTIVO,
+        estado: EstadoPedido.EN_PREPARACION,
+        detalles: [],
       };
-    } else {
+    } else if (props.pedido?.id === 0) {
+      console.log("Nuevo pedido", props.pedido);
       formData.value = {
         id: 0,
         pedido_padre_id: null,
-        mesa_id: null,
+        mesa_id: 0,
         mesera_id: 0,
         cajero_id: 0,
-        tipo_pago: "EFECTIVO",
-        estado: "EN_ATENCION",
+        tipo_pago: TipoPago.EFECTIVO,
+        estado: EstadoPedido.EN_PREPARACION,
         detalles: [],
       };
-
       // Seleccionar valores aleatorios para nuevo pedido
       seleccionarValoresAleatorios();
     }
@@ -1110,6 +1082,11 @@ watch(
 watch(categoriaSeleccionada, () => {
   filtrarProductos();
 });
+watchEffect(() => {
+  if (mesaStore.mesas.length > 0 && !formData.value.mesa_id) {
+    formData.value.mesa_id = mesaStore.mesas[0].id;
+  }
+});
 
 // Cargar datos al montar el componente
 onMounted(async () => {
@@ -1123,7 +1100,7 @@ onMounted(async () => {
   filtrarProductos();
 
   // Seleccionar valores aleatorios para nuevo pedido
-  seleccionarValoresAleatorios();
+  //seleccionarValoresAleatorios();
 });
 </script>
 

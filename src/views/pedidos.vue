@@ -2,7 +2,7 @@
   <div>
     <CrearEditarPedido
       :mostrar="mostrarModalCrearEditar"
-      :pedido="pedidoEditar"
+      :pedido="pedidoAgregar"
       @cerrar="mostrarModalCrearEditar = false"
       @guardar="guardarPedido"
     />
@@ -439,7 +439,7 @@ const searchQuery = ref("");
 const mostrarModalCrearEditar = ref(false);
 const mostrarModalEliminar = ref(false);
 const mostrarModalDetalle = ref(false);
-const pedidoEditar = ref<Pedido | null>(null);
+const pedidoAgregar = ref<Pedido | null>(null);
 const pedidoEliminar = ref<Pedido | null>(null);
 const pedidoDetalle = ref<Pedido | null>(null);
 const mostrarToast = ref(false);
@@ -525,7 +525,7 @@ const buscarPedidos = () => {
 const crearNuevoPedido = async () => {
   const data = await cargarMesasLibresApi();
   mesaStore.setMesas(data);
-  pedidoEditar.value = {
+  pedidoAgregar.value = {
     id: 0,
     mesa_id: null,
     mesera_id: 0,
@@ -540,13 +540,17 @@ const crearNuevoPedido = async () => {
   mostrarModalCrearEditar.value = true;
 };
 
-const agregarAPedido = (pedido: Pedido) => {
-  pedidoEditar.value = {
-    id: 0,
+const agregarAPedido = async (pedido: Pedido) => {
+  const data = await cargarMesasLibresApi();
+  mesaStore.setMesas(data);
+  pedidoAgregar.value = {
+    id: pedido.id,
     pedido_padre_id: pedido.id,
-    mesa_id: pedido.mesa_id,
-    mesera_id: pedido.mesera_id,
-    cajero_id: pedido.cajero_id,
+    mesa_id: pedido.mesa?.id,
+    mesera_id: pedido.mesera.id,
+    cajero_id: pedido.cajero.id,
+    tipo_pago: pedido.tipo_pago,
+    num_pedido_dia: pedido.num_pedido_dia,
     estado: EstadoPedido.EN_PREPARACION,
     fecha_creacion: new Date().toISOString(),
     mesera: { ...pedido.mesera },
@@ -575,8 +579,8 @@ const guardarPedido = () => {
   cargarPedidos();
   mostrarModalCrearEditar.value = false;
   mostrarToastMensaje(
-    pedidoEditar.value?.id
-      ? "Pedido actualizado con éxito!"
+    pedidoAgregar.value?.id
+      ? "Pedido agregado con éxito!"
       : "Pedido creado con éxito!"
   );
 };

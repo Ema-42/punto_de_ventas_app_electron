@@ -2255,6 +2255,7 @@ const getPedidos = async () => {
         estado: true,
         fecha_creacion: true,
         fecha_concluido: true,
+        tipo_pago: true,
         total: true,
         detalles: {
           where: { eliminado: false },
@@ -2327,6 +2328,7 @@ const gePedidoById = async (id) => {
         estado: true,
         fecha_creacion: true,
         fecha_concluido: true,
+        tipo_pago: true,
         total: true,
         detalles: {
           where: { eliminado: false },
