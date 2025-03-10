@@ -117,213 +117,41 @@
       </div>
     </div>
 
-    <!-- Pedidos Activos -->
-    <div class="mb-6">
-      <h2 class="text-lg font-semibold mb-4">Pedidos Activos</h2>
-      <div
-        class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 max-h-screen overflow-y-auto"
-      >
-        <div
-          v-for="pedido in pedidosFiltrados"
-          :key="pedido.id"
-          class="bg-white rounded-lg shadow-md p-3 border-l-4 border-red-600 hover:shadow-lg transition text-sm"
-        >
-          <div class="flex justify-between items-start">
-            <div>
-              <h3 class="text-base font-semibold">
-                Pedido #{{ pedido.num_pedido_dia || pedido.id }}
-              </h3>
-              <div class="flex items-center gap-2 mt-1">
-                <div
-                  class="bg-red-600 text-white text-sm text-center py-1 px-2 rounded-md font-medium"
-                >
-                  {{ pedido.mesa ? `Mesa ${pedido.mesa.numero}` : "Sin mesa" }}
-                </div>
-              </div>
-              <div
-                v-if="
-                  pedidosHijos[pedido.id] && pedidosHijos[pedido.id].length > 0
-                "
-                class="mt-1 bg-blue-100 text-blue-800 text-xs font-medium px-2 py-1 rounded-full flex items-center"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="h-3 w-3 mr-1"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M13 5l7 7-7 7M5 5l7 7-7 7"
-                  />
-                </svg>
-                {{ pedidosHijos[pedido.id].length }} pedido(s) agregado(s)
-              </div>
-            </div>
-            <div class="flex flex-col items-end">
-              <span :class="getEstadoClase(pedido.estado)">
-                {{ getEstadoEtiqueta(pedido.estado) }}
-              </span>
-              <span class="text-gray-500 text-xs mt-1">
-                {{ formatearFecha(pedido.fecha_creacion) }}
-              </span>
-            </div>
-          </div>
-
-          <div class="flex justify-between mt-2">
-            <span class="text-gray-600"
-              >Mesero: {{ pedido.mesera.nombre }}</span
+    <!-- Contenedor principal para pedidos activos y concluidos -->
+    <div class="flex flex-col lg:flex-row gap-4">
+      <!-- Pedidos Activos (3/4 del ancho) -->
+      <div class="lg:w-3/4">
+        <div class="bg-white rounded-lg shadow-md p-4">
+          <h2 class="text-lg font-semibold mb-4">Pedidos Activos</h2>
+          <div
+            class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 max-h-[calc(100vh-220px)] overflow-y-auto"
+          >
+            <div
+              v-for="pedido in pedidosFiltrados"
+              :key="pedido.id"
+              class="bg-white rounded-lg shadow-md p-3 border-l-4 border-red-600 hover:shadow-lg transition text-sm"
             >
-            <span class="font-medium text-gray-800">${{ pedido.total }}</span>
-          </div>
-
-          <div class="flex justify-between mt-3 pt-2 border-t border-gray-200">
-            <button
-              @click="agregarAPedido(pedido)"
-              class="text-green-600 hover:text-green-800 flex items-center text-xs font-medium"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-4 w-4 mr-1"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-                />
-              </svg>
-              Agregar
-            </button>
-            <div class="flex gap-2">
-              <button
-                @click="cambiarEstadoPedido(pedido)"
-                class="text-green-600 hover:text-green-800 flex items-center text-xs font-medium"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="h-4 w-4 mr-1"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M5 13l4 4L19 7"
-                  />
-                </svg>
-                Completar
-              </button>
-              <button
-                @click="verDetalle(pedido)"
-                class="text-blue-600 hover:text-blue-800 flex items-center text-xs font-medium"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="h-4 w-4 mr-1"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                  />
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-                  />
-                </svg>
-                Ver detalles
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Sección de pedidos concluidos -->
-    <div class="bg-white rounded-lg shadow-md p-4">
-      <h2 class="text-lg font-semibold mb-4">Pedidos Completados</h2>
-      <div class="overflow-x-auto">
-        <table class="min-w-full divide-y divide-gray-200">
-          <thead class="bg-gray-50">
-            <tr>
-              <th
-                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-              >
-                N° Pedido
-              </th>
-              <th
-                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-              >
-                Mesa
-              </th>
-              <th
-                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-              >
-                Mesero
-              </th>
-              <th
-                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-              >
-                Total
-              </th>
-              <th
-                class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-              >
-                Fecha
-              </th>
-              <th
-                class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
-              >
-                Acciones
-              </th>
-            </tr>
-          </thead>
-          <tbody class="bg-white divide-y divide-gray-200">
-            <tr v-for="pedido in pedidosConcluidos" :key="pedido.id">
-              <td class="px-6 py-4 whitespace-nowrap">
-                <span
-                  class="bg-gray-200 text-gray-700 px-2 py-1 rounded-full text-xs font-bold"
-                >
-                  {{ pedido.num_pedido_dia || pedido.id }}
-                </span>
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap">
-                {{ pedido.mesa ? `Mesa ${pedido.mesa.numero}` : "Sin mesa" }}
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap">
-                {{ pedido.mesera.nombre }}
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap font-medium">
-                ${{ pedido.total }}
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                {{ formatearFecha(pedido.fecha_creacion) }}
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap text-center">
-                <div class="flex justify-center gap-2">
-                  <button
-                    @click="imprimirTicketIndividual(pedido)"
-                    class="text-blue-600 hover:text-blue-900"
-                    title="Imprimir ticket"
+              <div class="flex justify-between items-start">
+                <div>
+                  <h3 class="text-base font-semibold">
+                    Pedido #{{ pedido.num_pedido_dia || pedido.id }}
+                  </h3>
+                  <div class="flex items-center gap-2 mt-1">
+                    <div
+                      class="bg-red-600 text-white text-sm text-center py-1 px-2 rounded-md font-medium"
+                    >
+                      {{ pedido.mesa ? `Mesa ${pedido.mesa.numero}` : "Sin mesa" }}
+                    </div>
+                  </div>
+                  <div
+                    v-if="
+                      pedidosHijos[pedido.id] && pedidosHijos[pedido.id].length > 0
+                    "
+                    class="mt-1 bg-blue-100 text-blue-800 text-xs font-medium px-2 py-1 rounded-full flex items-center"
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
-                      class="h-5 w-5"
+                      class="h-3 w-3 mr-1"
                       fill="none"
                       viewBox="0 0 24 24"
                       stroke="currentColor"
@@ -332,18 +160,78 @@
                         stroke-linecap="round"
                         stroke-linejoin="round"
                         stroke-width="2"
-                        d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"
+                        d="M13 5l7 7-7 7M5 5l7 7-7 7"
                       />
                     </svg>
-                  </button>
+                    {{ pedidosHijos[pedido.id].length }} pedido(s) agregado(s)
+                  </div>
+                </div>
+                <div class="flex flex-col items-end">
+                  <span :class="getEstadoClase(pedido.estado)">
+                    {{ getEstadoEtiqueta(pedido.estado) }}
+                  </span>
+                  <span class="text-gray-500 text-xs mt-1">
+                    {{ formatearFecha(pedido.fecha_creacion) }}
+                  </span>
+                </div>
+              </div>
+
+              <div class="flex justify-between mt-2">
+                <span class="text-gray-600"
+                  >Mesero: {{ pedido.mesera.nombre }}</span
+                >
+                <span class="font-medium text-gray-800">${{ pedido.total }}</span>
+              </div>
+
+              <div class="flex justify-between mt-3 pt-2 border-t border-gray-200">
+                <button
+                  @click="agregarAPedido(pedido)"
+                  class="text-green-600 hover:text-green-800 flex items-center text-xs font-medium"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-4 w-4 mr-1"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+                    />
+                  </svg>
+                  Agregar
+                </button>
+                <div class="flex gap-2">
                   <button
-                    @click="verDetalle(pedido)"
-                    class="text-blue-600 hover:text-blue-900"
-                    title="Ver detalles"
+                    @click="cambiarEstadoPedido(pedido)"
+                    class="text-green-600 hover:text-green-800 flex items-center text-xs font-medium"
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
-                      class="h-5 w-5"
+                      class="h-4 w-4 mr-1"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M5 13l4 4L19 7"
+                      />
+                    </svg>
+                    Completar
+                  </button>
+                  <button
+                    @click="verDetalle(pedido)"
+                    class="text-blue-600 hover:text-blue-800 flex items-center text-xs font-medium"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="h-4 w-4 mr-1"
                       fill="none"
                       viewBox="0 0 24 24"
                       stroke="currentColor"
@@ -361,12 +249,120 @@
                         d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
                       />
                     </svg>
+                    Ver detalles
                   </button>
                 </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pedidos Concluidos (1/4 del ancho) -->
+      <div class="lg:w-1/4">
+        <div class="bg-white rounded-lg shadow-md p-4 h-full">
+          <h2 class="text-lg font-semibold mb-4">Pedidos Completados</h2>
+          <div class="overflow-x-auto max-h-[calc(100vh-220px)] overflow-y-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+              <thead class="bg-gray-50 sticky top-0 z-10">
+                <tr>
+                  <th
+                    class="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                  >
+                    N°
+                  </th>
+                  <th
+                    class="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                  >
+                    Mesa
+                  </th>
+                  <th
+                    class="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                  >
+                    Total
+                  </th>
+                  <th
+                    class="px-2 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
+                  >
+                    Acciones
+                  </th>
+                </tr>
+              </thead>
+              <tbody class="bg-white divide-y divide-gray-200">
+                <tr v-for="pedido in pedidosConcluidos" :key="pedido.id">
+                  <td class="px-2 py-3 whitespace-nowrap">
+                    <span
+                      class="bg-gray-200 text-gray-700 px-2 py-1 rounded-full text-xs font-bold"
+                    >
+                      {{ pedido.num_pedido_dia || pedido.id }}
+                    </span>
+                  </td>
+                  <td class="px-2 py-3 whitespace-nowrap text-xs">
+                    {{ pedido.mesa ? `Mesa ${pedido.mesa.numero}` : "Sin mesa" }}
+                  </td>
+                  <td class="px-2 py-3 whitespace-nowrap font-medium text-xs">
+                    ${{ pedido.total }}
+                  </td>
+                  <td class="px-2 py-3 whitespace-nowrap text-center">
+                    <div class="flex justify-center gap-1">
+                      <button
+                        @click="imprimirTicketIndividual(pedido)"
+                        class="text-blue-600 hover:text-blue-900"
+                        title="Imprimir ticket"
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          class="h-4 w-4"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"
+                          />
+                        </svg>
+                      </button>
+                      <button
+                        @click="verDetalle(pedido)"
+                        class="text-blue-600 hover:text-blue-900"
+                        title="Ver detalles"
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          class="h-4 w-4"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                          />
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                          />
+                        </svg>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+                <tr v-if="pedidosConcluidos.length === 0">
+                  <td colspan="4" class="px-2 py-4 text-center text-sm text-gray-500">
+                    No hay pedidos completados
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -727,6 +723,8 @@ const imprimirTicketIndividual = (pedido: Pedido) => {
                 .border-t, .border-b { border-top: 1px solid #ddd; border-bottom: 1px solid #ddd; }
                 .py-2 { padding-top: 8px; padding-bottom: 8px; }
                 .grid { display: grid; }
+                .grid-cols-12 { grid-template-columns:
+                .grid { display: grid; }
                 .grid-cols-12 { grid-template-columns: repeat(12, minmax(0, 1fr)); }
                 .col-span-6 { grid-column: span 6 / span 6; }
                 .col-span-2 { grid-column: span 2 / span 2; }
@@ -787,4 +785,3 @@ style.textContent = `
   `;
 document.head.appendChild(style);
 </script>
-
