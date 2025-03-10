@@ -26,6 +26,7 @@ import {
   authenticateUsuario,
   createUsuario,
   deleteUsuario,
+  getMeseroMasLibre,
   getUsuarioById,
   getUsuarios,
   updateUsuario,
@@ -105,6 +106,9 @@ export default () => {
   //usuarios
   ipcMain.handle("get-usuarios", async () => {
     return await getUsuarios();
+  });
+  ipcMain.handle("get-mesero-libre", async () => {
+    return await getMeseroMasLibre();
   });
   ipcMain.handle("create-usuario", async (_, usuario) => {
     return await createUsuario(usuario);

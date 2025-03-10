@@ -22,6 +22,7 @@ electron.contextBridge.exposeInMainWorld("api", {
   deleteMesaById: (id) => electron.ipcRenderer.invoke("delete-mesa", id),
   //USUARIOS
   getUsuarios: () => electron.ipcRenderer.invoke("get-usuarios"),
+  getMeseroMasLibre: () => electron.ipcRenderer.invoke("get-mesero-libre"),
   createUsuario: (usuarioData) => electron.ipcRenderer.invoke("create-usuario", usuarioData),
   editUsuarioById: (id, usuarioData) => electron.ipcRenderer.invoke("edit-usuario", { id, usuarioData }),
   getOneUsuarioById: (id) => electron.ipcRenderer.invoke("get-one-usuario", id),

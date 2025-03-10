@@ -58,6 +58,7 @@ interface Window {
     deleteMesaById: (id: number) => Promise<any>;
     //usuarios
     getUsuarios: () => Promise<any>;
+    getMeseroMasLibre: () => Promise<any>;
     createUsuario: (usuarioData: any) => Promise<any>;
     editUsuarioById: (id: number, usuarioData: any) => Promise<any>;
     getOneUsuarioById: (id: number) => Promise<any>;

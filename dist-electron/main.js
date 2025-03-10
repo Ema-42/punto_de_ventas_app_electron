@@ -344,6 +344,17 @@ const deleteMesa = async (id) => {
     return error;
   }
 };
+var EstadoPedido = /* @__PURE__ */ ((EstadoPedido2) => {
+  EstadoPedido2["EN_PREPARACION"] = "EN PREPARACION";
+  EstadoPedido2["COMPLETADO"] = "COMPLETADO";
+  EstadoPedido2["CANCELADO"] = "CANCELADO";
+  return EstadoPedido2;
+})(EstadoPedido || {});
+var EstadoIngreso = /* @__PURE__ */ ((EstadoIngreso2) => {
+  EstadoIngreso2["CONSOLIDADO"] = "CONSOLIDAD";
+  EstadoIngreso2["ELIMINADO"] = "ELIMINADO";
+  return EstadoIngreso2;
+})(EstadoIngreso || {});
 var randomFallback = null;
 function randomBytes(len) {
   try {
@@ -2064,6 +2075,25 @@ const bcrypt = {
   encodeBase64,
   decodeBase64
 };
+var EstadosMesa = /* @__PURE__ */ ((EstadosMesa2) => {
+  EstadosMesa2["LIBRE"] = "LIBRE";
+  EstadosMesa2["OCUPADA"] = "OCUPADA";
+  EstadosMesa2["RESERVADA"] = "RESERVADA";
+  EstadosMesa2["MANTENIMIENTO"] = "MANTENIMIENTO";
+  return EstadosMesa2;
+})(EstadosMesa || {});
+var Roles = /* @__PURE__ */ ((Roles2) => {
+  Roles2["ADMIN"] = "ADMIN";
+  Roles2["CAJERO"] = "CAJERO";
+  Roles2["MESERO"] = "MESERO";
+  return Roles2;
+})(Roles || {});
+Object.entries(EstadosMesa).map(
+  ([valor, etiqueta]) => ({
+    valor,
+    etiqueta
+  })
+);
 const prisma$3 = new PrismaClient();
 const getUsuarios = async () => {
   try {
@@ -2144,6 +2174,55 @@ const deleteUsuario = async (id) => {
     return error;
   }
 };
+const getMeseroMasLibre = async () => {
+  try {
+    const hoy = /* @__PURE__ */ new Date();
+    const inicioDia = new Date(hoy.setHours(0, 0, 0, 0));
+    const finDia = new Date(hoy.setHours(23, 59, 59, 999));
+    const meseros = await prisma$3.usuario.findMany({
+      where: { rol: { nombre: Roles.MESERO }, eliminado: false },
+      select: { id: true, nombre: true }
+    });
+    if (!meseros.length) return [];
+    const pedidos = await prisma$3.pedido.groupBy({
+      by: ["mesera_id", "estado"],
+      _count: { _all: true },
+      where: {
+        mesera_id: { in: meseros.map((m) => m.id) },
+        eliminado: false,
+        pedido_padre: null,
+        fecha_creacion: { gte: inicioDia, lte: finDia }
+      }
+    });
+    const resultado = meseros.map((mesero) => {
+      var _a, _b;
+      const asignados = ((_a = pedidos.find(
+        (p) => p.mesera_id === mesero.id && p.estado === EstadoPedido.EN_PREPARACION
+      )) == null ? void 0 : _a._count._all) || 0;
+      const atendidos = ((_b = pedidos.find(
+        (p) => p.mesera_id === mesero.id && p.estado === EstadoPedido.COMPLETADO
+      )) == null ? void 0 : _b._count._all) || 0;
+      return {
+        id: mesero.id,
+        nombre: mesero.nombre,
+        mesasAsignadas: asignados,
+        mesasAtendidas: atendidos
+      };
+    });
+    resultado.sort((a, b) => {
+      const totalA = a.mesasAsignadas + a.mesasAtendidas;
+      const totalB = b.mesasAsignadas + b.mesasAtendidas;
+      if (totalA !== totalB) {
+        return totalA - totalB;
+      }
+      return a.mesasAsignadas - b.mesasAsignadas;
+    });
+    return resultado;
+  } catch (error) {
+    console.error("Error al obtener meseros disponibles:", error);
+    throw error;
+  }
+};
 const authenticateUsuario = async (usuario, password) => {
   try {
     const usuarioEncontrado = await prisma$3.usuario.findFirst({
@@ -2201,30 +2280,6 @@ const getRolById = async (id) => {
     return error;
   }
 };
-var EstadoPedido = /* @__PURE__ */ ((EstadoPedido2) => {
-  EstadoPedido2["EN_PREPARACION"] = "EN PREPARACION";
-  EstadoPedido2["COMPLETADO"] = "COMPLETADO";
-  EstadoPedido2["CANCELADO"] = "CANCELADO";
-  return EstadoPedido2;
-})(EstadoPedido || {});
-var EstadoIngreso = /* @__PURE__ */ ((EstadoIngreso2) => {
-  EstadoIngreso2["CONSOLIDADO"] = "CONSOLIDAD";
-  EstadoIngreso2["ELIMINADO"] = "ELIMINADO";
-  return EstadoIngreso2;
-})(EstadoIngreso || {});
-var EstadosMesa = /* @__PURE__ */ ((EstadosMesa2) => {
-  EstadosMesa2["LIBRE"] = "LIBRE";
-  EstadosMesa2["OCUPADA"] = "OCUPADA";
-  EstadosMesa2["RESERVADA"] = "RESERVADA";
-  EstadosMesa2["MANTENIMIENTO"] = "MANTENIMIENTO";
-  return EstadosMesa2;
-})(EstadosMesa || {});
-Object.entries(EstadosMesa).map(
-  ([valor, etiqueta]) => ({
-    valor,
-    etiqueta
-  })
-);
 const prisma$1 = new PrismaClient();
 const getPedidos = async () => {
   try {
@@ -2960,6 +3015,9 @@ const ipcMainModules = () => {
   });
   ipcMain.handle("get-usuarios", async () => {
     return await getUsuarios();
+  });
+  ipcMain.handle("get-mesero-libre", async () => {
+    return await getMeseroMasLibre();
   });
   ipcMain.handle("create-usuario", async (_, usuario) => {
     return await createUsuario(usuario);

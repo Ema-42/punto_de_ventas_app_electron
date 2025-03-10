@@ -277,7 +277,7 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, computed, reactive } from "vue";
 import Chart from "chart.js/auto";
-import { EstadosMesa, Roles } from "../../electron/main/modules/enums";
+import { EstadosMesa } from "../../electron/main/modules/enums";
 import { format } from "date-fns";
 import { EstadoPedido } from "../../electron/main/modules/interfaces";
 import router from "../router";
@@ -301,12 +301,6 @@ interface ProductoStock {
   id: number;
   nombre: string;
   stock: number;
-}
-
-interface Mesero {
-  id: number;
-  nombre: string;
-  rol?: { nombre: string };
 }
 
 interface Categoria {
@@ -541,36 +535,10 @@ const getPedidosHoy = async () => {
   return pedidos.value;
 };
 
-const getMeseros = async () => {
-  const usuarios: Mesero[] = await window.api.getUsuarios();
-
-  const pedidos = await getPedidosHoy();
-
-  meseros.value = usuarios
-    .filter((mesero) => mesero.rol?.nombre === Roles.MESERO) // Filtrar solo meseros
-    .map((mesero) => {
-      // Filtrar pedidos asignados al mesero
-      const pedidosAsignados = pedidos.filter(
-        (pedido) =>
-          pedido.mesera?.id === mesero.id &&
-          pedido.estado === EstadoPedido.EN_PREPARACION
-      );
-      // Filtrar pedidos completados por el mesero
-      const pedidosCompletados = pedidos.filter(
-        (pedido) =>
-          pedido.mesera?.id === mesero.id &&
-          pedido.estado === EstadoPedido.COMPLETADO
-      );
-
-      return {
-        id: mesero.id,
-        nombre: mesero.nombre,
-        mesasAsignadas: pedidosAsignados.length,
-        mesasAtendidas: pedidosCompletados.length,
-      };
-    });
-  //meseros.value devuelve array co : { id: 1, nombre: "Ana López", mesasAsignadas: 5, mesasAtendidas: 12 }
+const getMeserosConPedidos = async () => {
+  meseros.value = await window.api.getMeseroMasLibre();
 };
+
 const totalIngresosDelDia = ref("0.00");
 
 const getPedidos = async () => {
@@ -598,7 +566,7 @@ const getPedidos = async () => {
 
 onMounted(async () => {
   setCantidadPedidosPorHora();
-  getMeseros();
+  getMeserosConPedidos();
   getMesas();
   getPedidos();
   relojInterval = setInterval(actualizarReloj, 1000);

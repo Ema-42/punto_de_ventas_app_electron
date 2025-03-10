@@ -43,6 +43,7 @@ contextBridge.exposeInMainWorld("api", {
   deleteMesaById: (id: number) => ipcRenderer.invoke("delete-mesa", id),
   //USUARIOS
   getUsuarios: () => ipcRenderer.invoke("get-usuarios"),
+  getMeseroMasLibre: () => ipcRenderer.invoke("get-mesero-libre"),
   createUsuario: (usuarioData: any) =>
     ipcRenderer.invoke("create-usuario", usuarioData),
   editUsuarioById: (id: number, usuarioData: any) =>
@@ -53,6 +54,7 @@ contextBridge.exposeInMainWorld("api", {
     ipcRenderer.invoke("authenticate-usuario", { usuario, password }),
   uploadFile: (fileData: FileData) =>
     ipcRenderer.invoke("upload-file", fileData),
+  
   //roles
   getRoles: () => ipcRenderer.invoke("get-roles"),
   getOneRoleById: (id: number) => ipcRenderer.invoke("get-one-role", id),

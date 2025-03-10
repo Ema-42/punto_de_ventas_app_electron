@@ -491,11 +491,29 @@
                   <p>Fecha: {{ new Date().toLocaleString() }}</p>
                 </div>
                 <div class="flex justify-between">
-                  <p>Mesero: {{ meseros.find((m) => m.id === formData.mesera_id)?.nombre || "" }}</p>
-                  <p>Cajero: {{ cajeros.find((c) => c.id === formData.cajero_id)?.nombre || "" }}</p>
+                  <p>
+                    Mesero:
+                    {{
+                      meseros.find((m) => m.id === formData.mesera_id)
+                        ?.nombre || ""
+                    }}
+                  </p>
+                  <p>
+                    Cajero:
+                    {{
+                      cajeros.find((c) => c.id === formData.cajero_id)
+                        ?.nombre || ""
+                    }}
+                  </p>
                 </div>
                 <div class="flex justify-between">
-                  <p v-if="formData.mesa_id">Mesa: {{ mesaStore.mesas.find((m) => m.id === formData.mesa_id)?.numero || "" }}</p>
+                  <p v-if="formData.mesa_id">
+                    Mesa:
+                    {{
+                      mesaStore.mesas.find((m) => m.id === formData.mesa_id)
+                        ?.numero || ""
+                    }}
+                  </p>
                   <p>Tipo de pago: {{ formData.tipo_pago }}</p>
                 </div>
               </div>
@@ -539,11 +557,19 @@
               </div>
 
               <!-- Nuevo: Sección de pago (solo visible si el pedido no está guardado) -->
-              <div v-if="!pedidoGuardado" class="border-t border-gray-300 pt-4 mb-4">
+              <div
+                v-if="!pedidoGuardado"
+                class="border-t border-gray-300 pt-4 mb-4"
+              >
                 <div class="mb-3">
-                  <label class="block text-sm font-bold mb-1">Monto Recibido:</label>
+                  <label class="block text-sm font-bold mb-1"
+                    >Monto Recibido:</label
+                  >
                   <div class="relative">
-                    <span class="absolute left-3 top-1/2 transform -translate-y-1/2">$</span>
+                    <span
+                      class="absolute left-3 top-1/2 transform -translate-y-1/2"
+                      >$</span
+                    >
                     <input
                       v-model="montoRecibido"
                       type="number"
@@ -701,7 +727,9 @@ import {
 import { useMesaStore } from "../../stores/useMesaStore";
 import { EstadoPedido } from "../../../electron/main/modules/interfaces";
 import { useToast } from "vue-toastification";
+import { useAuthStore } from "../../stores/auth";
 
+const authStore = useAuthStore();
 const toast = useToast();
 const mesaStore = useMesaStore();
 
@@ -797,7 +825,7 @@ const categoriaSeleccionada = ref<number | string>("");
 const mostrarVistaPrevia = ref(false);
 const pedidoGuardado = ref(false);
 const montoRecibido = ref(0); // Nueva variable para el monto recibido
-
+const meseroIdealId = ref(0);
 // Formulario
 const formData = ref({
   id: 0,
@@ -969,7 +997,7 @@ const cerrar = () => {
 const guardar = async () => {
   try {
     errorMensaje.value = "";
-    
+
     // Validaciones
     if (detallesActivos.value.length === 0) {
       errorMensaje.value = "Debe agregar al menos un producto al pedido";
@@ -978,11 +1006,12 @@ const guardar = async () => {
 
     // Mostrar vista previa sin guardar
     mostrarVistaPrevia.value = true;
-    
+
     // Establecer el monto recibido al total por defecto
     montoRecibido.value = parseFloat(calcularTotal());
   } catch (error: any) {
-    errorMensaje.value = error.message || "Ocurrió un error al procesar el pedido";
+    errorMensaje.value =
+      error.message || "Ocurrió un error al procesar el pedido";
   }
 };
 
@@ -1021,7 +1050,7 @@ const confirmarPedido = async () => {
     const result = await window.api.crearPedidoConDetalles(pedidoData);
 
     if (result instanceof Error) {
-      throw result; 
+      throw result;
     }
 
     if (result.success) {
@@ -1031,7 +1060,8 @@ const confirmarPedido = async () => {
       throw new Error(result.message || "Error al guardar el pedido");
     }
   } catch (error: any) {
-    errorMensaje.value = error.message || "Ocurrió un error al guardar el pedido";
+    errorMensaje.value =
+      error.message || "Ocurrió un error al guardar el pedido";
   } finally {
     guardando.value = false;
   }
@@ -1112,29 +1142,24 @@ const imprimirTicket = () => {
 };
 
 // Seleccionar valores aleatorios para nuevo pedido
-const seleccionarValoresAleatorios = () => {
+const seleccionarValoresPorDefecto = async () => {
   // Solo si es un pedido nuevo y no es un pedido hijo
   if (!props.pedido?.id && !props.pedido?.pedido_padre_id) {
     if (mesaStore.mesas.length > 0) {
       formData.value.mesa_id = mesaStore.mesas[0].id;
     }
-    if (meseros.value.length > 0) {
-      const meseroAleatorio =
-        meseros.value[Math.floor(Math.random() * meseros.value.length)];
-      formData.value.mesera_id = meseroAleatorio.id;
-    }
-    if (cajeros.value.length > 0) {
-      const cajeroAleatorio =
-        cajeros.value[Math.floor(Math.random() * cajeros.value.length)];
-      formData.value.cajero_id = cajeroAleatorio.id;
-    }
+    //usuario logueado sera cajero
+    formData.value.cajero_id = authStore.user?.id || 0;
+    //mesero mas libre sera elegido por defecto
+    const mesero = await window.api.getMeseroMasLibre();
+    meseroIdealId.value = mesero[0].id;
+    formData.value.mesera_id = meseroIdealId.value;
   }
 };
-
 // Inicializar formulario cuando cambia el pedido
 watch(
   () => props.pedido,
-  (newPedido) => {
+  async (newPedido) => {
     if (newPedido && newPedido.id !== 0) {
       console.log("AGREGAR pedido", props.pedido);
       formData.value = {
@@ -1159,8 +1184,7 @@ watch(
         estado: EstadoPedido.EN_PREPARACION,
         detalles: [],
       };
-      // Seleccionar valores aleatorios para nuevo pedido
-      seleccionarValoresAleatorios();
+      seleccionarValoresPorDefecto();
     }
 
     errorMensaje.value = "";
@@ -1170,7 +1194,6 @@ watch(
   },
   { immediate: true }
 );
-
 // Observar cambios en la categoría seleccionada
 watch(categoriaSeleccionada, () => {
   filtrarProductos();
@@ -1189,10 +1212,7 @@ onMounted(async () => {
     cargarProductos(),
     cargarCategorias(),
   ]);
-
   filtrarProductos();
-
-  // Seleccionar valores aleatorios para nuevo pedido
-  //seleccionarValoresAleatorios();
 });
 </script>
+
