@@ -478,37 +478,26 @@
               </button>
             </div>
             <div class="bg-white p-4 font-mono text-sm" id="ticket-preview">
-              <div class="text-center mb-4">
+              <!-- Información del restaurante (solo visible cuando el pedido está guardado) -->
+              <div v-if="pedidoGuardado" class="text-center mb-4">
                 <p class="font-bold text-lg">RESTAURANTE EJEMPLO</p>
                 <p>Dirección: Calle Principal #123</p>
                 <p>Tel: (123) 456-7890</p>
               </div>
 
               <div class="mb-4">
-                <p>TICKET #: {{ formData.id || "NUEVO" }}</p>
-                <p>Fecha: {{ new Date().toLocaleString() }}</p>
-                <p>
-                  Mesero:
-                  {{
-                    meseros.find((m) => m.id === formData.mesera_id)?.nombre ||
-                    ""
-                  }}
-                </p>
-                <p>
-                  Cajero:
-                  {{
-                    cajeros.find((c) => c.id === formData.cajero_id)?.nombre ||
-                    ""
-                  }}
-                </p>
-                <p v-if="formData.mesa_id">
-                  Mesa:
-                  {{
-                    mesaStore.mesas.find((m) => m.id === formData.mesa_id)
-                      ?.numero || ""
-                  }}
-                </p>
-                <p>Tipo de pago: {{ formData.tipo_pago }}</p>
+                <div class="flex justify-between">
+                  <p>TICKET #: {{ formData.id || "NUEVO" }}</p>
+                  <p>Fecha: {{ new Date().toLocaleString() }}</p>
+                </div>
+                <div class="flex justify-between">
+                  <p>Mesero: {{ meseros.find((m) => m.id === formData.mesera_id)?.nombre || "" }}</p>
+                  <p>Cajero: {{ cajeros.find((c) => c.id === formData.cajero_id)?.nombre || "" }}</p>
+                </div>
+                <div class="flex justify-between">
+                  <p v-if="formData.mesa_id">Mesa: {{ mesaStore.mesas.find((m) => m.id === formData.mesa_id)?.numero || "" }}</p>
+                  <p>Tipo de pago: {{ formData.tipo_pago }}</p>
+                </div>
               </div>
 
               <div class="border-t border-b border-gray-300 py-2 mb-4">
@@ -549,19 +538,91 @@
                 </div>
               </div>
 
+              <!-- Nuevo: Sección de pago (solo visible si el pedido no está guardado) -->
+              <div v-if="!pedidoGuardado" class="border-t border-gray-300 pt-4 mb-4">
+                <div class="mb-3">
+                  <label class="block text-sm font-bold mb-1">Monto Recibido:</label>
+                  <div class="relative">
+                    <span class="absolute left-3 top-1/2 transform -translate-y-1/2">$</span>
+                    <input
+                      v-model="montoRecibido"
+                      type="number"
+                      step="0.01"
+                      min="0"
+                      class="w-full px-3 py-2 pl-7 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400"
+                      placeholder="0.00"
+                    />
+                  </div>
+                </div>
+                <div class="mb-3">
+                  <label class="block text-sm font-bold mb-1">Cambio:</label>
+                  <div class="text-xl font-bold text-green-600">
+                    ${{ calcularCambio() }}
+                  </div>
+                </div>
+              </div>
+
               <div class="text-center mt-6">
                 <p>¡Gracias por su preferencia!</p>
               </div>
             </div>
 
             <div class="flex justify-end gap-2 mt-4">
+              <!-- Mostrar botón de confirmar solo si el pedido no está guardado -->
               <button
+                v-if="!pedidoGuardado"
+                type="button"
+                @click="confirmarPedido"
+                :disabled="guardando"
+                class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition flex items-center gap-2"
+              >
+                <span>Confirmar Pedido</span>
+                <svg
+                  v-if="!guardando"
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-5 w-5"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+                <svg
+                  v-else
+                  class="animate-spin h-5 w-5"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    class="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    stroke-width="4"
+                  ></circle>
+                  <path
+                    class="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  ></path>
+                </svg>
+              </button>
+
+              <!-- Mostrar botón de imprimir solo si el pedido está guardado -->
+              <button
+                v-if="pedidoGuardado"
                 type="button"
                 @click="imprimirTicket"
                 class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
               >
                 Imprimir
               </button>
+
               <button
                 type="button"
                 @click="mostrarVistaPrevia = false"
@@ -639,7 +700,9 @@ import {
 } from "../../../electron/main/modules/enums";
 import { useMesaStore } from "../../stores/useMesaStore";
 import { EstadoPedido } from "../../../electron/main/modules/interfaces";
+import { useToast } from "vue-toastification";
 
+const toast = useToast();
 const mesaStore = useMesaStore();
 
 interface DetallePedido {
@@ -733,6 +796,7 @@ const searchProducto = ref("");
 const categoriaSeleccionada = ref<number | string>("");
 const mostrarVistaPrevia = ref(false);
 const pedidoGuardado = ref(false);
+const montoRecibido = ref(0); // Nueva variable para el monto recibido
 
 // Formulario
 const formData = ref({
@@ -885,6 +949,13 @@ const calcularTotal = () => {
     .toFixed(2);
 };
 
+// Nuevo método para calcular el cambio
+const calcularCambio = () => {
+  const total = parseFloat(calcularTotal());
+  const cambio = montoRecibido.value - total;
+  return cambio > 0 ? cambio.toFixed(2) : "0.00";
+};
+
 const cerrar = () => {
   if (guardando.value) return;
 
@@ -894,18 +965,40 @@ const cerrar = () => {
   emit("cerrar");
 };
 
+// Modificado para solo mostrar la vista previa
 const guardar = async () => {
-  console.log("PEDIDO", formData.value.tipo_pago);
-
   try {
     errorMensaje.value = "";
-    guardando.value = true;
+    
     // Validaciones
     if (detallesActivos.value.length === 0) {
       errorMensaje.value = "Debe agregar al menos un producto al pedido";
+      return;
+    }
+
+    // Mostrar vista previa sin guardar
+    mostrarVistaPrevia.value = true;
+    
+    // Establecer el monto recibido al total por defecto
+    montoRecibido.value = parseFloat(calcularTotal());
+  } catch (error: any) {
+    errorMensaje.value = error.message || "Ocurrió un error al procesar el pedido";
+  }
+};
+
+// Nuevo método para confirmar y guardar el pedido
+const confirmarPedido = async () => {
+  try {
+    guardando.value = true;
+    errorMensaje.value = "";
+
+    const total = parseFloat(calcularTotal());
+    if (montoRecibido.value < total) {
+      errorMensaje.value = "El monto recibido es menor que el total";
       guardando.value = false;
       return;
     }
+
     const pedidoData = {
       ...(formData.value.id ? { id: formData.value.id } : {}),
       pedido_padre_id: formData.value.pedido_padre_id,
@@ -928,18 +1021,17 @@ const guardar = async () => {
     const result = await window.api.crearPedidoConDetalles(pedidoData);
 
     if (result instanceof Error) {
-      throw result;
+      throw result; 
     }
 
     if (result.success) {
       pedidoGuardado.value = true;
-      mostrarVistaPrevia.value = true;
+      toast.success("Pedido registrado con éxito!");
     } else {
       throw new Error(result.message || "Error al guardar el pedido");
     }
   } catch (error: any) {
-    errorMensaje.value =
-      error.message || "Ocurrió un error al guardar el pedido";
+    errorMensaje.value = error.message || "Ocurrió un error al guardar el pedido";
   } finally {
     guardando.value = false;
   }
@@ -1074,6 +1166,7 @@ watch(
     errorMensaje.value = "";
     mostrarVistaPrevia.value = false;
     pedidoGuardado.value = false;
+    montoRecibido.value = 0;
   },
   { immediate: true }
 );
@@ -1103,4 +1196,3 @@ onMounted(async () => {
   //seleccionarValoresAleatorios();
 });
 </script>
-

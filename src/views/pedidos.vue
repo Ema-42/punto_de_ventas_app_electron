@@ -140,12 +140,15 @@
                     <div
                       class="bg-red-600 text-white text-sm text-center py-1 px-2 rounded-md font-medium"
                     >
-                      {{ pedido.mesa ? `Mesa ${pedido.mesa.numero}` : "Sin mesa" }}
+                      {{
+                        pedido.mesa ? `Mesa ${pedido.mesa.numero}` : "Sin mesa"
+                      }}
                     </div>
                   </div>
                   <div
                     v-if="
-                      pedidosHijos[pedido.id] && pedidosHijos[pedido.id].length > 0
+                      pedidosHijos[pedido.id] &&
+                      pedidosHijos[pedido.id].length > 0
                     "
                     class="mt-1 bg-blue-100 text-blue-800 text-xs font-medium px-2 py-1 rounded-full flex items-center"
                   >
@@ -180,10 +183,14 @@
                 <span class="text-gray-600"
                   >Mesero: {{ pedido.mesera.nombre }}</span
                 >
-                <span class="font-medium text-gray-800">${{ pedido.total }}</span>
+                <span class="font-medium text-gray-800"
+                  >${{ pedido.total }}</span
+                >
               </div>
 
-              <div class="flex justify-between mt-3 pt-2 border-t border-gray-200">
+              <div
+                class="flex justify-between mt-3 pt-2 border-t border-gray-200"
+              >
                 <button
                   @click="agregarAPedido(pedido)"
                   class="text-green-600 hover:text-green-800 flex items-center text-xs font-medium"
@@ -262,7 +269,9 @@
       <div class="lg:w-1/4">
         <div class="bg-white rounded-lg shadow-md p-4 h-full">
           <h2 class="text-lg font-semibold mb-4">Pedidos Completados</h2>
-          <div class="overflow-x-auto max-h-[calc(100vh-220px)] overflow-y-auto">
+          <div
+            class="overflow-x-auto max-h-[calc(100vh-220px)] overflow-y-auto"
+          >
             <table class="min-w-full divide-y divide-gray-200">
               <thead class="bg-gray-50 sticky top-0 z-10">
                 <tr>
@@ -298,7 +307,9 @@
                     </span>
                   </td>
                   <td class="px-2 py-3 whitespace-nowrap text-xs">
-                    {{ pedido.mesa ? `Mesa ${pedido.mesa.numero}` : "Sin mesa" }}
+                    {{
+                      pedido.mesa ? `Mesa ${pedido.mesa.numero}` : "Sin mesa"
+                    }}
                   </td>
                   <td class="px-2 py-3 whitespace-nowrap font-medium text-xs">
                     ${{ pedido.total }}
@@ -355,7 +366,10 @@
                   </td>
                 </tr>
                 <tr v-if="pedidosConcluidos.length === 0">
-                  <td colspan="4" class="px-2 py-4 text-center text-sm text-gray-500">
+                  <td
+                    colspan="4"
+                    class="px-2 py-4 text-center text-sm text-gray-500"
+                  >
                     No hay pedidos completados
                   </td>
                 </tr>
