@@ -20,29 +20,6 @@
       @cerrar="mostrarModalDetalle = false"
     />
 
-    <!-- Toast Notification -->
-    <div
-      v-if="mostrarToast"
-      class="fixed top-4 right-4 bg-green-100 border-l-4 border-green-500 text-green-700 p-4 rounded shadow-md z-50 animate-fade-in-out"
-    >
-      <div class="flex items-center">
-        <svg
-          class="h-6 w-6 mr-2"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M5 13l4 4L19 7"
-          />
-        </svg>
-        <p>{{ mensajeToast }}</p>
-      </div>
-    </div>
-
     <!-- Encabezado con título y buscador -->
     <div class="bg-gradient-to-r bg-gray-100 p-4 rounded-lg shadow-md mb-4">
       <div
@@ -213,7 +190,7 @@
                 </button>
                 <div class="flex gap-2">
                   <button
-                    @click="cambiarEstadoPedido(pedido)"
+                    @click="confirmarCompletarPedido(pedido)"
                     class="text-green-600 hover:text-green-800 flex items-center text-xs font-medium"
                   >
                     <svg
@@ -379,6 +356,55 @@
         </div>
       </div>
     </div>
+    <!-- Modal de confirmación para completar pedido -->
+    <div
+      v-if="mostrarModalConfirmacion && pedidoACompletar"
+      class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+    >
+      <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md">
+        <div class="text-center">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-16 w-16 text-green-500 mx-auto mb-4"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+            />
+          </svg>
+          <h3 class="text-xl font-bold text-gray-800 mb-2">Confirmar acción</h3>
+          <p class="text-gray-600 mb-6">
+            ¿Estás seguro de que deseas marcar como completado el pedido
+            <span class="font-bold">
+              #{{
+                pedidoACompletar.num_pedido_dia || pedidoACompletar.id
+              }} </span
+            >?
+            <br />
+            <span class="text-sm">Esta acción no se puede deshacer.</span>
+          </p>
+          <div class="flex justify-center gap-3">
+            <button
+              @click="mostrarModalConfirmacion = false"
+              class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition"
+            >
+              Cancelar
+            </button>
+            <button
+              @click="cambiarEstadoPedido"
+              class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition"
+            >
+              Confirmar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -390,6 +416,8 @@ import DetallePedido from "../components/Pedidos/DetallePedido.vue";
 import { EstadoPedido } from "../../electron/main/modules/interfaces";
 import { useRoute } from "vue-router";
 import { cargarMesasLibresApi, useMesaStore } from "../stores/useMesaStore";
+import { useToast } from "vue-toastification";
+const toast = useToast();
 const mesaStore = useMesaStore();
 
 const route = useRoute();
@@ -452,9 +480,16 @@ const mostrarModalDetalle = ref(false);
 const pedidoAgregar = ref<Pedido | null>(null);
 const pedidoEliminar = ref<Pedido | null>(null);
 const pedidoDetalle = ref<Pedido | null>(null);
-const mostrarToast = ref(false);
-const mensajeToast = ref("");
 const pedidosHijos = ref<{ [key: number]: Pedido[] }>({});
+// Estado para el modal de confirmación
+const mostrarModalConfirmacion = ref(false);
+const pedidoACompletar = ref<Pedido | null>(null);
+
+// Método para mostrar el modal de confirmación
+const confirmarCompletarPedido = (pedido: Pedido) => {
+  pedidoACompletar.value = pedido;
+  mostrarModalConfirmacion.value = true;
+};
 
 const pedidosConcluidos = computed(() =>
   pedidos.value
@@ -578,16 +613,12 @@ const verDetalle = (pedido: Pedido) => {
 };
 
 const mostrarToastMensaje = (mensaje: string) => {
-  mensajeToast.value = mensaje;
-  mostrarToast.value = true;
-  setTimeout(() => {
-    mostrarToast.value = false;
-  }, 3000);
+  toast.success(mensaje)
 };
 
 const guardarPedido = () => {
   cargarPedidos();
-  mostrarModalCrearEditar.value = false;
+  //mostrarModalCrearEditar.value = false;
   mostrarToastMensaje(
     pedidoAgregar.value?.id
       ? "Pedido agregado con éxito!"
@@ -631,21 +662,30 @@ const getEstadoClase = (estado?: string) => {
   return clases[estado || ""] || "";
 };
 
-const cambiarEstadoPedido = async (pedido: Pedido) => {
+const cambiarEstadoPedido = async () => {
   try {
+    if (!pedidoACompletar.value) return;
+
     const result = await window.api.cambiarEstadoPedido(
-      pedido.id,
+      pedidoACompletar.value.id,
       EstadoPedido.COMPLETADO
     );
+
     if (result.success) {
       mostrarToastMensaje("Pedido completado con éxito!");
       cargarPedidos();
+      // Cerrar el modal después de completar
+      mostrarModalConfirmacion.value = false;
+      pedidoACompletar.value = null;
     } else {
       throw new Error(result.message || "Error al completar el pedido");
     }
   } catch (error: any) {
     console.error("Error al completar pedido:", error);
     mostrarToastMensaje("Error al completar el pedido: " + error.message);
+    // Cerrar el modal en caso de error
+    mostrarModalConfirmacion.value = false;
+    pedidoACompletar.value = null;
   }
 };
 

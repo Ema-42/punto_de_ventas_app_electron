@@ -16,7 +16,7 @@
       </div>
   
       <!-- Información del pedido -->
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 bg-gray-50 p-4 rounded-lg">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 bg-gray-50 p-4 rounded-lg border">
         <div>
           <p class="text-sm text-gray-500">Mesa</p>
           <p class="font-medium">
@@ -59,18 +59,18 @@
           <h3 class="text-lg font-semibold mb-2">Productos</h3>
           <div class="overflow-x-auto border rounded-lg">
             <table class="min-w-full divide-y divide-gray-200">
-              <thead class="bg-gray-50 sticky top-0">
+              <thead class="bg-red-600 sticky top-0">
                 <tr>
-                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th class="px-6 py-3 text-left text-sm font-medium text-white uppercase tracking-wider">
                     Producto
                   </th>
-                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th class="px-6 py-3 text-left text-sm font-medium text-white uppercase tracking-wider">
                     Precio Unitario
                   </th>
-                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th class="px-6 py-3 text-left text-sm font-medium text-white uppercase tracking-wider">
                     Cantidad
                   </th>
-                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th class="px-6 py-3 text-left text-sm font-medium text-white uppercase tracking-wider">
                     Subtotal
                   </th>
                 </tr>
@@ -127,7 +127,7 @@
                 </tr>
               </tbody>
               <tfoot>
-                <tr class="bg-gray-50">
+                <tr class="bg-red-50">
                   <td colspan="3" class="px-6 py-3 text-right font-medium">
                     Subtotal:
                   </td>
@@ -137,6 +137,30 @@
                 </tr>
               </tfoot>
             </table>
+          </div>
+          <!-- Botón de imprimir para el pedido principal -->
+          <div class="bg-gray-50 px-4 py-2 flex justify-end mt-2 rounded-lg">
+            <button
+              type="button"
+              @click="mostrarTicketIndividual"
+              class="px-3 py-1 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition flex items-center gap-1 text-sm"
+            >
+              <span>Imprimir</span>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-4 w-4"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"
+                />
+              </svg>
+            </button>
           </div>
         </div>
   
@@ -224,6 +248,30 @@
                 </tfoot>
               </table>
             </div>
+            <!-- Botón de imprimir para cada pedido adicional -->
+            <div class="bg-gray-50 px-4 py-2 flex justify-end">
+              <button
+                type="button"
+                @click="mostrarTicketHijo(hijo)"
+                class="px-3 py-1 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition flex items-center gap-1 text-sm"
+              >
+                <span>Imprimir</span>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-4 w-4"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"
+                  />
+                </svg>
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -253,15 +301,15 @@
             </div>
             
             <div class="mb-4">
-              <p>TICKET #: {{ pedido.num_pedido_dia || pedido.id }}</p>
-              <p>Fecha: {{ formatearFecha(pedido.fecha_creacion) }}</p>
-              <p>Mesero: {{ pedido.mesera.nombre }}</p>
-              <p>Cajero: {{ pedido.cajero.nombre }}</p>
-              <p v-if="pedido.mesa_id">
-                Mesa: {{ pedido.mesa?.numero || "" }}
+              <p>TICKET #: {{ pedidoParaImprimir?.num_pedido_dia || pedidoParaImprimir?.id }}</p>
+              <p>Fecha: {{ formatearFecha(pedidoParaImprimir?.fecha_creacion) }}</p>
+              <p>Mesero: {{ pedidoParaImprimir?.mesera.nombre }}</p>
+              <p>Cajero: {{ pedidoParaImprimir?.cajero.nombre }}</p>
+              <p v-if="pedidoParaImprimir?.mesa_id">
+                Mesa: {{ pedidoParaImprimir?.mesa?.numero || "" }}
               </p>
-              <p>Tipo de pago: {{ pedido.tipo_pago || "No especificado" }}</p>
-              <p>Estado: {{ getEstadoEtiqueta(pedido.estado) }}</p>
+              <p>Tipo de pago: {{ pedidoParaImprimir?.tipo_pago || "No especificado" }}</p>
+              <p>Estado: {{ getEstadoEtiqueta(pedidoParaImprimir?.estado) }}</p>
             </div>
             
             <div class="border-t border-b border-gray-300 py-2 mb-4">
@@ -273,7 +321,7 @@
             </div>
             
             <div class="mb-4">
-              <div v-for="(detalle, index) in pedido.detalles" :key="index" class="grid grid-cols-12 mb-1">
+              <div v-for="(detalle, index) in pedidoParaImprimir?.detalles" :key="index" class="grid grid-cols-12 mb-1">
                 <div class="col-span-6 truncate">{{ detalle.producto?.nombre }}</div>
                 <div class="col-span-2 text-center">{{ detalle.cantidad }}</div>
                 <div class="col-span-4 text-right">${{ (detalle.cantidad * parseFloat(detalle.precio_unitario.toString())).toFixed(2) }}</div>
@@ -283,7 +331,7 @@
             <div class="border-t border-gray-300 pt-2 mb-4">
               <div class="flex justify-between">
                 <span>Subtotal:</span>
-                <span>${{ calcularTotalPedido(pedido) }}</span>
+                <span>${{ pedidoParaImprimir ? calcularTotalPedido(pedidoParaImprimir) : '0.00' }}</span>
               </div>
             </div>
             
@@ -307,8 +355,8 @@
             <!-- Total global -->
             <div class="border-t border-gray-300 pt-2 mb-4">
               <div class="flex justify-between font-bold">
-                <span>TOTAL GLOBAL:</span>
-                <span>${{ imprimirConAgregados ? calcularTotalGlobal() : calcularTotalPedido(pedido) }}</span>
+                <span>TOTAL:</span>
+                <span>${{ imprimirConAgregados ? calcularTotalGlobal() : (pedidoParaImprimir ? calcularTotalPedido(pedidoParaImprimir) : '0.00') }}</span>
               </div>
             </div>
             
@@ -330,27 +378,7 @@
       </div>
   
       <div class="flex justify-end gap-2">
-        <button
-          type="button"
-          @click="mostrarTicketIndividual"
-          class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition flex items-center gap-2"
-        >
-          <span>Imprimir Ticket</span>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-5 w-5"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"
-            />
-          </svg>
-        </button>
+        
         <button
           v-if="pedidosHijos.length > 0"
           type="button"
@@ -383,258 +411,269 @@
       </div>
     </div>
   </div>
-  </template>
-  
-  <script setup lang="ts">
-  import { ref, watch, onMounted } from "vue";
-  
-  interface DetallePedido {
-    id?: number;
-    producto_id: number;
-    cantidad: number;
-    precio_unitario: number;
-    eliminado?: boolean;
-    producto?: {
-      id: number;
-      nombre: string;
-      imagen_url?: string;
-      maneja_stock: boolean;
-    };
-  }
-  
-  interface Pedido {
+</template>
+
+<script setup lang="ts">
+import { ref, watch, onMounted } from "vue";
+
+interface DetallePedido {
+  id?: number;
+  producto_id: number;
+  cantidad: number;
+  precio_unitario: number;
+  eliminado?: boolean;
+  producto?: {
     id: number;
-    pedido_padre_id?: number | null;
-    tipo_pago?: string;
-    mesa_id?: number | null;
-    mesera_id: number;
-    cajero_id: number;
-    num_pedido_dia?: number | null;
-    estado?: string;
-    fecha_creacion: string;
-    fecha_concluido?: string | null;
-    total?: number | string;
-    eliminado?: boolean;
-    mesa?: {
-      id: number;
-      numero: number;
-    };
-    mesera: {
-      id: number;
-      nombre: string;
-    };
-    cajero: {
-      id: number;
-      nombre: string;
-    };
-    detalles: DetallePedido[];
-  }
-  
-  const props = defineProps<{
-    mostrar: boolean;
-    pedido: Pedido | null;
-  }>();
-  
-  const emit = defineEmits<{
-    (e: "cerrar"): void;
-  }>();
-  
-  // Estado
-  const pedidosHijos = ref<Pedido[]>([]);
-  const mostrarVistaPrevia = ref(false);
-  const imprimirConAgregados = ref(false);
-  
-  // Métodos
-  const cargarPedidosHijos = async () => {
-    if (!props.pedido) return;
-  
-    try {
-      if (window.api && window.api.getPedidos) {
-        const pedidos = await window.api.getPedidos();
-        pedidosHijos.value = pedidos.filter(
-          (p: Pedido) => p.pedido_padre_id === props.pedido?.id
-        );
-      } else {
-        // Simulación si no hay API
-        pedidosHijos.value = [];
-      }
-    } catch (error) {
-      console.error("Error al cargar pedidos hijos:", error);
+    nombre: string;
+    imagen_url?: string;
+    maneja_stock: boolean;
+  };
+}
+
+interface Pedido {
+  id: number;
+  pedido_padre_id?: number | null;
+  tipo_pago?: string;
+  mesa_id?: number | null;
+  mesera_id: number;
+  cajero_id: number;
+  num_pedido_dia?: number | null;
+  estado?: string;
+  fecha_creacion: string;
+  fecha_concluido?: string | null;
+  total?: number | string;
+  eliminado?: boolean;
+  mesa?: {
+    id: number;
+    numero: number;
+  };
+  mesera: {
+    id: number;
+    nombre: string;
+  };
+  cajero: {
+    id: number;
+    nombre: string;
+  };
+  detalles: DetallePedido[];
+}
+
+const props = defineProps<{
+  mostrar: boolean;
+  pedido: Pedido | null;
+}>();
+
+const emit = defineEmits<{
+  (e: "cerrar"): void;
+}>();
+
+// Estado
+const pedidosHijos = ref<Pedido[]>([]);
+const mostrarVistaPrevia = ref(false);
+const imprimirConAgregados = ref(false);
+const pedidoParaImprimir = ref<Pedido | null>(null);
+
+// Métodos
+const cargarPedidosHijos = async () => {
+  if (!props.pedido) return;
+
+  try {
+    if (window.api && window.api.getPedidos) {
+      const pedidos = await window.api.getPedidos();
+      pedidosHijos.value = pedidos.filter(
+        (p: Pedido) => p.pedido_padre_id === props.pedido?.id
+      );
+    } else {
+      // Simulación si no hay API
       pedidosHijos.value = [];
     }
+  } catch (error) {
+    console.error("Error al cargar pedidos hijos:", error);
+    pedidosHijos.value = [];
+  }
+};
+
+const formatearFecha = (fecha?: string) => {
+  if (!fecha) return "";
+  const date = new Date(fecha);
+  return date.toLocaleDateString("es-ES", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+};
+
+const getEstadoEtiqueta = (estado?: string) => {
+  const estados: { [key: string]: string } = {
+    EN_ATENCION: "En Atención",
+    CONCLUIDO: "Concluido",
   };
-  
-  const formatearFecha = (fecha?: string) => {
-    if (!fecha) return "";
-    const date = new Date(fecha);
-    return date.toLocaleDateString("es-ES", {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    });
+  return estados[estado || ""] || estado || "";
+};
+
+const getEstadoClase = (estado?: string) => {
+  const clases: { [key: string]: string } = {
+    EN_ATENCION:
+      "bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full text-sm font-medium",
+    CONCLUIDO:
+      "bg-green-100 text-green-800 px-2 py-1 rounded-full text-sm font-medium",
   };
-  
-  const getEstadoEtiqueta = (estado?: string) => {
-    const estados: { [key: string]: string } = {
-      EN_ATENCION: "En Atención",
-      CONCLUIDO: "Concluido",
-    };
-    return estados[estado || ""] || estado || "";
-  };
-  
-  const getEstadoClase = (estado?: string) => {
-    const clases: { [key: string]: string } = {
-      EN_ATENCION:
-        "bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full text-sm font-medium",
-      CONCLUIDO:
-        "bg-green-100 text-green-800 px-2 py-1 rounded-full text-sm font-medium",
-    };
-    return clases[estado || ""] || "";
-  };
-  
-  const calcularTotalPedido = (pedido: Pedido) => {
-    return pedido.detalles
-      .reduce((total, detalle) => {
-        return total + detalle.cantidad * parseFloat(detalle.precio_unitario.toString());
-      }, 0)
-      .toFixed(2);
-  };
-  
-  const calcularTotalGlobal = () => {
-    let total = 0;
-  
-    // Sumar el total del pedido principal
-    if (props.pedido) {
-      total += props.pedido.detalles.reduce(
-        (sum, detalle) => sum + detalle.cantidad * parseFloat(detalle.precio_unitario.toString()),
-        0
-      );
-    }
-  
-    // Sumar los totales de los pedidos hijos
-    pedidosHijos.value.forEach(hijo => {
-      total += hijo.detalles.reduce(
-        (sum, detalle) => sum + detalle.cantidad * parseFloat(detalle.precio_unitario.toString()),
-        0
-      );
-    });
-  
-    return total.toFixed(2);
-  };
-  
-  const cerrar = () => {
-    mostrarVistaPrevia.value = false;
-    emit("cerrar");
-  };
-  
-  const mostrarTicketIndividual = () => {
-    imprimirConAgregados.value = false;
-    mostrarVistaPrevia.value = true;
-  };
-  
-  const mostrarTicketCompleto = () => {
-    imprimirConAgregados.value = true;
-    mostrarVistaPrevia.value = true;
-  };
-  
-  const imprimirTicket = () => {
-    try {
-      // Obtener el contenido del ticket
-      const ticketContent = document.getElementById('ticket-preview');
+  return clases[estado || ""] || "";
+};
+
+const calcularTotalPedido = (pedido: Pedido) => {
+  return pedido.detalles
+    .reduce((total, detalle) => {
+      return total + detalle.cantidad * parseFloat(detalle.precio_unitario.toString());
+    }, 0)
+    .toFixed(2);
+};
+
+const calcularTotalGlobal = () => {
+  let total = 0;
+
+  // Sumar el total del pedido principal
+  if (props.pedido) {
+    total += props.pedido.detalles.reduce(
+      (sum, detalle) => sum + detalle.cantidad * parseFloat(detalle.precio_unitario.toString()),
+      0
+    );
+  }
+
+  // Sumar los totales de los pedidos hijos
+  pedidosHijos.value.forEach(hijo => {
+    total += hijo.detalles.reduce(
+      (sum, detalle) => sum + detalle.cantidad * parseFloat(detalle.precio_unitario.toString()),
+      0
+    );
+  });
+
+  return total.toFixed(2);
+};
+
+const cerrar = () => {
+  mostrarVistaPrevia.value = false;
+  emit("cerrar");
+};
+
+const mostrarTicketIndividual = () => {
+  pedidoParaImprimir.value = props.pedido;
+  imprimirConAgregados.value = false;
+  mostrarVistaPrevia.value = true;
+};
+
+const mostrarTicketCompleto = () => {
+  pedidoParaImprimir.value = props.pedido;
+  imprimirConAgregados.value = true;
+  mostrarVistaPrevia.value = true;
+};
+
+// Nuevo método para mostrar el ticket de un pedido hijo específico
+const mostrarTicketHijo = (hijo: Pedido) => {
+  pedidoParaImprimir.value = hijo;
+  imprimirConAgregados.value = false;
+  mostrarVistaPrevia.value = true;
+};
+
+const imprimirTicket = () => {
+  try {
+    // Obtener el contenido del ticket
+    const ticketContent = document.getElementById('ticket-preview');
+    
+    // Crear un iframe para imprimir
+    const printIframe = document.createElement('iframe');
+    printIframe.style.position = 'absolute';
+    print.style.position = 'absolute';
+    printIframe.style.top = '-9999px';
+    document.body.appendChild(printIframe);
+    
+    // Escribir el contenido en el iframe
+    const printDocument = printIframe.contentDocument || printIframe.contentWindow?.document;
+    if (printDocument) {
+      printDocument.open();
+      printDocument.write(`
+        <html>
+          <head>
+            <title>Ticket de Pedido</title>
+            <style>
+              body {
+                font-family: monospace;
+                font-size: 12px;
+                width: 80mm;
+                margin: 0;
+                padding: 10px;
+              }
+              .text-center { text-align: center; }
+              .mb-4 { margin-bottom: 16px; }
+              .font-bold { font-weight: bold; }
+              .text-lg { font-size: 16px; }
+              .border-t, .border-b { border-top: 1px solid #ddd; border-bottom: 1px solid #ddd; }
+              .py-2 { padding-top: 8px; padding-bottom: 8px; }
+              .grid { display: grid; }
+              .grid-cols-12 { grid-template-columns: repeat(12, minmax(0, 1fr)); }
+              .col-span-6 { grid-column: span 6 / span 6; }
+              .col-span-2 { grid-column: span 2 / span 2; }
+              .col-span-4 { grid-column: span 4 / span 4; }
+              .text-right { text-align: right; }
+              .text-center { text-align: center; }
+              .truncate { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+              .mb-1 { margin-bottom: 4px; }
+              .pt-2 { padding-top: 8px; }
+              .mt-6 { margin-top: 24px; }
+              .flex { display: flex; }
+              .justify-between { justify-content: space-between; }
+              .pl-2 { padding-left: 8px; }
+              .mt-1 { margin-top: 4px; }
+              .mt-2 { margin-top: 8px; }
+            </style>
+          </head>
+          <body>
+            ${ticketContent?.innerHTML || ''}
+          </body>
+        </html>
+      `);
+      printDocument.close();
       
-      // Crear un iframe para imprimir
-      const printIframe = document.createElement('iframe');
-      printIframe.style.position = 'absolute';
-      printIframe.style.top = '-9999px';
-      document.body.appendChild(printIframe);
+      // Imprimir y eliminar el iframe
+      printIframe.contentWindow?.focus();
+      printIframe.contentWindow?.print();
       
-      // Escribir el contenido en el iframe
-      const printDocument = printIframe.contentDocument || printIframe.contentWindow?.document;
-      if (printDocument) {
-        printDocument.open();
-        printDocument.write(`
-          <html>
-            <head>
-              <title>Ticket de Pedido</title>
-              <style>
-                body {
-                  font-family: monospace;
-                  font-size: 12px;
-                  width: 80mm;
-                  margin: 0;
-                  padding: 10px;
-                }
-                .text-center { text-align: center; }
-                .mb-4 { margin-bottom: 16px; }
-                .font-bold { font-weight: bold; }
-                .text-lg { font-size: 16px; }
-                .border-t, .border-b { border-top: 1px solid #ddd; border-bottom: 1px solid #ddd; }
-                .py-2 { padding-top: 8px; padding-bottom: 8px; }
-                .grid { display: grid; }
-                .grid-cols-12 { grid-template-columns: repeat(12, minmax(0, 1fr)); }
-                .col-span-6 { grid-column: span 6 / span 6; }
-                .col-span-2 { grid-column: span 2 / span 2; }
-                .col-span-4 { grid-column: span 4 / span 4; }
-                .text-right { text-align: right; }
-                .text-center { text-align: center; }
-                .truncate { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-                .mb-1 { margin-bottom: 4px; }
-                .pt-2 { padding-top: 8px; }
-                .mt-6 { margin-top: 24px; }
-                .flex { display: flex; }
-                .justify-between { justify-content: space-between; }
-                .pl-2 { padding-left: 8px; }
-                .mt-1 { margin-top: 4px; }
-                .mt-2 { margin-top: 8px; }
-              </style>
-            </head>
-            <body>
-              ${ticketContent?.innerHTML || ''}
-            </body>
-          </html>
-        `);
-        printDocument.close();
-        
-        // Imprimir y eliminar el iframe
-        printIframe.contentWindow?.focus();
-        printIframe.contentWindow?.print();
-        
-        // Eliminar el iframe después de imprimir
-        setTimeout(() => {
-          document.body.removeChild(printIframe);
-        }, 500);
-      }
-    } catch (error) {
-      console.error("Error al imprimir ticket:", error);
+      // Eliminar el iframe después de imprimir
+      setTimeout(() => {
+        document.body.removeChild(printIframe);
+      }, 500);
     }
-  };
-  
-  // Observar cambios en el pedido
-  watch(
-    () => props.pedido,
-    () => {
-      if (props.pedido && props.mostrar) {
-        cargarPedidosHijos();
-      }
-    }
-  );
-  
-  // Observar cambios en mostrar
-  watch(
-    () => props.mostrar,
-    (newValue) => {
-      if (newValue && props.pedido) {
-        cargarPedidosHijos();
-      }
-    }
-  );
-  
-  // Cargar datos al montar el componente
-  onMounted(() => {
-    if (props.mostrar && props.pedido) {
+  } catch (error) {
+    console.error("Error al imprimir ticket:", error);
+  }
+};
+
+// Observar cambios en el pedido
+watch(
+  () => props.pedido,
+  () => {
+    if (props.pedido && props.mostrar) {
       cargarPedidosHijos();
     }
-  });
-  </script>
+  }
+);
+
+// Observar cambios en mostrar
+watch(
+  () => props.mostrar,
+  (newValue) => {
+    if (newValue && props.pedido) {
+      cargarPedidosHijos();
+    }
+  }
+);
+
+// Cargar datos al montar el componente
+onMounted(() => {
+  if (props.mostrar && props.pedido) {
+    cargarPedidosHijos();
+  }
+});
+</script>
