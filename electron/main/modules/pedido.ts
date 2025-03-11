@@ -205,7 +205,7 @@ function validarDetallesUnicos(
   }
 }
 
-export const crearPedidoConDetalles = async (data: CrearPedidoConDetalles) => {
+export const crearPedidoConDetalles = async (data: CrearPedidoConDetalles) => {  
   try {
     if (!data.detalles || data.detalles.length === 0) {
       throw new Error("No se puede crear un pedido sin detalles.");

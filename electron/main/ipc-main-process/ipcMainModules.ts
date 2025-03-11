@@ -40,6 +40,7 @@ import {
   editarPedidoConDetalles,
   eliminarPedido,
   gePedidoById,
+  getNumeroPedidoDia,
   getPedidos,
 } from "../modules/pedido";
 import {
@@ -139,6 +140,10 @@ export default () => {
 
   ipcMain.handle("get-pedidos", async () => {
     return await getPedidos();
+  });
+
+  ipcMain.handle("get-numero-pedido-dia", async () => {
+    return await getNumeroPedidoDia();
   });
 
   ipcMain.handle("get-one-pedido", async (_, id) => {

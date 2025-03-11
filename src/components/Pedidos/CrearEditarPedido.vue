@@ -8,13 +8,13 @@
     >
       <div class="flex justify-between items-center mb-4">
         <h2 class="text-xl font-bold text-gray-800">
-          {{ pedido?.id && !pedido.pedido_padre_id ? "Editar" : "Nuevo" }}
-          Pedido
+          {{ pedido?.pedido_padre_id ? "Agregar" : "Nuevo" }}
+          Pedido Nº {{ numeroPedidoDia }}
           <span
             v-if="pedido?.pedido_padre_id"
-            class="text-sm font-normal text-gray-500"
+            class="px-3 py-1 bg-green-600 text-white text-lg font-semibold rounded-lg"
           >
-            (Agregado a Pedido #{{ pedido.num_pedido_dia }})
+            En la mesa: {{ pedido.mesa?.numero }}
           </span>
         </h2>
         <button @click="cerrar" class="text-gray-500 hover:text-gray-700">
@@ -34,10 +34,17 @@
             </label>
             <select
               v-model="formData.mesa_id"
-              required
               id="mesa"
-              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400 bg-white"
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400"
+              :class="{
+                'bg-green-300 cursor-not-allowed': pedido?.pedido_padre_id,
+                'bg-white cursor-pointer': !pedido?.pedido_padre_id,
+              }"
+              :disabled="!!pedido?.pedido_padre_id"
             >
+              <option v-if="pedido?.pedido_padre_id" :value="pedido.mesa?.id">
+                Misma Mesa
+              </option>
               <option
                 v-for="mesa in mesaStore.mesas"
                 :key="mesa.id"
@@ -59,7 +66,11 @@
               v-model="formData.mesera_id"
               id="mesera"
               required
-              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400 bg-white"
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400"
+              :class="{
+                'bg-green-200': pedido?.pedido_padre_id,
+                'bg-white': !pedido?.pedido_padre_id,
+              }"
             >
               <option value="" disabled>Seleccione un mesero/a</option>
               <option
@@ -487,7 +498,7 @@
 
               <div class="mb-4">
                 <div class="flex justify-between">
-                  <p>TICKET #: {{ formData.id || "NUEVO" }}</p>
+                  <p>TICKET #: {{ numeroPedidoDia }}</p>
                   <p>Fecha: {{ new Date().toLocaleString() }}</p>
                 </div>
                 <div class="flex justify-between">
@@ -826,11 +837,13 @@ const mostrarVistaPrevia = ref(false);
 const pedidoGuardado = ref(false);
 const montoRecibido = ref(0); // Nueva variable para el monto recibido
 const meseroIdealId = ref(0);
+const numeroPedidoDia = ref(0);
 // Formulario
 const formData = ref({
   id: 0,
   pedido_padre_id: null as number | null,
   mesa_id: 0,
+  num_pedido_dia: numeroPedidoDia.value,
   mesera_id: 0,
   cajero_id: 0,
   tipo_pago: "EFECTIVO",
@@ -844,7 +857,9 @@ const meseros = computed(() => {
 });
 
 const cajeros = computed(() => {
-  return usuarios.value.filter((u) => u.rol.nombre === Roles.CAJERO);
+  return usuarios.value.filter(
+    (u) => u.rol.nombre === Roles.CAJERO || Roles.ADMIN
+  );
 });
 
 const detallesActivos = computed(() => {
@@ -1032,6 +1047,7 @@ const confirmarPedido = async () => {
       ...(formData.value.id ? { id: formData.value.id } : {}),
       pedido_padre_id: formData.value.pedido_padre_id,
       mesa_id: formData.value.mesa_id,
+      num_pedido_dia: formData.value.num_pedido_dia,
       mesera_id: formData.value.mesera_id,
       cajero_id: formData.value.cajero_id,
       tipo_pago: formData.value.tipo_pago,
@@ -1150,32 +1166,51 @@ const seleccionarValoresPorDefecto = async () => {
     }
     //usuario logueado sera cajero
     formData.value.cajero_id = authStore.user?.id || 0;
+    //numero de pedido del dia
+    const numPedido = await window.api.getNumeroPedidoDia();
+    numeroPedidoDia.value = numPedido;
+    formData.value.num_pedido_dia = numeroPedidoDia.value;
     //mesero mas libre sera elegido por defecto
     const mesero = await window.api.getMeseroMasLibre();
     meseroIdealId.value = mesero[0].id;
     formData.value.mesera_id = meseroIdealId.value;
   }
 };
+const esteblecerNumPedidoDia = async () => {
+  const numPedido = await window.api.getNumeroPedidoDia();
+  numeroPedidoDia.value = numPedido;
+  formData.value.num_pedido_dia = numeroPedidoDia.value;
+};
+const establecerCajeroLogueado = async () => {
+  //usuario logueado sera cajero
+  formData.value.cajero_id = authStore.user?.id || 0;
+};
 // Inicializar formulario cuando cambia el pedido
 watch(
   () => props.pedido,
   async (newPedido) => {
     if (newPedido && newPedido.id !== 0) {
+      console.log("MESA", newPedido.mesa);
+
       console.log("AGREGAR pedido", props.pedido);
+      await esteblecerNumPedidoDia();
       formData.value = {
         id: newPedido.id,
+        num_pedido_dia: numeroPedidoDia.value,
         pedido_padre_id: newPedido.pedido_padre_id || null,
         mesa_id: newPedido.mesa_id || 0,
         mesera_id: newPedido.mesera_id,
-        cajero_id: newPedido.cajero_id,
+        cajero_id: 0,
         tipo_pago: newPedido.tipo_pago || TipoPago.EFECTIVO,
         estado: EstadoPedido.EN_PREPARACION,
         detalles: [],
       };
+      await establecerCajeroLogueado();
     } else if (props.pedido?.id === 0) {
       console.log("Nuevo pedido", props.pedido);
       formData.value = {
         id: 0,
+        num_pedido_dia: numeroPedidoDia.value,
         pedido_padre_id: null,
         mesa_id: 0,
         mesera_id: 0,

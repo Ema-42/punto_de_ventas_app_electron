@@ -63,7 +63,8 @@ export interface CrearPedidoConDetalles {
   cajero_id: number;
   estado?: string; // "EN_ATENCION" o "CONCLUIDO"
   fecha_concluido?: Date;
-  tipo_pago?: TipoPago
+  tipo_pago?: TipoPago;
+  num_pedido_dia?: number;
   detalles: {
     producto_id: number;
     cantidad: number;
@@ -123,7 +124,6 @@ export interface EditarIngresoConDetalles {
   }[];
 }
 
-
 export interface PedidoEditData {
   pedido_padre_id?: number;
   mesa_id?: number;
@@ -132,7 +132,6 @@ export interface PedidoEditData {
   estado?: string;
   fecha_concluido?: Date;
 }
-
 
 export interface ProductoIngreso {
   id: number;

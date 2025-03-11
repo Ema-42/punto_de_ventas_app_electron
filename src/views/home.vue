@@ -34,6 +34,7 @@
           </svg>
           Nuevo Pedido
         </button>
+        <button>Get Numero de pedido</button>
       </div>
     </div>
 

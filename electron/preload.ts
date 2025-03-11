@@ -60,6 +60,7 @@ contextBridge.exposeInMainWorld("api", {
   getOneRoleById: (id: number) => ipcRenderer.invoke("get-one-role", id),
   //pedidos
   getPedidos: () => ipcRenderer.invoke("get-pedidos"),
+  getNumeroPedidoDia: () => ipcRenderer.invoke("get-numero-pedido-dia"),
   editEstadoPedidoById: (id: number, estado: EstadoPedido) =>
     ipcRenderer.invoke("edit-estado-pedido", { id, estado }),
   getOnePedidoById: (id: number) => ipcRenderer.invoke("get-one-pedido", id),
