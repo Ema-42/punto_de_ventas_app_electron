@@ -8,7 +8,7 @@
     >
       <div class="flex justify-between items-center mb-4">
         <h2 class="text-xl font-bold text-gray-800">
-          Detalles del Pedido #{{ pedido.num_pedido_dia || pedido.id }}
+          Detalles del Pedido N° {{ pedido.num_pedido_dia || pedido.id }}
         </h2>
         <button @click="cerrar" class="text-gray-500 hover:text-gray-700">
           <span class="text-2xl">&times;</span>
@@ -16,23 +16,23 @@
       </div>
   
       <!-- Información del pedido -->
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 bg-gray-50 p-4 rounded-lg border">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 bg-red-50 p-4 rounded-lg border border-red-600">
         <div>
-          <p class="text-sm text-gray-500">Mesa</p>
-          <p class="font-medium">
+          <p class="font-medium text-sm text-red-600">Mesa</p>
+          <p>
             {{ pedido.mesa ? `Mesa ${pedido.mesa.numero}` : "Sin mesa" }}
           </p>
         </div>
         <div>
-          <p class="text-sm text-gray-500">Mesero/a</p>
-          <p class="font-medium">{{ pedido.mesera.nombre }}</p>
+          <p class="font-medium text-sm text-red-600">Mesero/a</p>
+          <p>{{ pedido.mesera.nombre }}</p>
         </div>
         <div>
-          <p class="text-sm text-gray-500">Cajero/a</p>
-          <p class="font-medium">{{ pedido.cajero.nombre }}</p>
+          <p class="font-medium text-sm text-red-600">Cajero/a</p>
+          <p>{{ pedido.cajero.nombre }}</p>
         </div>
         <div>
-          <p class="text-sm text-gray-500">Estado</p>
+          <p class="font-medium text-sm text-red-600">Estado</p>
           <p>
             <span :class="getEstadoClase(pedido.estado)">
               {{ getEstadoEtiqueta(pedido.estado) }}
@@ -40,23 +40,39 @@
           </p>
         </div>
         <div>
-          <p class="text-sm text-gray-500">Fecha de creación</p>
-          <p class="font-medium">{{ formatearFecha(pedido.fecha_creacion) }}</p>
+          <p class="font-medium text-sm text-red-600">Fecha de creación</p>
+          <p>{{ formatearFecha(pedido.fecha_creacion) }}</p>
         </div>
         <div v-if="pedido.fecha_concluido">
-          <p class="text-sm text-gray-500">Fecha de conclusión</p>
-          <p class="font-medium">{{ formatearFecha(pedido.fecha_concluido) }}</p>
+          <p class=" font-medium text-sm text-red-600">Fecha de conclusión</p>
+          <p>{{ formatearFecha(pedido.fecha_concluido) }}</p>
         </div>
         <div>
-          <p class="text-sm text-gray-500">Tipo de pago</p>
-          <p class="font-medium">{{ pedido.tipo_pago || "No especificado" }}</p>
+          <p class="font-medium text-sm text-red-600">Tipo de pago</p>
+          <p>{{ pedido.tipo_pago || "No especificado" }}</p>
         </div>
       </div>
   
       <div class="max-h-[calc(100vh-400px)] overflow-y-auto pr-2">
         <!-- Detalles del pedido principal -->
         <div class="mb-6">
-          <h3 class="text-lg font-semibold mb-2">Productos</h3>
+          
+          <h3 class="text-lg font-semibold mb-2 text-red-600 flex items-center">Productos 
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-6 w-6 ml-2 text-red-500"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+            />
+          </svg>
+          </h3>
           <div class="overflow-x-auto border rounded-lg">
             <table class="min-w-full divide-y divide-gray-200">
               <thead class="bg-red-600 sticky top-0">
@@ -128,22 +144,22 @@
               </tbody>
               <tfoot>
                 <tr class="bg-red-50">
-                  <td colspan="3" class="px-6 py-3 text-right font-medium">
-                    Subtotal:
-                  </td>
-                  <td class="px-6 py-3 text-left font-bold">
-                    ${{ calcularTotalPedido(pedido) }}
+                  <td colspan="4" class="px-6 py-3">
+                    <div class="flex justify-between items-center">
+                      <span class="font-medium">Tipo de pago: {{ pedido.tipo_pago || "No especificado" }}</span>
+                      <span class="font-bold">Subtotal: ${{ calcularTotalPedido(pedido) }}</span>
+                    </div>
                   </td>
                 </tr>
               </tfoot>
             </table>
           </div>
           <!-- Botón de imprimir para el pedido principal -->
-          <div class="bg-gray-50 px-4 py-2 flex justify-end mt-2 rounded-lg">
+          <div class="bg-white-50 px-4 py-2 flex justify-end mt-2 rounded-lg">
             <button
               type="button"
               @click="mostrarTicketIndividual"
-              class="px-3 py-1 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition flex items-center gap-1 text-sm"
+              class="px-3 py-1 bg-red-600 text-white rounded-lg hover:bg-red-700 transition flex items-center gap-1 text-sm"
             >
               <span>Imprimir</span>
               <svg
@@ -166,26 +182,48 @@
   
         <!-- Pedidos agregados (hijos) -->
         <div v-if="pedidosHijos.length > 0" class="mb-6">
-          <h3 class="text-lg font-semibold mb-2">Pedidos Agregados</h3>
-          <div v-for="(hijo, index) in pedidosHijos" :key="hijo.id" class="mb-4 border rounded-lg overflow-hidden">
-            <div class="bg-gray-100 px-4 py-2 flex justify-between items-center">
-              <h4 class="font-medium">Pedido adicional #{{ index + 1 }}</h4>
-              <span class="text-gray-600 text-sm">{{ formatearFecha(hijo.fecha_creacion) }}</span>
+          <h3 class="text-lg font-semibold mb-2 text-red-600 flex items-center">
+             Pedidos Agregados
+             <svg 
+              xmlns="http://www.w3.org/2000/svg" 
+              class="h-6 w-6 ml-2 text-red-500" 
+              fill="currentColor" 
+              viewBox="0 -960 960 960" 
+              stroke="currentColor"
+              >
+              <path 
+                  stroke-linecap="round" 
+                  stroke-linejoin="round" 
+                  stroke-width="2" 
+                  d="M440-280h80v-160h160v-80H520v-160h-80v160H280v80h160v160Zm40 200q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z" 
+              />
+              </svg>
+            </h3>
+
+
+          <div v-for="(hijo, index) in pedidosHijos" :key="hijo.id" class="mb-4 rounded-lg overflow-hidden">
+            <div class="bg-gray-100 px-4 py-2 flex justify-between items-center border">
+              <div class="flex flex-col sm:flex-row sm:items-center gap-2">
+                <h4>Pedido adicional N° {{ index + 1 }}</h4>
+              </div>
+              <div class="text-sm font-medium">
+                <span class="text-gray-600 text-sm">{{ formatearFecha(hijo.fecha_creacion) }}</span>
+              </div>
             </div>
-            <div class="overflow-x-auto">
+            <div class="overflow-x-auto border rounded-b-lg ">
               <table class="min-w-full divide-y divide-gray-200">
-                <thead class="bg-gray-50">
+                <thead class="bg-red-600">
                   <tr>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th class="px-6 py-3 text-left text-sm font-medium text-white uppercase tracking-wider">
                       Producto
                     </th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th class="px-6 py-3 text-left text-sm font-medium text-white uppercase tracking-wider">
                       Precio Unitario
                     </th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th class="px-6 py-3 text-left text-sm font-medium text-white uppercase tracking-wider">
                       Cantidad
                     </th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th class="px-6 py-3 text-left text-sm font-medium text-white uppercase tracking-wider">
                       Subtotal
                     </th>
                   </tr>
@@ -237,23 +275,23 @@
                   </tr>
                 </tbody>
                 <tfoot>
-                  <tr class="bg-gray-50">
-                    <td colspan="3" class="px-6 py-3 text-right font-medium">
-                      Subtotal:
-                    </td>
-                    <td class="px-6 py-3 text-left font-bold">
-                      ${{ calcularTotalPedido(hijo) }}
+                  <tr class="bg-red-50">
+                    <td colspan="4" class="px-6 py-3">
+                      <div class="flex justify-between items-center">
+                        <span class="">Tipo de pago: {{ hijo.tipo_pago || "No especificado" }}</span>
+                        <span class="font-bold">Subtotal: ${{ calcularTotalPedido(hijo) }}</span>
+                      </div>
                     </td>
                   </tr>
                 </tfoot>
               </table>
             </div>
             <!-- Botón de imprimir para cada pedido adicional -->
-            <div class="bg-gray-50 px-4 py-2 flex justify-end">
+            <div class="bg-white px-4 py-2 flex justify-end">
               <button
                 type="button"
                 @click="mostrarTicketHijo(hijo)"
-                class="px-3 py-1 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition flex items-center gap-1 text-sm"
+                class="px-3 py-1 bg-red-600 text-white rounded-lg hover:bg-red-700 transition flex items-center gap-1 text-sm"
               >
                 <span>Imprimir</span>
                 <svg
@@ -279,7 +317,7 @@
       <!-- Total global -->
       <div class="bg-gray-100 p-4 rounded-lg mb-6">
         <div class="flex justify-between items-center">
-          <span class="text-lg font-bold">Total Global:</span>
+          <span class="text-lg font-bold text-red-600">Total Global:</span>
           <span class="text-xl font-bold text-red-600">${{ calcularTotalGlobal() }}</span>
         </div>
       </div>
@@ -329,9 +367,9 @@
             </div>
             
             <div class="border-t border-gray-300 pt-2 mb-4">
-              <div class="flex justify-between">
-                <span>Subtotal:</span>
-                <span>${{ pedidoParaImprimir ? calcularTotalPedido(pedidoParaImprimir) : '0.00' }}</span>
+              <div class="flex justify-between items-center">
+                <span class="font-medium">Tipo de pago: {{ pedidoParaImprimir?.tipo_pago || "No especificado" }}</span>
+                <span class="font-medium">Subtotal: ${{ pedidoParaImprimir ? calcularTotalPedido(pedidoParaImprimir) : '0.00' }}</span>
               </div>
             </div>
             
@@ -346,8 +384,8 @@
                   <div class="col-span-4 text-right">${{ (detalle.cantidad * parseFloat(detalle.precio_unitario.toString())).toFixed(2) }}</div>
                 </div>
                 <div class="flex justify-between pl-2 mt-1">
-                  <span>Subtotal:</span>
-                  <span>${{ calcularTotalPedido(hijo) }}</span>
+                  <span>Tipo de pago: {{ hijo.tipo_pago || "No especificado" }}</span>
+                  <span>Subtotal: ${{ calcularTotalPedido(hijo) }}</span>
                 </div>
               </div>
             </div>

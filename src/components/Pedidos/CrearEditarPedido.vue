@@ -176,7 +176,7 @@
                   :class="[
                     'px-3 py-1 rounded-full text-sm font-medium transition',
                     categoriaSeleccionada === ''
-                      ? 'bg-gray-700 text-white'
+                      ? 'bg-red-600 text-white'
                       : 'bg-gray-200 text-gray-700 hover:bg-gray-300',
                   ]"
                 >
@@ -275,33 +275,33 @@
           <!-- Columna derecha: Detalles del pedido -->
           <div class="w-full md:w-1/2">
             <h3 class="text-lg font-semibold mb-2">Detalles del Pedido</h3>
-            <div class="border rounded-lg h-[calc(100vh-500px)] flex flex-col">
-              <div class="overflow-y-auto flex-grow">
-                <table class="min-w-full divide-y divide-gray-200 table-fixed">
-                  <thead class="bg-gray-50 sticky top-0">
+            <div class="border rounded-lg h-[calc(100vh-400px)] flex flex-col">
+              <div class="overflow-y-auto flex-grow rounded-lg">
+                <table class="min-w-full divide-y divide-gray-200 table-fixed ">
+                  <thead class="bg-red-600 sticky top-0  ">
                     <tr>
                       <th
-                        class="w-2/5 px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                        class="w-2/5 px-3 py-3 text-left text-sm font-medium text-white uppercase tracking-wider"
                       >
                         Producto
                       </th>
                       <th
-                        class="w-1/5 px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                        class="w-1/5 px-3 py-3 text-left text-sm font-medium text-white uppercase tracking-wider"
                       >
                         Precio
                       </th>
                       <th
-                        class="w-1/5 px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                        class="w-1/5 px-3 py-3 text-center text-sm font-medium text-white uppercase tracking-wider"
                       >
                         Cant.
                       </th>
                       <th
-                        class="w-1/5 px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                        class="w-1/5 px-3 py-3 text-left text-sm font-medium text-white uppercase tracking-wider"
                       >
                         Subtotal
                       </th>
                       <th
-                        class="w-1/10 px-3 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
+                        class="w-1/10 px-3 py-3 text-center text-sm font-medium text-white uppercase tracking-wider"
                       >
                         Acción
                       </th>
@@ -344,7 +344,7 @@
                           </div>
                           <div class="truncate max-w-[120px]">
                             <div
-                              class="text-xs font-medium text-gray-900 truncate"
+                              class="text-sm font-medium text-gray-900 truncate"
                             >
                               {{ detalle.producto?.nombre }}
                             </div>
@@ -352,7 +352,7 @@
                         </div>
                       </td>
                       <td
-                        class="px-3 py-2 whitespace-nowrap text-xs text-gray-500"
+                        class="px-3 py-2 whitespace-nowrap text-sm text-gray-500"
                       >
                         ${{ detalle.precio_unitario }}
                       </td>
@@ -361,14 +361,14 @@
                           <button
                             type="button"
                             @click="decrementarCantidad(index)"
-                            class="p-1 rounded-full bg-gray-200 hover:bg-gray-300"
+                            class="p-1 rounded-full bg-red-600 hover:bg-red-700"
                           >
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
-                              class="h-3 w-3"
+                              class="h-4 w-4"
                               fill="none"
                               viewBox="0 0 24 24"
-                              stroke="currentColor"
+                              stroke="white"
                             >
                               <path
                                 stroke-linecap="round"
@@ -382,19 +382,19 @@
                             v-model.number="detalle.cantidad"
                             type="number"
                             min="1"
-                            class="mx-1 w-10 text-center border rounded-md text-xs"
+                            class="mx-1 w-10 text-center border rounded-md text-sm"
                           />
                           <button
                             type="button"
                             @click="incrementarCantidad(index)"
-                            class="p-1 rounded-full bg-gray-200 hover:bg-gray-300"
+                            class="p-1 rounded-full bg-red-600 hover:bg-red-700"
                           >
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
-                              class="h-3 w-3"
+                              class="h-4 w-4"
                               fill="none"
                               viewBox="0 0 24 24"
-                              stroke="currentColor"
+                              stroke="white"
                             >
                               <path
                                 stroke-linecap="round"
@@ -407,7 +407,7 @@
                         </div>
                       </td>
                       <td
-                        class="px-3 py-2 whitespace-nowrap text-xs text-gray-900 font-medium"
+                        class="px-3 py-2 whitespace-nowrap text-sm text-gray-900 font-medium text-center"
                       >
                         ${{
                           (
@@ -426,7 +426,7 @@
                         >
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
-                            class="h-4 w-4"
+                            class="h-5 w-5"
                             fill="none"
                             viewBox="0 0 24 24"
                             stroke="currentColor"
