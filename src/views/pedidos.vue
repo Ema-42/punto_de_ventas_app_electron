@@ -390,6 +390,7 @@ import DetallePedido from "../components/Pedidos/DetallePedido.vue";
 import { EstadoPedido } from "../../electron/main/modules/interfaces";
 import { useRoute } from "vue-router";
 import { cargarMesasLibresApi, useMesaStore } from "../stores/useMesaStore";
+import { TipoPago } from "../../electron/main/modules/enums";
 const mesaStore = useMesaStore();
 
 const route = useRoute();
@@ -411,7 +412,7 @@ interface DetallePedido {
 interface Pedido {
   id: number;
   pedido_padre_id?: number | null;
-  tipo_pago?: string;
+  tipo_pago?:TipoPago;
   mesa_id?: number | null;
   mesera_id: number;
   cajero_id: number;

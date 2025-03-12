@@ -4,7 +4,7 @@
     class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
   >
     <div
-      class="bg-white rounded-lg shadow-xl p-6 w-full max-w-4xl h-[75vh] flex flex-col"
+      class="bg-white rounded-lg shadow-xl p-6 w-full max-w-4xl h-[80vh] flex flex-col"
     >
       <div class="flex justify-between items-center mb-4">
         <h2 class="text-xl font-bold text-gray-800">Nuevo Ingreso</h2>
@@ -12,7 +12,7 @@
           <span class="text-2xl">&times;</span>
         </button>
       </div>
-      
+
       <!-- Mensaje de error -->
       <div
         v-if="errorMensaje"
@@ -33,7 +33,8 @@
             v-model="formData.usuario_id"
             id="usuario"
             required
-            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400 bg-white"
+            disabled
+            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400 bg-gray-100"
           >
             <option value="" disabled>Seleccione un usuario</option>
             <option
@@ -51,7 +52,7 @@
           <h3 class="text-lg font-semibold text-gray-700 mb-3">
             Agregar Producto
           </h3>
-          
+
           <div class="grid grid-cols-1 md:grid-cols-12 gap-3">
             <div class="col-span-5">
               <label class="block text-gray-700 text-xs font-medium mb-1">
@@ -71,7 +72,10 @@
                   @focus="nuevoDetalle.mostrarLista = true"
                 />
                 <div
-                  v-if="nuevoDetalle.mostrarLista && nuevoDetalle.productosFiltrados.length > 0"
+                  v-if="
+                    nuevoDetalle.mostrarLista &&
+                    nuevoDetalle.productosFiltrados.length > 0
+                  "
                   class="absolute z-50 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg max-h-40 overflow-y-auto"
                 >
                   <div
@@ -79,8 +83,10 @@
                     :key="producto.id"
                     class="px-3 py-2 hover:bg-gray-100 cursor-pointer text-sm"
                     :class="{
-                      'opacity-50 cursor-not-allowed':
-                        productoYaSeleccionado(producto.id, -1),
+                      'opacity-50 cursor-not-allowed': productoYaSeleccionado(
+                        producto.id,
+                        -1
+                      ),
                     }"
                     @click="
                       !productoYaSeleccionado(producto.id, -1) &&
@@ -131,7 +137,7 @@
                 class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400 text-sm"
               />
             </div>
-            
+
             <div class="col-span-3 flex items-end">
               <div class="flex justify-between w-full">
                 <div class="text-md font-medium text-gray-700 mb-2">
@@ -142,7 +148,9 @@
                   @click="agregarDetalleALista"
                   class="px-3 py-1 bg-red-600 text-white rounded-lg hover:bg-red-700 transition flex items-center gap-1 text-sm"
                   :disabled="!nuevoDetalleValido"
-                  :class="{ 'opacity-50 cursor-not-allowed': !nuevoDetalleValido }"
+                  :class="{
+                    'opacity-50 cursor-not-allowed': !nuevoDetalleValido,
+                  }"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -168,20 +176,22 @@
           <h3 class="text-lg font-semibold text-gray-700 mb-2">
             Productos Agregados
           </h3>
-          
-          <div class="bg-gray-200 p-4  rounded-lg h-52 overflow-y-auto flex-grow border border-gray-300">
+          <div
+            class="bg-gray-200 p-2 rounded-lg h-52 overflow-y-auto flex-grow border border-gray-300"
+          >
             <div
               v-if="formData.detalles.length === 0"
               class="text-center py-4 text-gray-500"
             >
-              No hay productos agregados. Complete el formulario superior y haga clic en "Agregar".
+              No hay productos agregados. Complete el formulario superior y haga
+              clic en "Agregar".
             </div>
 
             <div v-else class="space-y-2">
               <div
                 v-for="(detalle, index) in formData.detalles"
                 :key="index"
-                class="bg-white p-3 rounded-lg shadow-sm border border-gray-200"
+                class="bg-white px-4 p-2 rounded-lg shadow-sm border border-gray-200"
               >
                 <div class="flex items-center justify-between">
                   <div class="grid grid-cols-12 gap-3 w-full">
@@ -190,7 +200,7 @@
                         {{ obtenerNombreProducto(detalle.producto_id) }}
                       </span>
                     </div>
-                    
+
                     <div class="col-span-2">
                       <div class="flex flex-col">
                         <label class="text-xs text-gray-500">Cantidad</label>
@@ -203,7 +213,7 @@
                         />
                       </div>
                     </div>
-                    
+
                     <div class="col-span-2">
                       <div class="flex flex-col">
                         <label class="text-xs text-gray-500">Precio</label>
@@ -217,10 +227,14 @@
                         />
                       </div>
                     </div>
-                    
+
                     <div class="col-span-2 flex items-center justify-between">
                       <div class="text-sm font-medium text-gray-700">
-                        ${{ (detalle.cantidad * detalle.precio_unitario).toFixed(2) }}
+                        ${{
+                          (detalle.cantidad * detalle.precio_unitario).toFixed(
+                            2
+                          )
+                        }}
                       </div>
                       <button
                         type="button"
@@ -248,21 +262,18 @@
           </div>
         </div>
 
-        <div class="mt-2">
-          <div
-            v-if="formData.detalles.length > 0"
-            class="flex justify-end items-center mb-4"
-          >
-            <div class="text-2xl font-bold text-gray-800">
+        <div class="pb-0 sm:pb-4 mb-4 sm:mb-4 md:mb-0 pt-2">
+          <div class="flex gap-2 justify-end">
+            <div
+              v-if="formData.detalles.length > 0"
+              class="text-2xl font-bold text-gray-800"
+            >
               Total: ${{ calcularTotal().toFixed(2) }}
             </div>
-          </div>
-
-          <div class="flex justify-end gap-2">
             <button
               type="button"
               @click="cerrar"
-              class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition"
+              class="flex px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition"
             >
               Cancelar
             </button>
@@ -272,19 +283,7 @@
               :disabled="!formularioValido"
               :class="{ 'opacity-50 cursor-not-allowed': !formularioValido }"
             >
-              <span>Guardar</span>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-5 w-5"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-              >
-                <path
-                  fill-rule="evenodd"
-                  d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                  clip-rule="evenodd"
-                />
-              </svg>
+              <span>Registrar Ingreso</span>
             </button>
           </div>
         </div>
@@ -295,7 +294,10 @@
 
 <script setup lang="ts">
 import { ref, onMounted, computed } from "vue";
+import { useAuthStore } from "../../stores/auth";
+import { Roles } from "../../../electron/main/modules/enums";
 
+const authStore = useAuthStore();
 // Interfaces
 interface Usuario {
   id: number;
@@ -360,7 +362,7 @@ const nuevoDetalle = ref<NuevoDetalle>({
   busqueda: "",
   mostrarLista: false,
   mostrarError: false,
-  productosFiltrados: []
+  productosFiltrados: [],
 });
 
 const errorMensaje = ref("");
@@ -374,9 +376,11 @@ const formularioValido = computed(() => {
 });
 
 const nuevoDetalleValido = computed(() => {
-  return nuevoDetalle.value.producto_id > 0 && 
-         nuevoDetalle.value.cantidad > 0 && 
-         nuevoDetalle.value.precio_unitario > 0;
+  return (
+    nuevoDetalle.value.producto_id > 0 &&
+    nuevoDetalle.value.cantidad > 0 &&
+    nuevoDetalle.value.precio_unitario > 0
+  );
 });
 
 const calcularSubtotalNuevo = computed(() => {
@@ -389,12 +393,11 @@ const cargarUsuarios = async () => {
     const data = await window.api.getUsuarios();
     // Filtrar usuarios con rol ADMIN
     usuarios.value = data.filter(
-      (usuario: Usuario) => usuario.rol && usuario.rol.nombre === "ADMIN"
+      (usuario: Usuario) => usuario.rol && usuario.rol.nombre === Roles.ADMIN
     );
-
-    // Establecer el primer usuario como predeterminado si hay alguno
     if (usuarios.value.length > 0) {
-      formData.value.usuario_id = usuarios.value[0].id;
+      //formData.value.usuario_id = usuarios.value[0].id;
+      formData.value.usuario_id = authStore.user?.id || 0;
     }
   } catch (error) {
     console.error("Error al cargar usuarios:", error);
@@ -420,7 +423,7 @@ const cargarProductos = async () => {
 // Método para filtrar productos en el nuevo detalle
 const filtrarProductosNuevo = () => {
   const busqueda = nuevoDetalle.value.busqueda.toLowerCase();
-  nuevoDetalle.value.productosFiltrados = productos.value.filter(producto => 
+  nuevoDetalle.value.productosFiltrados = productos.value.filter((producto) =>
     producto.nombre.toLowerCase().includes(busqueda)
   );
   nuevoDetalle.value.mostrarLista = true;
@@ -450,7 +453,7 @@ const agregarDetalleALista = () => {
   formData.value.detalles.push({
     producto_id: nuevoDetalle.value.producto_id,
     cantidad: nuevoDetalle.value.cantidad,
-    precio_unitario: nuevoDetalle.value.precio_unitario
+    precio_unitario: nuevoDetalle.value.precio_unitario,
   });
 
   // Limpiar el formulario para un nuevo detalle
@@ -461,7 +464,7 @@ const agregarDetalleALista = () => {
     busqueda: "",
     mostrarLista: false,
     mostrarError: false,
-    productosFiltrados: [...productos.value]
+    productosFiltrados: [...productos.value],
   };
 };
 
@@ -481,7 +484,7 @@ const productoYaSeleccionado = (
 
 // Obtener el nombre de un producto por su ID
 const obtenerNombreProducto = (productoId: number): string => {
-  const producto = productos.value.find(p => p.id === productoId);
+  const producto = productos.value.find((p) => p.id === productoId);
   return producto ? producto.nombre : `Producto #${productoId}`;
 };
 

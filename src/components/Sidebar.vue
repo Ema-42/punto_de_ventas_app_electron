@@ -49,6 +49,7 @@ import mesa from '../assets/iconos/mesa.svg'
 import home from '../assets/iconos/home.svg'
 import usuario from '../assets/iconos/usuario.svg'
 import ingreso from '../assets/iconos/ingreso.svg'
+import gestionpedidos from '../assets/iconos/cash.svg'
 
 const isOpen = ref(false);
 
@@ -60,6 +61,7 @@ const menuItems = [
   { text: "Mesas", icon: mesa, route:"/mesas" },
   { text: "Usuarios", icon: usuario, route:"/usuarios" },
   { text: "Ingresos", icon: ingreso, route:"/ingresos" },
+  { text: "Gestion de Pedidos", icon: gestionpedidos, route:"/gestion-pedidos" },
 ];
 
 const toggleSidebar = () => {

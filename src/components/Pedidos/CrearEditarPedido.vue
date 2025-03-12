@@ -1,7 +1,7 @@
 <template>
   <div
     v-if="mostrar"
-    class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 overflow-y-auto"
+    class="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50 overflow-y-auto"
   >
     <div
       class="bg-white rounded-lg shadow-xl p-6 w-full max-w-7xl transform transition-all my-8 mx-4"
@@ -466,7 +466,7 @@
 
         <div
           v-if="errorMensaje"
-          class="mt-4 p-3 bg-red-100 text-red-700 rounded-lg"
+          class="mt-4 p-3 bg-red-600 text-white font-bold rounded-lg z-50 "
         >
           {{ errorMensaje }}
         </div>
@@ -474,7 +474,7 @@
         <!-- Vista previa del ticket -->
         <div
           v-if="mostrarVistaPrevia"
-          class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50"
+          class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 rounded-lg"
         >
           <div
             class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md max-h-[90vh] overflow-y-auto"
@@ -761,7 +761,7 @@ interface DetallePedido {
 interface Pedido {
   id: number;
   pedido_padre_id?: number | null;
-  tipo_pago?: string;
+  tipo_pago?: TipoPago;
   mesa_id?: number | null;
   mesera_id: number;
   cajero_id: number;
@@ -791,7 +791,7 @@ interface Usuario {
   nombre: string;
   rol: {
     id: number;
-    nombre: string;
+    nombre: Roles;
   };
 }
 
@@ -846,8 +846,8 @@ const formData = ref({
   num_pedido_dia: numeroPedidoDia.value,
   mesera_id: 0,
   cajero_id: 0,
-  tipo_pago: "EFECTIVO",
-  estado: "EN_ATENCION",
+  tipo_pago: TipoPago.EFECTIVO,
+  estado: EstadoPedido.EN_PREPARACION,
   detalles: [] as DetallePedido[],
 });
 
@@ -857,8 +857,8 @@ const meseros = computed(() => {
 });
 
 const cajeros = computed(() => {
-  return usuarios.value.filter(
-    (u) => u.rol.nombre === Roles.CAJERO || Roles.ADMIN
+  return usuarios.value.filter((u: Usuario) =>
+    [Roles.CAJERO, Roles.ADMIN].includes(u.rol.nombre)
   );
 });
 

@@ -9,6 +9,7 @@ import Usuarios from "../views/usuarios.vue";
 import Pedidos from "../views/pedidos.vue";
 import Ingresos from "../views/ingresos.vue";
 import Login from "../views/login.vue";
+import GestionPedidos from "../views/GestionPedidos.vue";
 
 const routes = [
   {
@@ -61,6 +62,12 @@ const routes = [
     path: "/ingresos",
     name: "ingresos",
     component: Ingresos,
+    meta: { requiresAuth: true }
+  },
+  {
+    path: "/gestion-pedidos",
+    name: "gestion-pedidos",
+    component: GestionPedidos,
     meta: { requiresAuth: true }
   },
 ];
