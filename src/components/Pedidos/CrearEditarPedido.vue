@@ -662,7 +662,7 @@
 
               <button
                 type="button"
-                @click="mostrarVistaPrevia = false"
+                @click="cerrarFormulario"
                 class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition"
               >
                 Cerrar
@@ -850,6 +850,17 @@ const formData = ref({
   estado: EstadoPedido.EN_PREPARACION,
   detalles: [] as DetallePedido[],
 });
+
+const cerrarFormulario = () => {
+  if (pedidoGuardado.value) {
+      errorMensaje.value = "";
+  mostrarVistaPrevia.value = false;
+  emit("cerrar");
+  }
+else{
+  mostrarVistaPrevia.value = false;
+}
+};
 
 // Computed
 const meseros = computed(() => {
@@ -1071,7 +1082,8 @@ const confirmarPedido = async () => {
 
     if (result.success) {
       pedidoGuardado.value = true;
-      toast.success("Pedido registrado con éxito!");
+      //toast.success("Pedido registrado con éxito!");
+      emit("guardar");
     } else {
       throw new Error(result.message || "Error al guardar el pedido");
     }
@@ -1147,7 +1159,6 @@ const imprimirTicket = () => {
       setTimeout(() => {
         document.body.removeChild(printIframe);
         if (pedidoGuardado.value) {
-          emit("guardar");
         }
       }, 500);
     }
@@ -1250,4 +1261,3 @@ onMounted(async () => {
   filtrarProductos();
 });
 </script>
-
