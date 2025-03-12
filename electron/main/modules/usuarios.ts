@@ -123,6 +123,7 @@ export const getMeseroMasLibre = async () => {
         mesera_id: { in: meseros.map((m) => m.id) },
         eliminado: false,
         pedido_padre: null,
+        para_llevar: false,
         fecha_creacion: { gte: inicioDia, lte: finDia },
       },
     });

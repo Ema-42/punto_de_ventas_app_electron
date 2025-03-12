@@ -2191,6 +2191,7 @@ const getMeseroMasLibre = async () => {
         mesera_id: { in: meseros.map((m) => m.id) },
         eliminado: false,
         pedido_padre: null,
+        para_llevar: false,
         fecha_creacion: { gte: inicioDia, lte: finDia }
       }
     });
@@ -2311,6 +2312,7 @@ const getPedidos = async () => {
         fecha_creacion: true,
         fecha_concluido: true,
         tipo_pago: true,
+        para_llevar: true,
         total: true,
         detalles: {
           where: { eliminado: false },
@@ -2384,6 +2386,7 @@ const gePedidoById = async (id) => {
         fecha_creacion: true,
         fecha_concluido: true,
         tipo_pago: true,
+        para_llevar: true,
         total: true,
         detalles: {
           where: { eliminado: false },
@@ -2476,6 +2479,7 @@ function validarDetallesUnicos$1(detalles) {
   }
 }
 const crearPedidoConDetalles = async (data) => {
+  console.log("PEDIDO", data);
   try {
     if (!data.detalles || data.detalles.length === 0) {
       throw new Error("No se puede crear un pedido sin detalles.");
@@ -2494,7 +2498,8 @@ const crearPedidoConDetalles = async (data) => {
           num_pedido_dia,
           total: 0,
           // Inicialmente 0, se actualizará después
-          tipo_pago: data.tipo_pago
+          tipo_pago: data.tipo_pago,
+          para_llevar: data.para_llevar || false
         }
       });
       const productoIds = data.detalles.map((detalle) => detalle.producto_id);
@@ -2537,7 +2542,7 @@ const crearPedidoConDetalles = async (data) => {
         where: { id: nuevoPedido.id },
         data: { total: totalPedido }
       });
-      cambiarEstadoMesa(data.mesa_id, EstadosMesa.OCUPADA);
+      !data.para_llevar && cambiarEstadoMesa(data.mesa_id, EstadosMesa.OCUPADA);
       return {
         success: true,
         message: "Pedido creado correctamente"

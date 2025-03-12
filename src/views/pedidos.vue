@@ -106,7 +106,12 @@
             <div
               v-for="pedido in pedidosFiltrados"
               :key="pedido.id"
-              class="bg-white rounded-lg shadow-md p-3 border-l-4 border-red-600 hover:shadow-lg transition text-sm"
+              class="rounded-lg shadow-md p-3 border-l-4 hover:shadow-lg transition text-sm flex flex-col h-full"
+              :class="
+                pedido.para_llevar
+                  ? 'bg-sky-50 border-sky-700'
+                  : 'bg-white border-red-600 text-black'
+              "
             >
               <div class="flex justify-between items-start">
                 <div>
@@ -115,11 +120,18 @@
                   </h3>
                   <div class="flex items-center gap-2 mt-1">
                     <div
+                      v-if="!pedido.para_llevar"
                       class="bg-red-600 text-white text-sm text-center py-1 px-2 rounded-md font-medium"
                     >
                       {{
                         pedido.mesa ? `Mesa ${pedido.mesa.numero}` : "Sin mesa"
                       }}
+                    </div>
+                    <div
+                      v-if="pedido.para_llevar"
+                      class="bg-sky-600 text-white text-sm text-center py-1 px-2 rounded-md font-medium"
+                    >
+                      {{ "Para Llevar" }}
                     </div>
                   </div>
                   <div
@@ -147,7 +159,14 @@
                   </div>
                 </div>
                 <div class="flex flex-col items-end">
-                  <span :class="getEstadoClase(pedido.estado)">
+                  <span
+                    :class="
+                      pedido.para_llevar
+                        ? 'bg-sky-200 text-sky-800'
+                        : 'bg-green-100 text-green-700'
+                    "
+                    class="px-2 py-1 rounded-md font-medium"
+                  >
                     {{ getEstadoEtiqueta(pedido.estado) }}
                   </span>
                   <span class="text-gray-500 text-xs mt-1">
@@ -164,11 +183,11 @@
                   >${{ pedido.total }}</span
                 >
               </div>
-
               <div
-                class="flex justify-between mt-3 pt-2 border-t border-gray-200"
+                class="mt-auto flex justify-between pt-2 border-t border-gray-200"
               >
                 <button
+                  v-if="!pedido.para_llevar"
                   @click="agregarAPedido(pedido)"
                   class="text-green-600 hover:text-green-800 flex items-center text-xs font-medium"
                 >
@@ -440,7 +459,8 @@ interface DetallePedido {
 interface Pedido {
   id: number;
   pedido_padre_id?: number | null;
-  tipo_pago?:TipoPago;
+  tipo_pago?: TipoPago;
+  para_llevar: boolean;
   mesa_id?: number | null;
   mesera_id: number;
   cajero_id: number;
@@ -510,7 +530,6 @@ const pedidosActivos = computed(() =>
 
 const pedidosFiltrados = computed(() => {
   if (!searchQuery.value) return pedidosActivos.value;
-
   const query = searchQuery.value.toLowerCase();
   return pedidosActivos.value.filter(
     (p) =>
@@ -548,7 +567,6 @@ const cargarPedidosHijos = () => {
       hijos[pedido.pedido_padre_id].push(pedido);
     }
   });
-
   pedidosHijos.value = hijos;
 };
 
@@ -576,6 +594,7 @@ const crearNuevoPedido = async () => {
     mesa_id: null,
     mesera_id: 0,
     cajero_id: 0,
+    para_llevar: false,
     estado: EstadoPedido.EN_PREPARACION,
     fecha_creacion: new Date().toISOString(),
     mesera: { id: 0, nombre: "" },
@@ -597,6 +616,7 @@ const agregarAPedido = async (pedido: Pedido) => {
     cajero_id: pedido.cajero.id,
     tipo_pago: pedido.tipo_pago,
     num_pedido_dia: pedido.num_pedido_dia,
+    para_llevar: pedido.para_llevar,
     estado: EstadoPedido.EN_PREPARACION,
     fecha_creacion: new Date().toISOString(),
     mesera: { ...pedido.mesera },
@@ -614,7 +634,7 @@ const verDetalle = (pedido: Pedido) => {
 };
 
 const mostrarToastMensaje = (mensaje: string) => {
-  toast.success(mensaje)
+  toast.success(mensaje);
 };
 
 const guardarPedido = () => {
@@ -840,3 +860,4 @@ style.textContent = `
   `;
 document.head.appendChild(style);
 </script>
+

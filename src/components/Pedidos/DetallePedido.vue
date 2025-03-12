@@ -14,9 +14,11 @@
           <span class="text-2xl">&times;</span>
         </button>
       </div>
-  
+
       <!-- Información del pedido -->
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 bg-red-50 p-4 rounded-lg border border-red-600">
+      <div
+        class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6 bg-red-50 p-4 rounded-lg border border-red-600"
+      >
         <div>
           <p class="font-medium text-sm text-red-600">Mesa</p>
           <p>
@@ -26,6 +28,10 @@
         <div>
           <p class="font-medium text-sm text-red-600">Mesero/a</p>
           <p>{{ pedido.mesera.nombre }}</p>
+        </div>
+        <div v-if="pedido.para_llevar">
+          <p class="font-medium text-sm text-red-600">Para LLevar</p>
+          <p>SI</p>
         </div>
         <div>
           <p class="font-medium text-sm text-red-600">Cajero/a</p>
@@ -44,7 +50,7 @@
           <p>{{ formatearFecha(pedido.fecha_creacion) }}</p>
         </div>
         <div v-if="pedido.fecha_concluido">
-          <p class=" font-medium text-sm text-red-600">Fecha de conclusión</p>
+          <p class="font-medium text-sm text-red-600">Fecha de conclusión</p>
           <p>{{ formatearFecha(pedido.fecha_concluido) }}</p>
         </div>
         <div>
@@ -52,47 +58,59 @@
           <p>{{ pedido.tipo_pago || "No especificado" }}</p>
         </div>
       </div>
-  
+
       <div class="max-h-[calc(100vh-400px)] overflow-y-auto pr-2">
         <!-- Detalles del pedido principal -->
         <div class="mb-6">
-          
-          <h3 class="text-lg font-semibold mb-2 text-red-600 flex items-center">Productos 
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-6 w-6 ml-2 text-red-500"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
-            />
-          </svg>
+          <h3 class="text-lg font-semibold mb-2 text-red-600 flex items-center">
+            Productos
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-6 w-6 ml-2 text-red-500"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+              />
+            </svg>
           </h3>
           <div class="overflow-x-auto border rounded-lg">
             <table class="min-w-full divide-y divide-gray-200">
               <thead class="bg-red-600 sticky top-0">
                 <tr>
-                  <th class="px-6 py-3 text-left text-sm font-medium text-white uppercase tracking-wider">
+                  <th
+                    class="px-6 py-3 text-left text-sm font-medium text-white uppercase tracking-wider"
+                  >
                     Producto
                   </th>
-                  <th class="px-6 py-3 text-left text-sm font-medium text-white uppercase tracking-wider">
+                  <th
+                    class="px-6 py-3 text-left text-sm font-medium text-white uppercase tracking-wider"
+                  >
                     Precio Unitario
                   </th>
-                  <th class="px-6 py-3 text-left text-sm font-medium text-white uppercase tracking-wider">
+                  <th
+                    class="px-6 py-3 text-left text-sm font-medium text-white uppercase tracking-wider"
+                  >
                     Cantidad
                   </th>
-                  <th class="px-6 py-3 text-left text-sm font-medium text-white uppercase tracking-wider">
+                  <th
+                    class="px-6 py-3 text-left text-sm font-medium text-white uppercase tracking-wider"
+                  >
                     Subtotal
                   </th>
                 </tr>
               </thead>
               <tbody class="bg-white divide-y divide-gray-200">
-                <tr v-for="detalle in pedido.detalles" :key="detalle.id" class="hover:bg-gray-50">
+                <tr
+                  v-for="detalle in pedido.detalles"
+                  :key="detalle.id"
+                  class="hover:bg-gray-50"
+                >
                   <td class="px-6 py-4 whitespace-nowrap">
                     <div class="flex items-center">
                       <div class="flex-shrink-0 h-10 w-10 mr-3">
@@ -102,7 +120,10 @@
                           class="h-10 w-10 rounded-full object-cover"
                           alt=""
                         />
-                        <div v-else class="h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center">
+                        <div
+                          v-else
+                          class="h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center"
+                        >
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
                             class="h-5 w-5 text-gray-400"
@@ -132,8 +153,15 @@
                   <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                     {{ detalle.cantidad }}
                   </td>
-                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium">
-                    ${{ (detalle.cantidad * parseFloat(detalle.precio_unitario.toString())).toFixed(2) }}
+                  <td
+                    class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium"
+                  >
+                    ${{
+                      (
+                        detalle.cantidad *
+                        parseFloat(detalle.precio_unitario.toString())
+                      ).toFixed(2)
+                    }}
                   </td>
                 </tr>
                 <tr v-if="pedido.detalles.length === 0">
@@ -146,8 +174,13 @@
                 <tr class="bg-red-50">
                   <td colspan="4" class="px-6 py-3">
                     <div class="flex justify-between items-center">
-                      <span class="font-medium">Tipo de pago: {{ pedido.tipo_pago || "No especificado" }}</span>
-                      <span class="font-bold">Subtotal: ${{ calcularTotalPedido(pedido) }}</span>
+                      <span class="font-medium"
+                        >Tipo de pago:
+                        {{ pedido.tipo_pago || "No especificado" }}</span
+                      >
+                      <span class="font-bold"
+                        >Subtotal: ${{ calcularTotalPedido(pedido) }}</span
+                      >
                     </div>
                   </td>
                 </tr>
@@ -179,57 +212,76 @@
             </button>
           </div>
         </div>
-  
+
         <!-- Pedidos agregados (hijos) -->
         <div v-if="pedidosHijos.length > 0" class="mb-6">
           <h3 class="text-lg font-semibold mb-2 text-red-600 flex items-center">
-             Pedidos Agregados
-             <svg 
-              xmlns="http://www.w3.org/2000/svg" 
-              class="h-6 w-6 ml-2 text-red-500" 
-              fill="currentColor" 
-              viewBox="0 -960 960 960" 
+            Pedidos Agregados
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-6 w-6 ml-2 text-red-500"
+              fill="currentColor"
+              viewBox="0 -960 960 960"
               stroke="currentColor"
-              >
-              <path 
-                  stroke-linecap="round" 
-                  stroke-linejoin="round" 
-                  stroke-width="2" 
-                  d="M440-280h80v-160h160v-80H520v-160h-80v160H280v80h160v160Zm40 200q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z" 
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M440-280h80v-160h160v-80H520v-160h-80v160H280v80h160v160Zm40 200q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z"
               />
-              </svg>
-            </h3>
+            </svg>
+          </h3>
 
-
-          <div v-for="(hijo, index) in pedidosHijos" :key="hijo.id" class="mb-4 rounded-lg overflow-hidden">
-            <div class="bg-gray-100 px-4 py-2 flex justify-between items-center border">
+          <div
+            v-for="(hijo, index) in pedidosHijos"
+            :key="hijo.id"
+            class="mb-4 rounded-lg overflow-hidden"
+          >
+            <div
+              class="bg-gray-100 px-4 py-2 flex justify-between items-center border"
+            >
               <div class="flex flex-col sm:flex-row sm:items-center gap-2">
                 <h4>Pedido adicional N° {{ index + 1 }}</h4>
               </div>
               <div class="text-sm font-medium">
-                <span class="text-gray-600 text-sm">{{ formatearFecha(hijo.fecha_creacion) }}</span>
+                <span class="text-gray-600 text-sm">{{
+                  formatearFecha(hijo.fecha_creacion)
+                }}</span>
               </div>
             </div>
-            <div class="overflow-x-auto border rounded-b-lg ">
+            <div class="overflow-x-auto border rounded-b-lg">
               <table class="min-w-full divide-y divide-gray-200">
                 <thead class="bg-red-600">
                   <tr>
-                    <th class="px-6 py-3 text-left text-sm font-medium text-white uppercase tracking-wider">
+                    <th
+                      class="px-6 py-3 text-left text-sm font-medium text-white uppercase tracking-wider"
+                    >
                       Producto
                     </th>
-                    <th class="px-6 py-3 text-left text-sm font-medium text-white uppercase tracking-wider">
+                    <th
+                      class="px-6 py-3 text-left text-sm font-medium text-white uppercase tracking-wider"
+                    >
                       Precio Unitario
                     </th>
-                    <th class="px-6 py-3 text-left text-sm font-medium text-white uppercase tracking-wider">
+                    <th
+                      class="px-6 py-3 text-left text-sm font-medium text-white uppercase tracking-wider"
+                    >
                       Cantidad
                     </th>
-                    <th class="px-6 py-3 text-left text-sm font-medium text-white uppercase tracking-wider">
+                    <th
+                      class="px-6 py-3 text-left text-sm font-medium text-white uppercase tracking-wider"
+                    >
                       Subtotal
                     </th>
                   </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
-                  <tr v-for="detalle in hijo.detalles" :key="detalle.id" class="hover:bg-gray-50">
+                  <tr
+                    v-for="detalle in hijo.detalles"
+                    :key="detalle.id"
+                    class="hover:bg-gray-50"
+                  >
                     <td class="px-6 py-4 whitespace-nowrap">
                       <div class="flex items-center">
                         <div class="flex-shrink-0 h-10 w-10 mr-3">
@@ -239,7 +291,10 @@
                             class="h-10 w-10 rounded-full object-cover"
                             alt=""
                           />
-                          <div v-else class="h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center">
+                          <div
+                            v-else
+                            class="h-10 w-10 rounded-full bg-gray-200 flex items-center justify-center"
+                          >
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
                               class="h-5 w-5 text-gray-400"
@@ -263,14 +318,25 @@
                         </div>
                       </div>
                     </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <td
+                      class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"
+                    >
                       ${{ detalle.precio_unitario }}
                     </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <td
+                      class="px-6 py-4 whitespace-nowrap text-sm text-gray-500"
+                    >
                       {{ detalle.cantidad }}
                     </td>
-                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium">
-                      ${{ (detalle.cantidad * parseFloat(detalle.precio_unitario.toString())).toFixed(2) }}
+                    <td
+                      class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium"
+                    >
+                      ${{
+                        (
+                          detalle.cantidad *
+                          parseFloat(detalle.precio_unitario.toString())
+                        ).toFixed(2)
+                      }}
                     </td>
                   </tr>
                 </tbody>
@@ -278,8 +344,13 @@
                   <tr class="bg-red-50">
                     <td colspan="4" class="px-6 py-3">
                       <div class="flex justify-between items-center">
-                        <span class="">Tipo de pago: {{ hijo.tipo_pago || "No especificado" }}</span>
-                        <span class="font-bold">Subtotal: ${{ calcularTotalPedido(hijo) }}</span>
+                        <span class=""
+                          >Tipo de pago:
+                          {{ hijo.tipo_pago || "No especificado" }}</span
+                        >
+                        <span class="font-bold"
+                          >Subtotal: ${{ calcularTotalPedido(hijo) }}</span
+                        >
                       </div>
                     </td>
                   </tr>
@@ -313,21 +384,31 @@
           </div>
         </div>
       </div>
-  
+
       <!-- Total global -->
       <div class="bg-gray-100 p-4 rounded-lg mb-6">
         <div class="flex justify-between items-center">
           <span class="text-lg font-bold text-red-600">Total Global:</span>
-          <span class="text-xl font-bold text-red-600">${{ calcularTotalGlobal() }}</span>
+          <span class="text-xl font-bold text-red-600"
+            >${{ calcularTotalGlobal() }}</span
+          >
         </div>
       </div>
-  
+
       <!-- Vista previa del ticket -->
-      <div v-if="mostrarVistaPrevia" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50">
-        <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md max-h-[90vh] overflow-y-auto">
+      <div
+        v-if="mostrarVistaPrevia"
+        class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50"
+      >
+        <div
+          class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md max-h-[90vh] overflow-y-auto"
+        >
           <div class="flex justify-between items-center mb-4">
             <h3 class="text-lg font-bold">Vista previa del ticket</h3>
-            <button @click="mostrarVistaPrevia = false" class="text-gray-500 hover:text-gray-700">
+            <button
+              @click="mostrarVistaPrevia = false"
+              class="text-gray-500 hover:text-gray-700"
+            >
               <span class="text-2xl">&times;</span>
             </button>
           </div>
@@ -337,19 +418,29 @@
               <p>Dirección: Calle Principal #123</p>
               <p>Tel: (123) 456-7890</p>
             </div>
-            
+
             <div class="mb-4">
-              <p>TICKET #: {{ pedidoParaImprimir?.num_pedido_dia || pedidoParaImprimir?.id }}</p>
-              <p>Fecha: {{ formatearFecha(pedidoParaImprimir?.fecha_creacion) }}</p>
+              <p>
+                TICKET #:
+                {{
+                  pedidoParaImprimir?.num_pedido_dia || pedidoParaImprimir?.id
+                }}
+              </p>
+              <p>
+                Fecha: {{ formatearFecha(pedidoParaImprimir?.fecha_creacion) }}
+              </p>
               <p>Mesero: {{ pedidoParaImprimir?.mesera.nombre }}</p>
               <p>Cajero: {{ pedidoParaImprimir?.cajero.nombre }}</p>
               <p v-if="pedidoParaImprimir?.mesa_id">
                 Mesa: {{ pedidoParaImprimir?.mesa?.numero || "" }}
               </p>
-              <p>Tipo de pago: {{ pedidoParaImprimir?.tipo_pago || "No especificado" }}</p>
+              <p>
+                Tipo de pago:
+                {{ pedidoParaImprimir?.tipo_pago || "No especificado" }}
+              </p>
               <p>Estado: {{ getEstadoEtiqueta(pedidoParaImprimir?.estado) }}</p>
             </div>
-            
+
             <div class="border-t border-b border-gray-300 py-2 mb-4">
               <div class="grid grid-cols-12 font-bold">
                 <div class="col-span-6">Producto</div>
@@ -357,52 +448,107 @@
                 <div class="col-span-4 text-right">Precio</div>
               </div>
             </div>
-            
+
             <div class="mb-4">
-              <div v-for="(detalle, index) in pedidoParaImprimir?.detalles" :key="index" class="grid grid-cols-12 mb-1">
-                <div class="col-span-6 truncate">{{ detalle.producto?.nombre }}</div>
+              <div
+                v-for="(detalle, index) in pedidoParaImprimir?.detalles"
+                :key="index"
+                class="grid grid-cols-12 mb-1"
+              >
+                <div class="col-span-6 truncate">
+                  {{ detalle.producto?.nombre }}
+                </div>
                 <div class="col-span-2 text-center">{{ detalle.cantidad }}</div>
-                <div class="col-span-4 text-right">${{ (detalle.cantidad * parseFloat(detalle.precio_unitario.toString())).toFixed(2) }}</div>
+                <div class="col-span-4 text-right">
+                  ${{
+                    (
+                      detalle.cantidad *
+                      parseFloat(detalle.precio_unitario.toString())
+                    ).toFixed(2)
+                  }}
+                </div>
               </div>
             </div>
-            
+
             <div class="border-t border-gray-300 pt-2 mb-4">
               <div class="flex justify-between items-center">
-                <span class="font-medium">Tipo de pago: {{ pedidoParaImprimir?.tipo_pago || "No especificado" }}</span>
-                <span class="font-medium">Subtotal: ${{ pedidoParaImprimir ? calcularTotalPedido(pedidoParaImprimir) : '0.00' }}</span>
+                <span class="font-medium"
+                  >Tipo de pago:
+                  {{ pedidoParaImprimir?.tipo_pago || "No especificado" }}</span
+                >
+                <span class="font-medium"
+                  >Subtotal: ${{
+                    pedidoParaImprimir
+                      ? calcularTotalPedido(pedidoParaImprimir)
+                      : "0.00"
+                  }}</span
+                >
               </div>
             </div>
-            
+
             <!-- Pedidos agregados -->
-            <div v-if="imprimirConAgregados && pedidosHijos.length > 0" class="mb-4">
+            <div
+              v-if="imprimirConAgregados && pedidosHijos.length > 0"
+              class="mb-4"
+            >
               <p class="font-bold">AGREGADOS:</p>
-              <div v-for="(hijo, index) in pedidosHijos" :key="index" class="mt-2">
+              <div
+                v-for="(hijo, index) in pedidosHijos"
+                :key="index"
+                class="mt-2"
+              >
                 <p>Pedido adicional #{{ index + 1 }}:</p>
-                <div v-for="(detalle, i) in hijo.detalles" :key="i" class="grid grid-cols-12 mb-1 pl-2">
-                  <div class="col-span-6 truncate">{{ detalle.producto?.nombre }}</div>
-                  <div class="col-span-2 text-center">{{ detalle.cantidad }}</div>
-                  <div class="col-span-4 text-right">${{ (detalle.cantidad * parseFloat(detalle.precio_unitario.toString())).toFixed(2) }}</div>
+                <div
+                  v-for="(detalle, i) in hijo.detalles"
+                  :key="i"
+                  class="grid grid-cols-12 mb-1 pl-2"
+                >
+                  <div class="col-span-6 truncate">
+                    {{ detalle.producto?.nombre }}
+                  </div>
+                  <div class="col-span-2 text-center">
+                    {{ detalle.cantidad }}
+                  </div>
+                  <div class="col-span-4 text-right">
+                    ${{
+                      (
+                        detalle.cantidad *
+                        parseFloat(detalle.precio_unitario.toString())
+                      ).toFixed(2)
+                    }}
+                  </div>
                 </div>
                 <div class="flex justify-between pl-2 mt-1">
-                  <span>Tipo de pago: {{ hijo.tipo_pago || "No especificado" }}</span>
+                  <span
+                    >Tipo de pago:
+                    {{ hijo.tipo_pago || "No especificado" }}</span
+                  >
                   <span>Subtotal: ${{ calcularTotalPedido(hijo) }}</span>
                 </div>
               </div>
             </div>
-            
+
             <!-- Total global -->
             <div class="border-t border-gray-300 pt-2 mb-4">
               <div class="flex justify-between font-bold">
                 <span>TOTAL:</span>
-                <span>${{ imprimirConAgregados ? calcularTotalGlobal() : (pedidoParaImprimir ? calcularTotalPedido(pedidoParaImprimir) : '0.00') }}</span>
+                <span
+                  >${{
+                    imprimirConAgregados
+                      ? calcularTotalGlobal()
+                      : pedidoParaImprimir
+                      ? calcularTotalPedido(pedidoParaImprimir)
+                      : "0.00"
+                  }}</span
+                >
               </div>
             </div>
-            
+
             <div class="text-center mt-6">
               <p>¡Gracias por su preferencia!</p>
             </div>
           </div>
-          
+
           <div class="flex justify-end gap-2 mt-4">
             <button
               type="button"
@@ -414,9 +560,8 @@
           </div>
         </div>
       </div>
-  
+
       <div class="flex justify-end gap-2">
-        
         <button
           v-if="pedidosHijos.length > 0"
           type="button"
@@ -480,6 +625,7 @@ interface Pedido {
   fecha_creacion: string;
   fecha_concluido?: string | null;
   total?: number | string;
+  para_llevar: boolean;
   eliminado?: boolean;
   mesa?: {
     id: number;
@@ -564,7 +710,10 @@ const getEstadoClase = (estado?: string) => {
 const calcularTotalPedido = (pedido: Pedido) => {
   return pedido.detalles
     .reduce((total, detalle) => {
-      return total + detalle.cantidad * parseFloat(detalle.precio_unitario.toString());
+      return (
+        total +
+        detalle.cantidad * parseFloat(detalle.precio_unitario.toString())
+      );
     }, 0)
     .toFixed(2);
 };
@@ -575,15 +724,17 @@ const calcularTotalGlobal = () => {
   // Sumar el total del pedido principal
   if (props.pedido) {
     total += props.pedido.detalles.reduce(
-      (sum, detalle) => sum + detalle.cantidad * parseFloat(detalle.precio_unitario.toString()),
+      (sum, detalle) =>
+        sum + detalle.cantidad * parseFloat(detalle.precio_unitario.toString()),
       0
     );
   }
 
   // Sumar los totales de los pedidos hijos
-  pedidosHijos.value.forEach(hijo => {
+  pedidosHijos.value.forEach((hijo) => {
     total += hijo.detalles.reduce(
-      (sum, detalle) => sum + detalle.cantidad * parseFloat(detalle.precio_unitario.toString()),
+      (sum, detalle) =>
+        sum + detalle.cantidad * parseFloat(detalle.precio_unitario.toString()),
       0
     );
   });
@@ -618,17 +769,19 @@ const mostrarTicketHijo = (hijo: Pedido) => {
 const imprimirTicket = () => {
   try {
     // Obtener el contenido del ticket
-    const ticketContent = document.getElementById('ticket-preview');
-    
+    const ticketContent = document.getElementById("ticket-preview");
+
     // Crear un iframe para imprimir
-    const printIframe = document.createElement('iframe');
-    printIframe.style.position = 'absolute';
-    print.style.position = 'absolute';
-    printIframe.style.top = '-9999px';
+    const printIframe = document.createElement("iframe");
+    printIframe.style.position = "absolute";
+    //@ts-ignore
+    print.style.position = "absolute";
+    printIframe.style.top = "-9999px";
     document.body.appendChild(printIframe);
-    
+
     // Escribir el contenido en el iframe
-    const printDocument = printIframe.contentDocument || printIframe.contentWindow?.document;
+    const printDocument =
+      printIframe.contentDocument || printIframe.contentWindow?.document;
     if (printDocument) {
       printDocument.open();
       printDocument.write(`
@@ -668,16 +821,16 @@ const imprimirTicket = () => {
             </style>
           </head>
           <body>
-            ${ticketContent?.innerHTML || ''}
+            ${ticketContent?.innerHTML || ""}
           </body>
         </html>
       `);
       printDocument.close();
-      
+
       // Imprimir y eliminar el iframe
       printIframe.contentWindow?.focus();
       printIframe.contentWindow?.print();
-      
+
       // Eliminar el iframe después de imprimir
       setTimeout(() => {
         document.body.removeChild(printIframe);
@@ -715,3 +868,4 @@ onMounted(() => {
   }
 });
 </script>
+

@@ -38,7 +38,8 @@ export const getPedidos = async () => {
         estado: true,
         fecha_creacion: true,
         fecha_concluido: true,
-        tipo_pago:true,
+        tipo_pago: true,
+        para_llevar: true,
         total: true,
         detalles: {
           where: { eliminado: false },
@@ -104,7 +105,8 @@ export const gePedidoById = async (id: number) => {
         estado: true,
         fecha_creacion: true,
         fecha_concluido: true,
-        tipo_pago:true,
+        tipo_pago: true,
+        para_llevar: true,
         total: true,
         detalles: {
           where: { eliminado: false },
@@ -205,7 +207,8 @@ function validarDetallesUnicos(
   }
 }
 
-export const crearPedidoConDetalles = async (data: CrearPedidoConDetalles) => {  
+export const crearPedidoConDetalles = async (data: CrearPedidoConDetalles) => {
+  console.log("PEDIDO", data);
   try {
     if (!data.detalles || data.detalles.length === 0) {
       throw new Error("No se puede crear un pedido sin detalles.");
@@ -226,6 +229,7 @@ export const crearPedidoConDetalles = async (data: CrearPedidoConDetalles) => {
           num_pedido_dia,
           total: 0, // Inicialmente 0, se actualizará después
           tipo_pago: data.tipo_pago,
+          para_llevar: data.para_llevar || false,
         },
       });
 
@@ -289,8 +293,9 @@ export const crearPedidoConDetalles = async (data: CrearPedidoConDetalles) => {
         where: { id: nuevoPedido.id },
         data: { total: totalPedido },
       });
-      //cambiar estado de la mesa a ocupada
-      cambiarEstadoMesa(data.mesa_id, EstadosMesa.OCUPADA);
+      //cambiar estado de la mesa a ocupada si hay mesa
+      !data.para_llevar && cambiarEstadoMesa(data.mesa_id, EstadosMesa.OCUPADA);
+
       return {
         success: true,
         message: "Pedido creado correctamente",

@@ -24,7 +24,7 @@
 
       <form @submit.prevent="guardar">
         <!-- Información básica del pedido -->
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+        <div class="grid grid-cols-1 md:grid-cols-5 gap-4 mb-6">
           <div>
             <label
               class="block text-gray-700 text-sm font-bold mb-2"
@@ -40,10 +40,17 @@
                 'bg-green-300 cursor-not-allowed': pedido?.pedido_padre_id,
                 'bg-white cursor-pointer': !pedido?.pedido_padre_id,
               }"
-              :disabled="!!pedido?.pedido_padre_id"
+              :disabled="!!pedido?.pedido_padre_id || formData.para_llevar"
             >
               <option v-if="pedido?.pedido_padre_id" :value="pedido.mesa?.id">
                 Misma Mesa
+              </option>
+              <option
+                v-if="formData.para_llevar"
+                :selected="formData.para_llevar"
+                value="0.1"
+              >
+                Sin Mesa
               </option>
               <option
                 v-for="mesa in mesaStore.mesas"
@@ -128,7 +135,32 @@
                   value="TRANSFERENCIA"
                   class="form-radio h-5 w-5 text-red-600"
                 />
-                <span class="ml-2 text-gray-700">Transferencia</span>
+                <span class="ml-2 text-gray-700">QR</span>
+              </label>
+            </div>
+          </div>
+          <div v-if="props.pedido?.id == 0">
+            <label class="block text-gray-700 text-sm font-bold mb-2">
+              Para llevar
+            </label>
+            <div class="flex gap-4">
+              <label class="inline-flex items-center">
+                <input
+                  type="radio"
+                  v-model="formData.para_llevar"
+                  :value="true"
+                  class="form-radio h-5 w-5 text-red-600"
+                />
+                <span class="ml-2 text-gray-700">SI</span>
+              </label>
+              <label class="inline-flex items-center">
+                <input
+                  type="radio"
+                  v-model="formData.para_llevar"
+                  :value="false"
+                  class="form-radio h-5 w-5 text-red-600"
+                />
+                <span class="ml-2 text-gray-700">NO</span>
               </label>
             </div>
           </div>
@@ -277,8 +309,8 @@
             <h3 class="text-lg font-semibold mb-2">Detalles del Pedido</h3>
             <div class="border rounded-lg h-[calc(100vh-400px)] flex flex-col">
               <div class="overflow-y-auto flex-grow rounded-lg">
-                <table class="min-w-full divide-y divide-gray-200 table-fixed ">
-                  <thead class="bg-red-600 sticky top-0  ">
+                <table class="min-w-full divide-y divide-gray-200 table-fixed">
+                  <thead class="bg-red-600 sticky top-0">
                     <tr>
                       <th
                         class="w-2/5 px-3 py-3 text-left text-sm font-medium text-white uppercase tracking-wider"
@@ -466,7 +498,7 @@
 
         <div
           v-if="errorMensaje"
-          class="mt-4 p-3 bg-red-600 text-white font-bold rounded-lg z-50 "
+          class="mt-4 p-3 bg-red-600 text-white font-bold rounded-lg z-50"
         >
           {{ errorMensaje }}
         </div>
@@ -737,11 +769,9 @@ import {
 } from "../../../electron/main/modules/enums";
 import { useMesaStore } from "../../stores/useMesaStore";
 import { EstadoPedido } from "../../../electron/main/modules/interfaces";
-import { useToast } from "vue-toastification";
 import { useAuthStore } from "../../stores/auth";
 
 const authStore = useAuthStore();
-const toast = useToast();
 const mesaStore = useMesaStore();
 
 interface DetallePedido {
@@ -762,6 +792,7 @@ interface Pedido {
   id: number;
   pedido_padre_id?: number | null;
   tipo_pago?: TipoPago;
+  para_llevar?: boolean;
   mesa_id?: number | null;
   mesera_id: number;
   cajero_id: number;
@@ -846,6 +877,7 @@ const formData = ref({
   num_pedido_dia: numeroPedidoDia.value,
   mesera_id: 0,
   cajero_id: 0,
+  para_llevar: false,
   tipo_pago: TipoPago.EFECTIVO,
   estado: EstadoPedido.EN_PREPARACION,
   detalles: [] as DetallePedido[],
@@ -853,13 +885,12 @@ const formData = ref({
 
 const cerrarFormulario = () => {
   if (pedidoGuardado.value) {
-      errorMensaje.value = "";
-  mostrarVistaPrevia.value = false;
-  emit("cerrar");
+    errorMensaje.value = "";
+    mostrarVistaPrevia.value = false;
+    emit("cerrar");
+  } else {
+    mostrarVistaPrevia.value = false;
   }
-else{
-  mostrarVistaPrevia.value = false;
-}
 };
 
 // Computed
@@ -1057,11 +1088,12 @@ const confirmarPedido = async () => {
     const pedidoData = {
       ...(formData.value.id ? { id: formData.value.id } : {}),
       pedido_padre_id: formData.value.pedido_padre_id,
-      mesa_id: formData.value.mesa_id,
+      mesa_id: formData.value.para_llevar ? null : formData.value.mesa_id,
       num_pedido_dia: formData.value.num_pedido_dia,
       mesera_id: formData.value.mesera_id,
       cajero_id: formData.value.cajero_id,
       tipo_pago: formData.value.tipo_pago,
+      para_llevar: formData.value.para_llevar || false,
       estado: formData.value.estado,
       detalles: formData.value.detalles
         .filter((d) => !d.eliminado || d.id) // Incluir eliminados solo si tienen ID
@@ -1073,7 +1105,6 @@ const confirmarPedido = async () => {
           ...(d.eliminado ? { eliminado: true } : {}),
         })),
     };
-
     const result = await window.api.crearPedidoConDetalles(pedidoData);
 
     if (result instanceof Error) {
@@ -1201,8 +1232,6 @@ watch(
   () => props.pedido,
   async (newPedido) => {
     if (newPedido && newPedido.id !== 0) {
-      console.log("MESA", newPedido.mesa);
-
       console.log("AGREGAR pedido", props.pedido);
       await esteblecerNumPedidoDia();
       formData.value = {
@@ -1213,6 +1242,7 @@ watch(
         mesera_id: newPedido.mesera_id,
         cajero_id: 0,
         tipo_pago: newPedido.tipo_pago || TipoPago.EFECTIVO,
+        para_llevar: newPedido.para_llevar || false,
         estado: EstadoPedido.EN_PREPARACION,
         detalles: [],
       };
@@ -1227,6 +1257,7 @@ watch(
         mesera_id: 0,
         cajero_id: 0,
         tipo_pago: TipoPago.EFECTIVO,
+        para_llevar: false,
         estado: EstadoPedido.EN_PREPARACION,
         detalles: [],
       };
@@ -1249,7 +1280,17 @@ watchEffect(() => {
     formData.value.mesa_id = mesaStore.mesas[0].id;
   }
 });
-
+watch(
+  () => formData.value.para_llevar,
+  (nuevoValor) => {
+    if (nuevoValor) {
+      formData.value.mesa_id = 0.1; // Selecciona "Sin Mesa"
+    } else {
+      formData.value.mesa_id =
+        mesaStore.mesas.length > 0 ? mesaStore.mesas[0].id : 10; // Selecciona la primera mesa disponible
+    }
+  }
+);
 // Cargar datos al montar el componente
 onMounted(async () => {
   await Promise.all([
@@ -1261,3 +1302,4 @@ onMounted(async () => {
   filtrarProductos();
 });
 </script>
+

@@ -65,6 +65,7 @@ export interface CrearPedidoConDetalles {
   fecha_concluido?: Date;
   tipo_pago?: TipoPago;
   num_pedido_dia?: number;
+  para_llevar?: boolean,
   detalles: {
     producto_id: number;
     cantidad: number;
