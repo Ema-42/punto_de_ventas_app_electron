@@ -655,7 +655,7 @@ const getEstadoEtiqueta = (estado?: string) => {
 const getEstadoClase = (estado?: string) => {
   const clases: { [key: string]: string } = {
     "EN PREPARACION":
-      "bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full text-sm font-medium",
+      "bg-green-100 text-green-800 px-2 py-1 rounded-full text-sm font-medium",
     COMPLETADO:
       "bg-green-100 text-green-800 px-2 py-1 rounded-full text-sm font-medium",
   };
