@@ -1,11 +1,11 @@
 import { app, ipcMain, protocol, BrowserWindow } from "electron";
 import { fileURLToPath } from "node:url";
-import path from "node:path";
+import path$1, { join } from "path";
 import { PrismaClient } from "@prisma/client";
 import { mkdir, writeFile } from "fs/promises";
-import { join } from "path";
 import nodeCrypto from "crypto";
 import { readFile } from "node:fs/promises";
+import path from "node:path";
 const prisma$6 = new PrismaClient();
 const obtenerProductos = async () => {
   try {
@@ -126,7 +126,8 @@ const uploadFile = async (fileData) => {
   const { name, size, buffer } = fileData;
   const fileBuffer = Buffer.from(buffer);
   const uploadsDir = join(app.getPath("userData"), "uploads");
-  const uniqueName = `${(/* @__PURE__ */ new Date()).toISOString().replace(/[:.]/g, "-")}-${name}`;
+  const ext = name.substring(name.lastIndexOf("."));
+  const uniqueName = `${Date.now()}-producto${ext}`;
   const filePath = join(uploadsDir, uniqueName);
   try {
     await mkdir(uploadsDir, { recursive: true });
@@ -135,7 +136,8 @@ const uploadFile = async (fileData) => {
     return {
       message: "File received successfully",
       path: filePath,
-      name,
+      name: uniqueName,
+      // Retorna el nuevo nombre del archivo
       size
     };
   } catch (error) {
@@ -3102,26 +3104,28 @@ const ipcMainModules = () => {
     }
   });
 };
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-process.env.APP_ROOT = path.join(__dirname, "..");
+const __dirname = path$1.dirname(fileURLToPath(import.meta.url));
+process.env.APP_ROOT = path$1.join(__dirname, "..");
 const VITE_DEV_SERVER_URL = process.env["VITE_DEV_SERVER_URL"];
-const MAIN_DIST = path.join(process.env.APP_ROOT, "dist-electron");
-const RENDERER_DIST = path.join(process.env.APP_ROOT, "dist");
-process.env.VITE_PUBLIC = VITE_DEV_SERVER_URL ? path.join(process.env.APP_ROOT, "public") : RENDERER_DIST;
+const MAIN_DIST = path$1.join(process.env.APP_ROOT, "dist-electron");
+const RENDERER_DIST = path$1.join(process.env.APP_ROOT, "dist");
+process.env.VITE_PUBLIC = VITE_DEV_SERVER_URL ? path$1.join(process.env.APP_ROOT, "public") : RENDERER_DIST;
 let win;
 function createWindow() {
   win = new BrowserWindow({
-    icon: path.join(process.env.VITE_PUBLIC, "electron-vite.svg"),
+    icon: path$1.join(process.env.VITE_PUBLIC, "electron-vite.svg"),
     webPreferences: {
-      preload: path.join(__dirname, "preload.mjs")
+      preload: path$1.join(__dirname, "preload.mjs")
     }
   });
-  win.setIcon(path.join(process.env.VITE_PUBLIC, "icono-logo.png"));
+  win.setIcon(path$1.join(process.env.VITE_PUBLIC, "icono-logo.png"));
   win.maximize();
+  const dbPath = join(app.getPath("userData"), "database", "dev.db");
+  console.log("Ruta de la base de datos:", dbPath);
   if (VITE_DEV_SERVER_URL) {
     win.loadURL(VITE_DEV_SERVER_URL);
   } else {
-    win.loadFile(path.join(RENDERER_DIST, "index.html"));
+    win.loadFile(path$1.join(RENDERER_DIST, "index.html"));
   }
 }
 app.on("window-all-closed", () => {
@@ -3134,7 +3138,7 @@ app.whenReady().then(() => {
   if (process.platform === "win32") {
     protocol.registerFileProtocol("local", (request, callback) => {
       const url = request.url.replace(/^local:\//, "");
-      const filePath = path.normalize(decodeURIComponent(url));
+      const filePath = path$1.normalize(decodeURIComponent(url));
       callback({ path: filePath });
     });
   }

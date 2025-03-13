@@ -146,24 +146,25 @@ const uploadFile = async (fileData: FileData) => {
   // Definir directorio seguro en la carpeta de usuario
   const uploadsDir = join(app.getPath("userData"), "uploads");
 
-  // Crear un nombre único para la imagen
-  const uniqueName = `${new Date()
-    .toISOString()
-    .replace(/[:.]/g, "-")}-${name}`;
+  // Obtener la extensión del archivo original
+  const ext = name.substring(name.lastIndexOf("."));
+
+  // Crear un nombre único con timestamp en milisegundos y la palabra "producto"
+  const uniqueName = `${Date.now()}-producto${ext}`;
   const filePath = join(uploadsDir, uniqueName);
 
   try {
     // Asegurar que el directorio existe
     await mkdir(uploadsDir, { recursive: true });
 
-    // Guardar la imagen
+    // Guardar el archivo
     await writeFile(filePath, fileBuffer);
     console.log("Imagen guardada en:", filePath);
 
     return {
       message: "File received successfully",
       path: filePath,
-      name,
+      name: uniqueName, // Retorna el nuevo nombre del archivo
       size,
     };
   } catch (error) {

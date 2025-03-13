@@ -43,7 +43,7 @@ import { ref } from "vue";
 import menuicon from '../assets/iconos/menu.svg'
 import inicio from '../assets/iconos/inicio.svg'
 import vender from '../assets/iconos/vender.svg'
-import producto from '../assets/iconos/producto.svg'
+import producto from '../assets/iconos/productos.svg'
 import categoria from '../assets/iconos/categoria.svg'
 import mesa from '../assets/iconos/mesa.svg'
 import home from '../assets/iconos/home.svg'
