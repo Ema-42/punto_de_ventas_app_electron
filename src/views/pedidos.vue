@@ -264,7 +264,7 @@
       <!-- Pedidos Concluidos (1/4 del ancho) -->
       <div class="lg:w-1/4">
         <div class="bg-white rounded-lg shadow-md p-4 h-full">
-          <h2 class="text-lg font-semibold mb-4">Pedidos Completados</h2>
+          <h2 class="text-lg font-semibold mb-4">Pedidos Completados Hoy</h2>
           <div
             class="overflow-x-auto max-h-[calc(100vh-220px)] overflow-y-auto"
           >
@@ -512,15 +512,29 @@ const confirmarCompletarPedido = (pedido: Pedido) => {
   mostrarModalConfirmacion.value = true;
 };
 
-const pedidosConcluidos = computed(() =>
-  pedidos.value
-    .filter((p) => p.estado === EstadoPedido.COMPLETADO && p.fecha_concluido)
+const pedidosConcluidos = computed(() => {
+  // Obtener la fecha de hoy (inicio del día)
+  const hoy = new Date();
+  const inicioHoy = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate(), 0, 0, 0);
+  // Obtener fin del día de hoy
+  const finHoy = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate(), 23, 59, 59, 999);
+  return pedidos.value
+    .filter((p) => {
+      // Verificar que el pedido esté completado y tenga fecha de conclusión
+      if (p.estado !== EstadoPedido.COMPLETADO || !p.fecha_concluido) {
+        return false;
+      }
+      // Crear fecha de conclusión respetando la zona horaria
+      const fechaConcluido = new Date(p.fecha_concluido);     
+      // Verificar si la fecha de conclusión está dentro del día de hoy
+      return fechaConcluido >= inicioHoy && fechaConcluido <= finHoy;
+    })
     .sort(
       (a, b) =>
         new Date(b.fecha_concluido!).getTime() -
         new Date(a.fecha_concluido!).getTime()
-    )
-);
+    );
+});
 
 const pedidosActivos = computed(() =>
   pedidos.value.filter(
@@ -546,6 +560,8 @@ const cargarPedidos = async () => {
     // Carga desde API
     if (window.api && window.api.getPedidos) {
       const data = await window.api.getPedidos();
+      console.log(data,data.length);
+      
       pedidos.value = data || [];
       cargarPedidosHijos();
     }
@@ -673,15 +689,6 @@ const getEstadoEtiqueta = (estado?: string) => {
   return estados[estado || ""] || estado || "";
 };
 
-const getEstadoClase = (estado?: string) => {
-  const clases: { [key: string]: string } = {
-    "EN PREPARACION":
-      "bg-green-100 text-green-800 px-2 py-1 rounded-full text-sm font-medium",
-    COMPLETADO:
-      "bg-green-100 text-green-800 px-2 py-1 rounded-full text-sm font-medium",
-  };
-  return clases[estado || ""] || "";
-};
 
 const cambiarEstadoPedido = async () => {
   try {

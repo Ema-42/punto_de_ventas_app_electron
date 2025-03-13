@@ -275,25 +275,25 @@
               </button>
               <button
                 @click="imprimirIngreso(ingreso)"
-                class="bg-green-100 p-2 rounded-full hover:bg-green-200 transition"
+                class="bg-red-100 p-2 rounded-full hover:bg-red-200 transition"
                 title="Imprimir"
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="h-5 w-5 text-green-600"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"
-                  />
-                </svg>
+              <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-5 w-5 text-red-600"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+                    />
+                  </svg>
               </button>
-              <button
+              <!--               <button
                 @click="abrirModalCambiarEstado(ingreso)"
                 class="bg-yellow-100 p-2 rounded-full hover:bg-yellow-200 transition"
                 title="Cambiar estado"
@@ -312,7 +312,7 @@
                     d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
                   />
                 </svg>
-              </button>
+              </button> -->
             </td>
           </tr>
           <tr v-if="paginatedIngresos.length === 0">
@@ -613,20 +613,32 @@ const buscarIngresos = () => {
 
   // Filtrar por rango de fechas
   if (filtros.value.fechaDesde) {
-    const fechaDesde = new Date(filtros.value.fechaDesde);
-    filtrados = filtrados.filter(
-      (ingreso) => new Date(ingreso.fecha_ingreso) >= fechaDesde
-    );
+    // Parsear la fecha correctamente por componentes para mantener la zona horaria local
+    const [year, month, day] = filtros.value.fechaDesde
+      .split("-")
+      .map((num) => parseInt(num, 10));
+    const fechaDesde = new Date(year, month - 1, day, 0, 0, 0);
+    console.log("fechaDesde", fechaDesde);
+
+    filtrados = filtrados.filter((ingreso) => {
+      const fechaIngreso = new Date(ingreso.fecha_ingreso);
+      return fechaIngreso >= fechaDesde;
+    });
   }
 
   if (filtros.value.fechaHasta) {
-    const fechaHasta = new Date(filtros.value.fechaHasta);
-    fechaHasta.setHours(23, 59, 59, 999); // Establecer al final del día
-    filtrados = filtrados.filter(
-      (ingreso) => new Date(ingreso.fecha_ingreso) <= fechaHasta
-    );
-  }
+    // Parsear la fecha correctamente por componentes para mantener la zona horaria local
+    const [year, month, day] = filtros.value.fechaHasta
+      .split("-")
+      .map((num) => parseInt(num, 10));
+    const fechaHasta = new Date(year, month - 1, day, 23, 59, 59, 999); // Ya está al final del día
+    console.log("fechaHasta", fechaHasta);
 
+    filtrados = filtrados.filter((ingreso) => {
+      const fechaIngreso = new Date(ingreso.fecha_ingreso);
+      return fechaIngreso <= fechaHasta;
+    });
+  }
   ingresosFiltrados.value = filtrados;
   pagina.value = 1;
 

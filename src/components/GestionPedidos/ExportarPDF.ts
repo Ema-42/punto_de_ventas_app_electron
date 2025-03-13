@@ -39,8 +39,9 @@ interface Pedido {
   fecha_creacion: string;
   fecha_concluido?: string;
   tipo_pago?: string;
+  para_llevar?:boolean;
   total: string;
-  detalles: DetallePedido[];
+  detalles?: DetallePedido[];
 }
 
 interface ProductoRanking {
@@ -70,6 +71,7 @@ const formatearFecha = (fechaStr: string): string => {
 
 // Función para generar el ranking de productos
 const generarRankingProductos = (pedidos: Pedido[]): ProductoRanking[] => {
+
   // Obtener todos los detalles de los pedidos
   const detalles: DetallePedido[] = pedidos.flatMap(pedido => pedido.detalles || []);
   
@@ -100,8 +102,7 @@ const generarRankingProductos = (pedidos: Pedido[]): ProductoRanking[] => {
 const agruparPorCategoria = async (productos: ProductoRanking[]): Promise<{ [key: string]: ProductoRanking[] }> => {
   try {
     // Obtener categorías
-    const categorias = await window.api.getCategorias();
-    
+    const categorias = await window.api.getCategorias();   
     // Asignar nombre de categoría a cada producto
     productos.forEach(producto => {
       if (producto.categoria_id) {
@@ -156,20 +157,21 @@ export const generarPDF = async (pedidos: Pedido[], incluirDetalles: boolean = f
   const dataPrincipal = pedidos.map(pedido => [
     pedido.num_pedido_dia.toString(),
     formatearFecha(pedido.fecha_creacion),
-    pedido.mesa ? `Mesa ${pedido.mesa.numero}` : '-',
+    pedido.mesa ? `${pedido.mesa.numero}` : '-',
     pedido.mesera.nombre,
     pedido.cajero.nombre,
     pedido.tipo_pago || '-',
+    pedido.para_llevar?'SI':'NO',
     `$${parseFloat(pedido.total).toFixed(2)}`
   ]);
   
   // Agregar fila de total
   const totalGeneral = pedidos.reduce((sum, pedido) => sum + parseFloat(pedido.total), 0);
-  dataPrincipal.push(['', '', '', '', '', 'TOTAL', `$${totalGeneral.toFixed(2)}`]);
+  dataPrincipal.push(['', '', '', '', '',  '','TOTAL', `$${totalGeneral.toFixed(2)}`]);
   
   // Agregar tabla de resumen
   doc.autoTable({
-    head: [['#', 'Fecha', 'Mesa', 'Mesero', 'Cajero', 'Tipo Pago', 'Total']],
+    head: [['#', 'Fecha Creación', 'Mesa', 'Mesero', 'Cajero', 'Tipo Pago','Para Llevar','Total']],
     body: dataPrincipal,
     startY: 40,
     theme: 'grid',
@@ -225,15 +227,12 @@ export const generarPDF = async (pedidos: Pedido[], incluirDetalles: boolean = f
       doc.addPage();
       y = 20;
     }
-    
     doc.setFontSize(16);
-    doc.text('Ranking de Productos por Categoría', 14, y);
+    doc.text('Demanda de Productos por Categoría', 14, y);
     y += 10;
-    
     // Generar ranking
-    const productosRanking = generarRankingProductos(pedidos);
+    const productosRanking = generarRankingProductos(pedidos);    
     const productosPorCategoria = await agruparPorCategoria(productosRanking);
-    
     // Mostrar ranking por categoría
     for (const [categoria, productos] of Object.entries(productosPorCategoria)) {
       // Verificar si necesitamos una nueva página

@@ -3,9 +3,7 @@
     <!-- Tabla con encabezados fijos -->
     <table class="w-full border-collapse bg-white rounded-lg shadow-md">
       <!-- Encabezados fijos con fondo degradado rojo -->
-      <thead
-        class="bg-red-500 text-white sticky top-0 z-10"
-      >
+      <thead class="bg-red-500 text-white sticky top-0 z-10">
         <tr>
           <th class="p-3 text-left w-12 rounded-tl-lg">
             <input
@@ -17,11 +15,12 @@
           </th>
           <th class="p-3 text-left">ID</th>
           <th class="p-3 text-left"># Pedido</th>
-          <th class="p-3 text-left">Fecha</th>
+          <th class="p-3 text-left">Fecha Creacion</th>
           <th class="p-3 text-left">Mesa</th>
           <th class="p-3 text-left">Mesero</th>
           <th class="p-3 text-left">Cajero</th>
           <th class="p-3 text-left">Tipo Pago</th>
+          <th class="p-3 text-left">Para llevar</th>
           <th class="p-3 text-right">Total</th>
           <th class="p-3 text-center rounded-tr-lg">Acciones</th>
         </tr>
@@ -51,8 +50,8 @@
 
         <template v-for="(grupo, index) in pedidosAgrupados" :key="index">
           <!-- Separador de fecha -->
-          <tr class="bg-red-50">
-            <td colspan="10" class="p-2 text-sm font-medium text-red-700">
+          <tr class="bg-amber-100">
+            <td colspan="11" class="p-2 text-md font-medium text-gray-700">
               {{ formatearFechaSeparador(grupo.fecha) }}
             </td>
           </tr>
@@ -93,6 +92,9 @@
                 {{ pedido.tipo_pago }}
               </span>
               <span v-else>-</span>
+            </td>
+            <td class="p-3 text-left font-medium">
+              {{ pedido.para_llevar ? "SI" : "NO" }}
             </td>
             <td class="p-3 text-right font-medium">
               ${{ parseFloat(pedido.total).toFixed(2) }}
@@ -178,6 +180,7 @@ interface Pedido {
   fecha_creacion: string;
   fecha_concluido?: string;
   tipo_pago?: string;
+  para_llevar?: boolean;
   total: string;
 }
 
@@ -215,9 +218,18 @@ const pedidosAgrupados = computed(() => {
   const pedidosPag = pedidosPaginados.value;
 
   pedidosPag.forEach((pedido) => {
-    const fecha = new Date(pedido.fecha_creacion).toISOString().split("T")[0];
+    // Convertir timestamp a fecha local
+    const fecha = new Intl.DateTimeFormat("es-BO", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      timeZone: "America/La_Paz",
+    })
+      .format(new Date(pedido.fecha_creacion))
+      .split("/")
+      .reverse()
+      .join("-");
     let grupo = grupos.find((g) => g.fecha === fecha);
-
     if (!grupo) {
       grupo = { fecha, pedidos: [] };
       grupos.push(grupo);
@@ -229,61 +241,61 @@ const pedidosAgrupados = computed(() => {
   return grupos;
 });
 
-// Métodos
-const formatearFecha = (fechaStr: string): string => {
-  const fecha = new Date(fechaStr);
-  return fecha.toLocaleDateString("es-ES", {
-    day: "2-digit",
-    month: "2-digit",
-    year: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
-};
-
 const formatearHora = (fechaStr: string): string => {
   const fecha = new Date(fechaStr);
-  return fecha.toLocaleTimeString("es-ES", {
+  return fecha.toLocaleTimeString("es-BO", {
     hour: "2-digit",
     minute: "2-digit",
   });
 };
 
 const formatearFechaSeparador = (fechaStr: string): string => {
-  const fecha = new Date(fechaStr);
+  const [year, month, day] = fechaStr
+    .split("-")
+    .map((num) => parseInt(num, 10));
+  const fecha = new Date(year, month - 1, day);
   const hoy = new Date();
-  const ayer = new Date(hoy);
+  const ayer = new Date();
   ayer.setDate(hoy.getDate() - 1);
 
-  // Formatear la fecha para comparación
-  const fechaFormateada = fecha.toISOString().split("T")[0];
-  const hoyFormateada = hoy.toISOString().split("T")[0];
-  const ayerFormateada = ayer.toISOString().split("T")[0];
+  const formatearFechaLocal = (date: Date) => {
+    return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(
+      2,
+      "0"
+    )}-${String(date.getDate()).padStart(2, "0")}`;
+  };
+
+  const fechaFormateada = formatearFechaLocal(fecha);
+  const hoyFormateada = formatearFechaLocal(hoy);
+  const ayerFormateada = formatearFechaLocal(ayer);
 
   if (fechaFormateada === hoyFormateada) {
     return (
       "Hoy - " +
-      fecha.toLocaleDateString("es-ES", {
+      fecha.toLocaleDateString("es-BO", {
         day: "2-digit",
         month: "2-digit",
         year: "numeric",
+        timeZone: "America/La_Paz",
       })
     );
   } else if (fechaFormateada === ayerFormateada) {
     return (
       "Ayer - " +
-      fecha.toLocaleDateString("es-ES", {
+      fecha.toLocaleDateString("es-BO", {
         day: "2-digit",
         month: "2-digit",
         year: "numeric",
+        timeZone: "America/La_Paz",
       })
     );
   } else {
-    return fecha.toLocaleDateString("es-ES", {
+    return fecha.toLocaleDateString("es-BO", {
       weekday: "long",
       day: "2-digit",
       month: "2-digit",
       year: "numeric",
+      timeZone: "America/La_Paz",
     });
   }
 };

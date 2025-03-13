@@ -115,9 +115,9 @@
     fecha_concluido?: string;
     tipo_pago?: string;
     total: string;
-    detalles: DetallePedido[];
+    detalles?: DetallePedido[];
   }
-  
+
   interface Categoria {
     id: number;
     nombre: string;
