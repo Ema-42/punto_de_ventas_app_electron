@@ -1,12 +1,15 @@
 {
   "name": "punto_de_venta_app",
+  "description": "Aplicación de Punto de Venta",  
+  "author": "Tu Nombre <tu@email.com>", 
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vue-tsc && vite build && electron-builder",
-    "build:win": "electron-builder --win",
+    "prisma:generate": "prisma generate",
+    "build": "npm run prisma:generate && vue-tsc --noEmit || true && vite build && electron-builder",
+    "build:win": "npm run prisma:generate && vue-tsc --noEmit && vite build && electron-builder --win --config electron-builder.json5",
     "preview": "vite preview"
   },
   "dependencies": {

@@ -3,17 +3,33 @@
   "appId": "com.tuempresa.puntodeventa",
   "productName": "Punto de Venta App",
   "asar": true,
+  "asarUnpack": [
+    "node_modules/@prisma/client",
+    "node_modules/.prisma"
+  ],
+  "npmRebuild": false,
   "directories": {
-    "output": "release/${version}"
+    "output": "release/${version}" // Carpeta de salida para los ejecutables
   },
   "files": [
-    "dist/**/*",
-    "dist-electron/**/*"
+    "dist/**/*", // Incluye todos los archivos de la carpeta dist (frontend)
+    "dist-electron/**/*", // Incluye todos los archivos de la carpeta dist-electron (backend)
+    "node_modules/.prisma/**/*",
+    "node_modules/@prisma/client/**/*",
+    "prisma/**/*"
   ],
   "extraResources": [
     {
       "from": "prisma",
       "to": "prisma"
+    },
+    {
+      "from": "node_modules/.prisma",
+      "to": "node_modules/.prisma"
+    },
+    {
+      "from": "node_modules/@prisma/client",
+      "to": "node_modules/@prisma/client"
     }
   ],
   "win": {

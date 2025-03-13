@@ -3,7 +3,6 @@ import { app, BrowserWindow, protocol } from "electron";
 import { fileURLToPath } from "node:url";
 import path, { join } from "path";
 import ipcMainModules from "./main/ipc-main-process/ipcMainModules";
-import { screen } from "electron";
 
 /* const require = createRequire(import.meta.url) */
 const __dirname = path.dirname(fileURLToPath(import.meta.url));

@@ -8,7 +8,7 @@ import {
   FileData,
   Producto,
 } from "./main/modules/interfaces";
-import { CategoriaProducto } from "@prisma/client";
+//import { CategoriaProducto } from "@prisma/client";
 import { EstadosMesa } from "./main/modules/enums";
 
 // --------- Expose some API to the Renderer process ---------
@@ -24,7 +24,7 @@ contextBridge.exposeInMainWorld("api", {
     ipcRenderer.invoke("edit-producto", { id, productoData }),
   //CATEGORIAS
   getCategorias: () => ipcRenderer.invoke("get-categorias"),
-  createCategoria: (categoriaData: CategoriaProducto) =>
+  createCategoria: (categoriaData: any) =>
     ipcRenderer.invoke("create-categoria", categoriaData),
   editCategoriaById: (id: number, categoriaData: any) =>
     ipcRenderer.invoke("edit-categoria", { id, categoriaData }),

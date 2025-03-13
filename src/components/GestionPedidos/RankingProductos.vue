@@ -138,7 +138,7 @@
   const props = defineProps<{
     pedidos: Pedido[];
   }>();
-  
+  //@
   const emit = defineEmits<{
     (e: 'cerrar'): void;
   }>();

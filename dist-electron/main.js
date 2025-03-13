@@ -1,12 +1,13 @@
 import { app, ipcMain, protocol, BrowserWindow } from "electron";
 import { fileURLToPath } from "node:url";
 import path$1, { join } from "path";
-import { PrismaClient } from "@prisma/client";
+import pkg from "@prisma/client";
 import { mkdir, writeFile } from "fs/promises";
 import nodeCrypto from "crypto";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
-const prisma$6 = new PrismaClient();
+const { PrismaClient: PrismaClient$6 } = pkg;
+const prisma$6 = new PrismaClient$6();
 const obtenerProductos = async () => {
   try {
     const productos = await prisma$6.producto.findMany({
@@ -145,7 +146,8 @@ const uploadFile = async (fileData) => {
     throw new Error("Error al guardar la imagen");
   }
 };
-const prisma$5 = new PrismaClient();
+const { PrismaClient: PrismaClient$5 } = pkg;
+const prisma$5 = new PrismaClient$5();
 const getCategoriasProductos = async () => {
   console.log("getCategoriasProductos");
   try {
@@ -224,7 +226,8 @@ const deleteCategoriaProducto = async (id) => {
     return error;
   }
 };
-const prisma$4 = new PrismaClient();
+const { PrismaClient: PrismaClient$4 } = pkg;
+const prisma$4 = new PrismaClient$4();
 const getMesas = async () => {
   try {
     const mesas = await prisma$4.mesa.findMany({
@@ -2096,7 +2099,8 @@ Object.entries(EstadosMesa).map(
     etiqueta
   })
 );
-const prisma$3 = new PrismaClient();
+const { PrismaClient: PrismaClient$3 } = pkg;
+const prisma$3 = new PrismaClient$3();
 const getUsuarios = async () => {
   try {
     const usuarios = await prisma$3.usuario.findMany({
@@ -2255,7 +2259,8 @@ const authenticateUsuario = async (usuario, password) => {
     return error;
   }
 };
-const prisma$2 = new PrismaClient();
+const { PrismaClient: PrismaClient$2 } = pkg;
+const prisma$2 = new PrismaClient$2();
 const getRoles = async () => {
   try {
     const roles = await prisma$2.rol.findMany({
@@ -2283,7 +2288,8 @@ const getRolById = async (id) => {
     return error;
   }
 };
-const prisma$1 = new PrismaClient();
+const { PrismaClient: PrismaClient$1 } = pkg;
+const prisma$1 = new PrismaClient$1();
 const getPedidos = async () => {
   try {
     const pedidos = await prisma$1.pedido.findMany({
@@ -2699,6 +2705,7 @@ const eliminarPedido = async (id) => {
     return error;
   }
 };
+const { PrismaClient } = pkg;
 const prisma = new PrismaClient();
 function validarDetallesUnicos(detalles) {
   const productoIds = detalles.map((detalle) => detalle.producto_id);

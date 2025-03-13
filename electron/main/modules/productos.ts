@@ -1,4 +1,5 @@
-import { PrismaClient } from "@prisma/client";
+import pkg from "@prisma/client";
+const { PrismaClient } = pkg;
 import { FileData, Producto } from "./interfaces";
 import { writeFile, mkdir } from "fs/promises";
 //import path, { join } from "path";

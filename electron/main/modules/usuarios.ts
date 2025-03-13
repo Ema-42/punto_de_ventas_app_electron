@@ -1,5 +1,6 @@
-import { PrismaClient } from "@prisma/client";
-import { EstadoPedido, Usuario, UsuarioAuth } from "./interfaces";
+import pkg from "@prisma/client";
+const { PrismaClient } = pkg;
+import { EstadoPedido, UsuarioAuth } from "./interfaces";
 import bcrypt from "bcryptjs";
 import { Roles } from "./enums";
 
