@@ -7,7 +7,7 @@
       <div class="bg-red-600 p-2 rounded-lg shadow-md">
         <!-- <img src="/placeholder.svg" alt="Logo" class="h-8 w-8 object-contain" /> -->
       </div>
-      <span class="text-red-600 font-bold text-xl tracking-tight">Mi Tienda</span>
+      <span class="text-red-600 text-xl tracking-tight font-black">CHICHARRONERIA 6 DE AGOSTO</span>
     </div>
 
     <!-- Título dinámico -->
@@ -21,18 +21,17 @@
     <div class="relative">
       <button 
         @click="toggleMenu" 
-        class="flex items-center space-x-3 py-2 px-3 rounded-full transition-all duration-200 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50"
+        class="flex items-center space-x-3 py-2 px-3 rounded-full transition-all duration-200 hover:bg-green-50 focus:outline-none focus:ring-2 focus:ring-gray-200 focus:ring-opacity-50"
       >
         <div class="flex flex-col items-end">
           <span class="text-gray-800 font-medium">{{ userName }}</span>
           <span class="text-xs text-gray-500">{{ authStore.user.rol }}</span>
         </div>
-        <div class="h-10 w-10 rounded-full bg-red-100 border-2 border-red-500 overflow-hidden flex items-center justify-center">
+        <div class="h-10 w-10 rounded-full border-2 border-green-600 overflow-hidden flex items-center justify-center">
           <img 
             :src="user" 
             alt="Usuario" 
             class="h-full w-full object-cover"
-            onerror="this.src='data:image/svg+xml;charset=UTF-8,%3csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'24\' height=\'24\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'%23ef4444\' stroke-width=\'2\' stroke-linecap=\'round\' stroke-linejoin=\'round\'%3e%3cpath d=\'M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2\'%3e%3c/path%3e%3ccircle cx=\'12\' cy=\'7\' r=\'4\'%3e%3c/circle%3e%3c/svg%3e'"
           />
         </div>
         <svg 
@@ -53,7 +52,7 @@
       >
         <div class="py-2 border-b border-gray-100">
           <div class="px-4 py-2">
-            <p class="text-sm font-medium text-gray-900">Usuario: {{ userName }}</p>
+            <p class="text-sm font-medium text-gray-900">Nombre: {{ userName }}</p>
           </div>
         </div>
         <ul class="py-1">
@@ -64,14 +63,14 @@
               <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
               </svg>
-              <span>Rol: <span class="font-medium text-red-600">{{ authStore.user.rol }}</span></span>
+              <span>Rol: <span class="font-medium text-green-600">{{ authStore.user.rol }}</span></span>
             </div>
           </li>
         </ul>
         <div class="py-1 border-t border-gray-100">
           <button 
             @click="cerrarSesion" 
-            class="flex w-full items-center px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors duration-150"
+            class="flex w-full items-center px-4 py-2 text-sm text-gray-600 hover:bg-red-50 transition-colors duration-150"
           >
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
@@ -87,7 +86,7 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from "vue";
 import { useAuthStore } from "../stores/auth";
-import user from "../assets/iconos/user.png";
+import user from "/user4.png";
 import router from "../router";
 
 const authStore = useAuthStore();

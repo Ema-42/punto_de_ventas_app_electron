@@ -944,7 +944,5 @@ const editarIngresoConDetalles = async (data: EditarIngresoConDetalles) => {
 import { useAuthStore } from './stores/auth';
 import Sidebar from "./components/Sidebar.vue";
 import Navbar from "./components/Navbar.vue";
-console.log('CONSOLA DE APP');
-
 const authStore = useAuthStore();
 </script>

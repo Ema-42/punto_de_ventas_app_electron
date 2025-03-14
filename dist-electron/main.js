@@ -4,6 +4,7 @@ import path$1, { join } from "path";
 import pkg from "@prisma/client";
 import { mkdir, writeFile } from "fs/promises";
 import nodeCrypto from "crypto";
+import { readFile } from "node:fs/promises";
 import path from "node:path";
 const { PrismaClient: PrismaClient$6 } = pkg;
 const prisma$6 = new PrismaClient$6();
@@ -3094,6 +3095,27 @@ const ipcMainModules = () => {
       const url = request.url.replace(/^local:\//, "");
       const filePath = path.normalize(decodeURIComponent(url));
       callback({ path: filePath });
+    });
+  } else {
+    protocol.handle("local", async (request) => {
+      const url = new URL(request.url);
+      const filePath = url.pathname;
+      try {
+        const fileBuffer = await readFile(filePath);
+        const ext = path.extname(filePath).toLowerCase();
+        let contentType = "application/octet-stream";
+        if (ext === ".png") {
+          contentType = "image/png";
+        } else if (ext === ".jpeg" || ext === ".jpg") {
+          contentType = "image/jpeg";
+        }
+        return new Response(fileBuffer, {
+          headers: { "Content-Type": contentType }
+        });
+      } catch (error) {
+        console.error("Error al cargar la imagen:", error);
+        return new Response("Archivo no encontrado", { status: 404 });
+      }
     });
   }
 };

@@ -1,6 +1,6 @@
 datasource db {
   provider = "sqlite"
-  url      = "file:C:\\Users\\emanu\\AppData\\Roaming\\punto_de_venta_app\\database\\dev.db"
+  url      = "file:/home/emanuel/.config/punto_de_venta_app/database/dev.db"
 }
 
 generator client {

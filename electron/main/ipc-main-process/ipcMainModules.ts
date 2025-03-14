@@ -183,9 +183,8 @@ export default () => {
       callback({ path: filePath });
     });
   }
-
-  //leer imagenes locales
-  /*   protocol.handle("local", async (request) => {
+  else{
+    protocol.handle("local", async (request) => {
     const url = new URL(request.url);
     const filePath = url.pathname;
 
@@ -207,5 +206,7 @@ export default () => {
       console.error("Error al cargar la imagen:", error);
       return new Response("Archivo no encontrado", { status: 404 });
     }
-  }); */
+  });
+  }
+
 };

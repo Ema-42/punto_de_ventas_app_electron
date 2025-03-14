@@ -5,8 +5,12 @@
       class="flex flex-col md:flex-row justify-between items-center gap-2 bg-gradient-to-r bg-gray-100 p-3 rounded-lg shadow-md"
     >
       <div class="flex items-center gap-4">
-        <h1 class="text-2xl font-bold text-gray-700">Dashboard</h1>
-        <div class="text-xl font-semibold text-red-600">{{ currentTime }}</div>
+        <h1 class="text-2xl font-bold text-gray-700">Pagina Inicial</h1>
+        <div
+          class="bg-gray-700 text-2xl md:text-2xl font-mono font-bold text-white px-2 rounded-lg shadow-lg inline-block border border-gray-700 tracking-widest tabular-nums backdrop-blur-sm"
+        >
+          {{ currentTime }}
+        </div>
       </div>
       <div class="flex flex-wrap gap-3">
         <div class="relative">
@@ -34,7 +38,6 @@
           </svg>
           Nuevo Pedido
         </button>
-        <button>Get Numero de pedido</button>
       </div>
     </div>
 
@@ -43,13 +46,15 @@
       <!-- Columna izquierda: Estadísticas -->
       <div class="col-span-1 flex flex-col gap-3">
         <!-- Pedidos de Hoy -->
-        <div class="bg-sky-100 p-3 rounded-lg shadow-md border-l-4 border-l-sky-500 hover:shadow-lg transition-shadow">
-          <h3 class="text-gray-500 text-sm font-medium mb-2">Pedidos de Hoy</h3>
-          <div class="flex justify-between items-start">
-            <div class="text-2xl font-bold text-gray-700">
+        <div
+          class="bg-sky-100 p-3 rounded-lg shadow-md border-l-4 border-l-sky-500 hover:shadow-lg transition-shadow"
+        >
+          <h3 class="text-gray-700 text-sm font-medium mb-2">Pedidos de Hoy</h3>
+          <div class="flex justify-between flex-col items-center">
+            <div class="text-3xl font-bold text-sky-700 mb-2">
               {{ totalPedidos }}
             </div>
-            <div class="flex flex-col gap-1 w-36">
+            <div class="flex gap-3">
               <div class="bg-sky-200 px-3 py-1 rounded-lg">
                 <div class="text-gray-600 text-sm font-medium">
                   {{ cantidadPedidosCompletados }} Completados
@@ -63,38 +68,36 @@
             </div>
           </div>
         </div>
-
         <!-- Ingresos del Día -->
-        <div class="bg-emerald-100 p-3 rounded-lg shadow-md border-l-4 border-l-emerald-500 hover:shadow-lg transition-shadow">
-          <h3 class="text-gray-500 text-sm font-medium mb-2">
+        <div
+          class="bg-emerald-100 p-3 rounded-lg shadow-md border-l-4 border-l-emerald-500 hover:shadow-lg transition-shadow"
+        >
+          <h3 class="text-gray-700 text-sm font-medium mb-2">
             Ingresos del Día
           </h3>
           <div class="flex flex-col items-center">
-            <div class="text-3xl font-bold text-gray-700 mb-2">
-              ${{ totalIngresosDelDia }}
+            <div class="text-3xl font-bold text-green-800 mb-2">
+              {{ totalIngresosDelDia }} Bs.
             </div>
           </div>
         </div>
 
         <!-- Meseros -->
-        <div class="bg-white p-3 rounded-lg shadow-md">
-          <h3 class="text-gray-500 text-sm font-medium mb-2">Meseros</h3>
-          <div class="space-y-2 lg:max-h-40 overflow-y-auto">
+        <div
+          class="bg-amber-50 p-3 rounded-lg shadow-md border-l-4 border-l-amber-500 hover:shadow-lg transition-shadow"
+        >
+          <h3 class="text-gray-700 text-sm font-medium mb-2">
+            Meseras, En orden de disponibilidad
+          </h3>
+          <div class="space-y-2 overflow-y-auto">
             <div
               v-for="mesero in meseros"
               :key="mesero.id"
-              class="flex justify-between items-center p-2 bg-gray-50 rounded-lg"
+              class="flex justify-between items-center p-2 bg-amber-100 rounded-lg"
             >
               <div class="flex items-center gap-2">
-                <div
-                  class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center"
-                >
-                  <span class="text-sm font-medium text-gray-600">
-                    {{ mesero.nombre.charAt(0) }}
-                  </span>
-                </div>
                 <span class="text-sm font-medium text-gray-700">
-                  {{ mesero.nombre }}
+                  👩🏻 {{ mesero.nombre }}
                 </span>
               </div>
               <div class="text-sm text-gray-500">
@@ -110,47 +113,23 @@
             </div>
           </div>
         </div>
-
-        <!-- Alertas de Stock -->
-        <div class="bg-white p-3 rounded-lg shadow-md">
-          <h3 class="text-gray-500 text-sm font-medium mb-2">
-            Alertas de Productos con poco Stock
-          </h3>
-          <div class="flex flex-col gap-2 lg:max-h-56 overflow-y-auto">
-            <div class="text-2xl font-bold text-red-600 mb-1">
-              {{ productosStockBajo.length }} productos
-            </div>
-            <div class="overflow-y-auto pr-2">
-              <div
-                v-for="producto in productosStockBajo"
-                :key="producto.id"
-                class="flex justify-between items-center p-2 bg-red-50 rounded-lg mb-1"
-              >
-                <span class="text-sm text-gray-700">{{ producto.nombre }}</span>
-                <span class="text-sm font-medium text-red-600"
-                  >{{ producto.stock }} uds.</span
-                >
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
 
       <!-- Columna central y derecha: Gráficos, Productos y Mesas -->
-      <div class="col-span-3 grid grid-cols-1 lg:grid-cols-3 gap-3">
+      <div class="lg:col-span-3 grid grid-cols-1 lg:grid-cols-3">
         <!-- Gráfico de Ventas del Día -->
         <div
-          class="lg:col-span-2 bg-white p-3 rounded-lg shadow-md flex flex-col"
+          class="lg:col-span-2 bg-white p-3 rounded-lg shadow-md flex flex-col lg:mr-4"
         >
           <h3 class="text-gray-700 font-semibold mb-2">Ventas del Día</h3>
           <div class="flex-1 min-h-0">
-            <canvas ref="ventasDiaChart"></canvas>
+            <canvas ref="ventasDiaChart" class="min-h-96"></canvas>
           </div>
         </div>
 
         <!-- Vista de Mesas -->
         <div
-          class="lg:col-span-1 bg-white p-3 rounded-lg shadow-md flex flex-col overflow-y-auto"
+          class="mt-4 lg:mt-0 lg:col-span-1 bg-gray-50 p-3 rounded-lg shadow-md border-l-4 border-l-gray-400 hover:shadow-lg transition-shadow flex flex-col overflow-y-auto"
         >
           <h3 class="text-gray-700 font-semibold mb-2">Vista de Mesas</h3>
 
@@ -177,12 +156,12 @@
               :class="[
                 'p-2 rounded-lg text-center cursor-pointer transition-colors',
                 mesa.estado === EstadosMesa.LIBRE
-                  ? 'bg-green-100 hover:bg-green-200'
+                  ? 'border border-green-300 bg-green-100 hover:bg-green-200'
                   : mesa.estado === EstadosMesa.OCUPADA
-                  ? 'bg-red-100 hover:bg-red-200'
+                  ? 'border border-red-300 bg-red-100 hover:bg-red-200'
                   : mesa.estado === EstadosMesa.MANTENIMIENTO
-                  ? 'bg-gray-200 hover:bg-gray-300'
-                  : 'bg-yellow-100 hover:bg-yellow-200',
+                  ? 'border border-gray-300 bg-gray-200 hover:bg-gray-300'
+                  : 'border border-yellow-300 bg-yellow-100 hover:bg-yellow-200',
               ]"
             >
               <div
@@ -205,66 +184,93 @@
 
         <!-- Productos Más Vendidos -->
         <div
-          class="lg:col-span-3 overflow-y-auto bg-white p-3 rounded-lg shadow-md"
+          class="col-span-1 lg:col-span-6 grid grid-cols-1 lg:grid-cols-2 gap-2 mt-4"
         >
-          <div class="flex justify-between items-center mb-3">
-            <h3 class="text-gray-700 font-semibold">
-              Productos Más Vendidos Hoy
-            </h3>
-            <div class="flex space-x-1">
-              <button
-                v-for="categoria in categorias"
-                :key="categoria.id"
-                @click="categoriaSeleccionada = categoria.id"
-                :class="[
-                  'px-3 py-1 text-xs rounded-md transition-colors',
-                  categoriaSeleccionada === categoria.id
-                    ? 'bg-red-600 text-white'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200',
-                ]"
-              >
-                {{ categoria.nombre }}
-              </button>
-              <button
-                @click="categoriaSeleccionada = null"
-                :class="[
-                  'px-3 py-1 text-xs rounded-md transition-colors',
-                  categoriaSeleccionada === null
-                    ? 'bg-red-600 text-white'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200',
-                ]"
-              >
-                Todos
-              </button>
+          <div class="col-span-1">
+            <div class="bg-violet-100 p-3 rounded-lg shadow-md border-l-4 border-l-violet-400 hover:shadow-lg transition-shadow">
+              <div class="flex justify-between items-center mb-3">
+                <h3 class="text-gray-700 font-semibold">
+                  Productos Más Vendidos Hoy
+                </h3>
+                <div class="flex space-x-1">
+                  <button
+                    v-for="categoria in categorias"
+                    :key="categoria.id"
+                    @click="categoriaSeleccionada = categoria.id"
+                    :class="[
+                      'px-3 py-1 text-xs rounded-md transition-colors',
+                      categoriaSeleccionada === categoria.id
+                        ? 'bg-violet-900 bg-opacity-70 text-white'
+                        : 'bg-white text-gray-700 hover:bg-gray-200',
+                    ]"
+                  >
+                    {{ categoria.nombre }}
+                  </button>
+                  <button
+                    @click="categoriaSeleccionada = null"
+                    :class="[
+                      'px-3 py-1 text-xs rounded-md transition-colors',
+                      categoriaSeleccionada === null
+                        ? 'bg-violet-900 bg-opacity-70 text-white'
+                        : 'bg-white text-gray-700 hover:bg-gray-200',
+                    ]"
+                  >
+                    Todos
+                  </button>
+                </div>
+              </div>
+              <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-3">
+                <div
+                  v-for="producto in productosFiltrados"
+                  :key="producto.id"
+                  class="flex items-center p-2 h-14 bg-violet-950 bg-opacity-10 rounded-lg"
+                >
+                  <div
+                    class="w-10 h-10 bg-violet-950 bg-opacity-40 rounded-lg flex items-center justify-center mr-3"
+                  >
+                    <span class="text-white font-semibold">{{
+                      producto.ranking
+                    }}</span>
+                  </div>
+                  <div class="flex-1 min-w-0">
+                    <div class="font-medium text-gray-700 truncate">
+                      {{ producto.nombre }}
+                    </div>
+                    <div class="flex justify-between text-sm">
+                      <span class="text-gray-500"
+                        >{{ producto.cantidad }} uds.</span
+                      >
+                      <span class="text-gray-500">{{
+                        getCategoriaName(producto.categoriaId)
+                      }}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
-
-          <div
-            class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 max-h-52 min-h-52 gap-3"
-          >
-            <div
-              v-for="producto in productosFiltrados"
-              :key="producto.id"
-              class="flex items-center p-2 h-14 bg-gray-100 rounded-lg"
-            >
-              <div
-                class="w-10 h-10 bg-gray-200 rounded-lg flex items-center justify-center mr-3"
-              >
-                <span class="text-gray-600 font-semibold">{{
-                  producto.ranking
-                }}</span>
-              </div>
-              <div class="flex-1 min-w-0">
-                <div class="font-medium text-gray-700 truncate">
-                  {{ producto.nombre }}
+          <div class="col-span-1 mt-2 lg:mt-0  mb-5 lg:mb-0">
+            <div class="p-3 rounded-lg shadow-md bg-red-100 border-l-4 border-l-red-400 hover:shadow-lg transition-shadow">
+              <h3 class="text-gray-700 text-sm font-medium mb-2">
+                Alertas de Productos con Stock
+              </h3>
+              <div class="flex flex-col gap-2 overflow-y-auto lg:h-60">
+                <div class="text-2xl font-bold text- mb-1 text-gray-700">
+                  {{ productosStockBajo.length }} productos
                 </div>
-                <div class="flex justify-between text-sm">
-                  <span class="text-gray-500"
-                    >{{ producto.cantidad }} uds.</span
+                <div class="overflow-y-auto pr-2">
+                  <div
+                    v-for="producto in productosStockBajo"
+                    :key="producto.id"
+                    class="flex justify-between items-center p-2 bg-red-200 bg-opacity-60 rounded-lg mb-1"
                   >
-                  <span class="text-gray-500">{{
-                    getCategoriaName(producto.categoriaId)
-                  }}</span>
+                    <span class="text-sm text-gray-700">{{
+                      producto.nombre
+                    }}</span>
+                    <span class="text-sm font-medium text-red-600"
+                      >{{ producto.stock }} uds.</span
+                    >
+                  </div>
                 </div>
               </div>
             </div>
@@ -291,6 +297,7 @@ const cantidadPedidosEnPreparacion = ref(0);
 const cantidadPedidosCompletados = ref(0);
 const totalPedidos = ref(0);
 const CantidadPedidosPorHora = ref([0]);
+const productosStockBajo = ref<ProductoStock[]>([]);
 
 // Interfaces
 interface Mesa {
@@ -302,6 +309,7 @@ interface ProductoStock {
   id: number;
   nombre: string;
   stock: number;
+  maneja_stock: boolean;
 }
 
 interface Categoria {
@@ -341,11 +349,20 @@ let ventasDiaChartInstance: Chart | null = null;
 let relojInterval: NodeJS.Timeout;
 const categoriaSeleccionada = ref<number | null>(null);
 
-const productosStockBajo = ref<ProductoStock[]>([
-  { id: 1, nombre: "Papas fritas", stock: 5 },
-  { id: 2, nombre: "Coca Cola 500ml", stock: 8 },
-  { id: 3, nombre: "Pan de hamburguesa", stock: 10 },
-]);
+const getProductosStockBajo = async () => {
+  const data = await window.api.getProductos();
+
+  // Filtrar solo los productos que tienen maneja_stock igual a true
+  const productosFiltrados = data.filter(
+    (producto: ProductoStock) => producto.maneja_stock === true
+  );
+  // Ordenar los productos filtrados de menor a mayor según la propiedad stock
+  productosStockBajo.value = productosFiltrados.sort(
+    (a: ProductoStock, b: ProductoStock) => a.stock - b.stock
+  );
+
+  console.log(productosStockBajo.value);
+};
 
 // Datos para categorías
 const categorias = ref<Categoria[]>([
@@ -370,8 +387,6 @@ const productosVendidos = ref<ProductoVendido[]>([
     ranking: 4,
     categoriaId: 1,
   },
-  { id: 5, nombre: "Cerveza", cantidad: 28, ranking: 5, categoriaId: 2 },
-  { id: 7, nombre: "Nachos", cantidad: 22, ranking: 7, categoriaId: 4 },
   { id: 8, nombre: "Agua Mineral", cantidad: 20, ranking: 8, categoriaId: 2 },
 ]);
 
@@ -570,6 +585,7 @@ onMounted(async () => {
   getMeserosConPedidos();
   getMesas();
   getPedidos();
+  getProductosStockBajo();
   relojInterval = setInterval(actualizarReloj, 1000);
   setTimeout(() => {
     inicializarGraficos();
