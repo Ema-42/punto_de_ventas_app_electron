@@ -111,7 +111,7 @@
             :key="mesa.id"
             class="border-b hover:bg-gray-100 transition"
           >
-            <td class="p-3">
+            <td class="p-3  h-20">
               <span
                 class="bg-gray-200 text-gray-700 px-2 py-1 rounded-full text-xs font-bold"
               >
@@ -119,7 +119,7 @@
               </span>
             </td>
             <td
-              class="px-3 w-16 py-1.5 text-center font-medium bg-slate-500 text-white rounded-lg shadow-md inline-block hover:bg-gray-600 transition-colors"
+              class="px-3 w-16 py-1.5 text-center font-medium bg-emerald-500 text-white rounded-lg shadow-md inline-block hover:bg-emerald-700 transition-colors"
             >
               {{ mesa.numero }}
             </td>
@@ -276,7 +276,7 @@ const mesas = ref<Mesa[]>([]);
 const mesasFiltradas = ref<Mesa[]>([]);
 const searchQuery = ref("");
 const pagina = ref(1);
-const porPagina = ref(8);
+const porPagina = ref(7);
 const mostrarModalCrearEditar = ref(false);
 const mostrarModalEliminar = ref(false);
 const mesaEditar = ref<Mesa | null>(null);

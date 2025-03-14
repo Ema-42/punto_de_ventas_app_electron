@@ -43,20 +43,20 @@
       <!-- Columna izquierda: Estadísticas -->
       <div class="col-span-1 flex flex-col gap-3">
         <!-- Pedidos de Hoy -->
-        <div class="bg-white p-3 rounded-lg shadow-md">
+        <div class="bg-sky-100 p-3 rounded-lg shadow-md border-l-4 border-l-sky-500 hover:shadow-lg transition-shadow">
           <h3 class="text-gray-500 text-sm font-medium mb-2">Pedidos de Hoy</h3>
           <div class="flex justify-between items-start">
             <div class="text-2xl font-bold text-gray-700">
               {{ totalPedidos }}
             </div>
             <div class="flex flex-col gap-1 w-36">
-              <div class="bg-green-100 px-3 py-1 rounded-lg">
-                <div class="text-green-600 text-sm font-medium">
+              <div class="bg-sky-200 px-3 py-1 rounded-lg">
+                <div class="text-gray-600 text-sm font-medium">
                   {{ cantidadPedidosCompletados }} Completados
                 </div>
               </div>
               <div class="bg-yellow-100 px-3 py-1 rounded-lg">
-                <div class="text-yellow-600 text-sm font-medium">
+                <div class="text-gray-600 text-sm font-medium">
                   {{ cantidadPedidosEnPreparacion }} En Preparación.
                 </div>
               </div>
@@ -65,7 +65,7 @@
         </div>
 
         <!-- Ingresos del Día -->
-        <div class="bg-white p-3 rounded-lg shadow-md">
+        <div class="bg-emerald-100 p-3 rounded-lg shadow-md border-l-4 border-l-emerald-500 hover:shadow-lg transition-shadow">
           <h3 class="text-gray-500 text-sm font-medium mb-2">
             Ingresos del Día
           </h3>

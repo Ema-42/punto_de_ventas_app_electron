@@ -50,13 +50,6 @@ app.on("window-all-closed", () => {
 });
 
 app.whenReady().then(() => {
-  if (process.platform === "win32") {
-    protocol.registerFileProtocol("local", (request, callback) => {
-      const url = request.url.replace(/^local:\//, "");
-      const filePath = path.normalize(decodeURIComponent(url));
-      callback({ path: filePath });
-    });
-  }
   createWindow();
   ipcMainModules();
 });

@@ -121,8 +121,8 @@
                 {{ producto.id }}
               </span>
             </td>
-            <td class="p-3">
-              <div class="w-16 h-16 flex items-center justify-center">
+            <td class="px-3">
+              <div class="w-16 h-20 flex items-center justify-center">
                 <img 
                   v-if="producto.imagen_url" 
                   :src="'local://' + producto.imagen_url" 
@@ -172,7 +172,7 @@
             <td class="p-3 text-gray-600">
               {{ formatearFecha(producto.fecha_creacion) }}
             </td>
-            <td class="p-3 flex justify-center space-x-3">
+            <td class="p-3 flex justify-center space-x-3 ">
               <button
                 @click="editarProducto(producto)"
                 class="bg-blue-100 p-2 rounded-full hover:bg-blue-200 transition"
@@ -329,7 +329,7 @@ const productosFiltrados = ref<Producto[]>([]);
 const categorias = ref<Categoria[]>([]);
 const searchQuery = ref("");
 const pagina = ref(1);
-const porPagina = ref(8);
+const porPagina = ref(7);
 const mostrarModalCrearEditar = ref(false);
 const mostrarModalEliminar = ref(false);
 const productoEditar = ref<Producto | null>(null);

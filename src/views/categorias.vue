@@ -110,7 +110,7 @@
             :key="categoria.id"
             class="border-b hover:bg-gray-100 transition"
           >
-            <td class="p-3">
+            <td class="p-3  h-20">
               <span
                 class="bg-gray-200 text-gray-700 px-2 py-1 rounded-full text-xs font-bold"
               >

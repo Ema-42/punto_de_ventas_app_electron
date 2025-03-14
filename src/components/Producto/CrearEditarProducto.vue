@@ -106,7 +106,7 @@
               </div>
               
               <div v-if="formData.imagen_url && !imageFile" class="mt-2 text-sm text-gray-500">
-                Imagen actual: 
+                Imagen actual: (Click aquí para cambiar la imagen)
               </div>
             </div>
           </div>

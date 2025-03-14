@@ -176,8 +176,16 @@ export default () => {
     return await getIngresoById(id);
   });
 
+  if (process.platform === "win32") {
+    protocol.registerFileProtocol("local", (request, callback) => {
+      const url = request.url.replace(/^local:\//, "");
+      const filePath = path.normalize(decodeURIComponent(url));
+      callback({ path: filePath });
+    });
+  }
+
   //leer imagenes locales
-  protocol.handle("local", async (request) => {
+  /*   protocol.handle("local", async (request) => {
     const url = new URL(request.url);
     const filePath = url.pathname;
 
@@ -199,5 +207,5 @@ export default () => {
       console.error("Error al cargar la imagen:", error);
       return new Response("Archivo no encontrado", { status: 404 });
     }
-  });
+  }); */
 };
