@@ -120,10 +120,7 @@
       </div>
 
       <!-- Sección de exportación -->
-      <div class="mt-4 border-t pt-4">
-        <h3 class="text-sm font-medium text-gray-700 mb-2">
-          Exportar registros
-        </h3>
+      <div class="mt-3 border-t pt-1">
         <div class="flex flex-wrap gap-2">
           <div class="flex items-center">
             <input
@@ -552,7 +549,7 @@ const toast = useToast();
 const ingresos = ref<Ingreso[]>([]);
 const ingresosFiltrados = ref<Ingreso[]>([]);
 const pagina = ref(1);
-const porPagina = ref(7);
+const porPagina = ref(6);
 const mostrarModalCrear = ref(false);
 const mostrarModalEstado = ref(false);
 const mostrarModalDetalles = ref(false);
