@@ -51,7 +51,7 @@
         <template v-for="(grupo, index) in pedidosAgrupados" :key="index">
           <!-- Separador de fecha -->
           <tr class="bg-amber-100">
-            <td colspan="11" class="p-2 text-md font-medium text-gray-700">
+            <td colspan="11" class="p text-md font-medium text-gray-700">
               {{ formatearFechaSeparador(grupo.fecha) }}
             </td>
           </tr>

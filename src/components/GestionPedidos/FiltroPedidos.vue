@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-white p-4 rounded-lg shadow-md mb-4">
+  <div class="bg-white p-4 pt-2 rounded-lg shadow-md mb-4">
     <div class="grid grid-cols-1 md:grid-cols-12 gap-4">
       <!-- Buscador más compacto -->
       <div class="relative md:col-span-3">
@@ -81,7 +81,7 @@
     </div>
 
     <!-- Opciones de exportación (ahora más compactas y en la parte inferior) -->
-    <div class="mt-4 pt-3 border-t">
+    <div class="mt-3 pt-1 border-t">
       <div class="flex flex-wrap items-center gap-3">
         <h3 class="text-sm font-medium text-gray-700">
           Opciones de exportación:
