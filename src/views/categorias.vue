@@ -110,7 +110,7 @@
             :key="categoria.id"
             class="border-b hover:bg-gray-100 transition"
           >
-            <td class="p-3  h-20">
+            <td class="p-3  h-16">
               <span
                 class="bg-gray-200 text-gray-700 px-2 py-1 rounded-full text-xs font-bold"
               >
@@ -263,7 +263,7 @@ const categorias = ref<Categoria[]>([]);
 const categoriasFiltradas = ref<Categoria[]>([]);
 const searchQuery = ref("");
 const pagina = ref(1);
-const porPagina = ref(7);
+const porPagina = ref(8);
 const mostrarModalCrearEditar = ref(false);
 const mostrarModalEliminar = ref(false);
 const categoriaEditar = ref<Categoria | null>(null);

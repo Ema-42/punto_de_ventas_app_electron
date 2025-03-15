@@ -122,7 +122,7 @@
               </span>
             </td>
             <td class="px-3">
-              <div class="w-16 h-20 flex items-center justify-center">
+              <div class="w-16 h-16 flex items-center justify-center">
                 <img 
                   v-if="producto.imagen_url" 
                   :src="'local://' + producto.imagen_url" 
@@ -329,7 +329,7 @@ const productosFiltrados = ref<Producto[]>([]);
 const categorias = ref<Categoria[]>([]);
 const searchQuery = ref("");
 const pagina = ref(1);
-const porPagina = ref(7);
+const porPagina = ref(8);
 const mostrarModalCrearEditar = ref(false);
 const mostrarModalEliminar = ref(false);
 const productoEditar = ref<Producto | null>(null);

@@ -254,7 +254,7 @@
               <h3 class="text-gray-700 text-sm font-medium mb-2">
                 Alertas de Productos con Stock
               </h3>
-              <div class="flex flex-col gap-2 overflow-y-auto lg:h-60">
+              <div class="flex flex-col gap-2 overflow-y-auto lg:h-56">
                 <div class="text-2xl font-bold text- mb-1 text-gray-700">
                   {{ productosStockBajo.length }} productos
                 </div>
