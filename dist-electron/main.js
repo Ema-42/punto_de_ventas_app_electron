@@ -3135,7 +3135,7 @@ function createWindow() {
   });
   win.setIcon(path$1.join(process.env.VITE_PUBLIC, "icono-logo.png"));
   win.maximize();
-  const dbPath = join(app.getPath("userData"), "database", "dev.db");
+  const dbPath = join(app.getPath("home"), "database", "dev.db");
   console.log("Ruta de la base de datos:", dbPath);
   if (VITE_DEV_SERVER_URL) {
     win.loadURL(VITE_DEV_SERVER_URL);

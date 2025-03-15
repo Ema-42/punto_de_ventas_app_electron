@@ -31,7 +31,7 @@ function createWindow() {
   win.setIcon(path.join(process.env.VITE_PUBLIC, "icono-logo.png"));
   win.maximize(); // Maximize the window
 
-  const dbPath = join(app.getPath("userData"), "database", "dev.db"); // Ruta segura
+  const dbPath = join(app.getPath("home"), "database", "dev.db"); // Ruta segura
   console.log("Ruta de la base de datos:", dbPath);
 
   if (VITE_DEV_SERVER_URL) {

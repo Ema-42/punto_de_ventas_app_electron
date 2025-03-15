@@ -1,5 +1,5 @@
 <template>
-  <div class="h-[calc(100vh-8rem)] flex flex-col">
+  <div class="h-full flex flex-col">
     <!-- Header con Reloj y Filtros -->
     <div
       class="flex flex-col md:flex-row justify-between items-center gap-2 bg-gradient-to-r bg-gray-100 p-3 rounded-lg shadow-md"
