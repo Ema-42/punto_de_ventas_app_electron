@@ -1,29 +1,55 @@
 <template>
-    <div>
-      <CrearEditarUsuario
-        :mostrar="mostrarModalCrearEditar"
-        :usuario="usuarioEditar"
-        @cerrar="mostrarModalCrearEditar = false"
-        @guardar="guardarUsuario"
-      />
-  
-      <EliminarUsuario
-        :mostrar="mostrarModalEliminar"
-        :usuario="usuarioEliminar"
-        @cerrar="mostrarModalEliminar = false"
-        @confirmar="eliminarUsuario"
-      />
-  
-      <!-- Encabezado con título y buscador -->
-      <div class="bg-gradient-to-r bg-gray-100 p-4 rounded-lg shadow-md mb-4">
-        <div
-          class="flex flex-col md:flex-row md:justify-between md:items-center gap-4"
-        >
-          <h1 class="text-2xl font-bold text-gray-700 flex items-center">
-            Usuarios
+  <div class="h-full flex flex-col overflow-hidden">
+    <CrearEditarUsuario
+      :mostrar="mostrarModalCrearEditar"
+      :usuario="usuarioEditar"
+      @cerrar="mostrarModalCrearEditar = false"
+      @guardar="guardarUsuario"
+    />
+
+    <EliminarUsuario
+      :mostrar="mostrarModalEliminar"
+      :usuario="usuarioEliminar"
+      @cerrar="mostrarModalEliminar = false"
+      @confirmar="eliminarUsuario"
+    />
+
+    <!-- Encabezado con título y buscador -->
+    <div class="bg-gradient-to-r bg-gray-100 p-4 rounded-lg shadow-md mb-4">
+      <div
+        class="flex flex-col md:flex-row md:justify-between md:items-center gap-4"
+      >
+        <h1 class="text-2xl font-bold text-gray-700 flex items-center">
+          Usuarios
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-6 w-6 ml-2 text-red-500"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+            />
+          </svg>
+        </h1>
+
+        <div class="flex flex-col sm:flex-row gap-2 items-center">
+          <!-- Buscador con icono -->
+          <div class="relative w-full sm:w-64">
+            <input
+              v-model="searchQuery"
+              type="text"
+              placeholder="Buscar usuario..."
+              class="border p-2 rounded-lg shadow-sm w-full focus:ring-2 focus:ring-red-400 outline-none pl-10 bg-white"
+              @input="buscarUsuarios"
+            />
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              class="h-6 w-6 ml-2 text-red-500"
+              class="h-5 w-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-red-600"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -32,77 +58,66 @@
                 stroke-linecap="round"
                 stroke-linejoin="round"
                 stroke-width="2"
-                d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
               />
             </svg>
-          </h1>
-  
-          <div class="flex flex-col sm:flex-row gap-2 items-center">
-            <!-- Buscador con icono -->
-            <div class="relative w-full sm:w-64">
-              <input
-                v-model="searchQuery"
-                type="text"
-                placeholder="Buscar usuario..."
-                class="border p-2 rounded-lg shadow-sm w-full focus:ring-2 focus:ring-red-400 outline-none pl-10 bg-white"
-                @input="buscarUsuarios"
-              />
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-5 w-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-red-600"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                />
-              </svg>
-            </div>
-  
-            <!-- Botón de agregar usuario -->
-            <button
-              @click="abrirModalCrear"
-              class="bg-red-600 text-white px-4 py-2 rounded-lg shadow-md hover:bg-red-700 transition flex items-center gap-2 w-full sm:w-auto justify-center"
-            >
-              Agregar Usuario
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-5 w-5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-                />
-              </svg>
-            </button>
           </div>
+
+          <!-- Botón de agregar usuario -->
+          <button
+            @click="abrirModalCrear"
+            class="bg-red-600 text-white px-4 py-2 rounded-lg shadow-md hover:bg-red-700 transition flex items-center gap-2 w-full sm:w-auto justify-center"
+          >
+            Agregar Usuario
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="h-5 w-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+              />
+            </svg>
+          </button>
         </div>
       </div>
-  
-      <!-- Contador de usuarios -->
-      <div class="mb-4 text-gray-600">
-        Total: {{ usuariosFiltrados.length }} usuarios encontrados
-      </div>
-  
-      <!-- Tabla de usuarios -->
-      <div class="overflow-x-auto bg-white shadow-lg rounded-lg">
+    </div>
+
+    <!-- Contador de usuarios -->
+    <div class="mb-2 text-gray-600">
+      Total: {{ usuariosFiltrados.length }} usuarios encontrados
+    </div>
+
+    <!-- Tabla de usuarios con altura fija -->
+    <div class="flex-1 overflow-hidden bg-white shadow-lg rounded-lg flex flex-col">
+      <div class="overflow-x-auto">
         <table class="w-full border-collapse">
           <thead>
             <tr class="bg-gradient-to-r from-red-500 to-red-600 text-white">
-              <th class="p-3 text-left rounded-tl-lg">ID</th>
-              <th class="p-3 text-left">Nombre</th>
-              <th class="p-3 text-left">Rol</th>
-              <th class="p-3 text-left">Fecha de creación</th>
-              <th class="p-3 text-center rounded-tr-lg">Acciones</th>
+              <th class="p-3 text-left rounded-tl-lg w-16">ID</th>
+              <th class="p-3 text-left w-1/3">Nombre</th>
+              <th class="p-3 text-left w-1/4">Rol</th>
+              <th class="p-3 text-left w-1/4">Fecha de creación</th>
+              <th class="p-3 text-center rounded-tr-lg w-32">Acciones</th>
+            </tr>
+          </thead>
+        </table>
+      </div>
+      
+      <div class="flex-1 overflow-y-auto">
+        <table class="w-full border-collapse">
+          <thead class="hidden">
+            <tr>
+              <th class="p-3 w-16"></th>
+              <th class="p-3 w-1/3"></th>
+              <th class="p-3 w-1/4"></th>
+              <th class="p-3 w-1/4"></th>
+              <th class="p-3 w-32"></th>
             </tr>
           </thead>
           <tbody>
@@ -194,61 +209,62 @@
           </tbody>
         </table>
       </div>
-  
-      <!-- Paginación -->
-      <div class="flex justify-between items-center mt-6">
-        <div class="text-sm text-gray-600">
-          Mostrando {{ paginatedUsuarios.length }} de
-          {{ usuariosFiltrados.length }} usuarios
-        </div>
-        <div class="flex space-x-2">
-          <button
-            @click="prevPage"
-            :disabled="pagina === 1"
-            class="px-4 py-2 border rounded-lg shadow-sm bg-white hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed transition"
+    </div>
+
+    <!-- Paginación -->
+    <div class="flex justify-between items-center mt-4 mb-2">
+      <div class="text-sm text-gray-600">
+        Mostrando {{ paginatedUsuarios.length }} de
+        {{ usuariosFiltrados.length }} usuarios
+      </div>
+      <div class="flex space-x-2">
+        <button
+          @click="prevPage"
+          :disabled="pagina === 1"
+          class="px-4 py-2 border rounded-lg shadow-sm bg-white hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed transition"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-5 w-5"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-5 w-5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M15 19l-7-7 7-7"
-              />
-            </svg>
-          </button>
-          <span class="px-4 py-2 text-gray-700 bg-white border rounded-lg">
-            {{ pagina }} / {{ totalPaginas || 1 }}
-          </span>
-          <button
-            @click="nextPage"
-            :disabled="pagina >= totalPaginas"
-            class="px-4 py-2 border rounded-lg shadow-sm bg-white hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed transition"
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M15 19l-7-7 7-7"
+            />
+          </svg>
+        </button>
+        <span class="px-4 py-2 text-gray-700 bg-white border rounded-lg">
+          {{ pagina }} / {{ totalPaginas || 1 }}
+        </span>
+        <button
+          @click="nextPage"
+          :disabled="pagina >= totalPaginas"
+          class="px-4 py-2 border rounded-lg shadow-sm bg-white hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed transition"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-5 w-5"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-5 w-5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M9 5l7 7-7 7"
-              />
-            </svg>
-          </button>
-        </div>
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M9 5l7 7-7 7"
+            />
+          </svg>
+        </button>
       </div>
     </div>
-  </template>
+  </div>
+</template>
   
   <script setup lang="ts">
   import { ref, computed, onMounted } from "vue";
@@ -280,7 +296,7 @@
   const roles = ref<Rol[]>([]);
   const searchQuery = ref("");
   const pagina = ref(1);
-  const porPagina = ref(8);
+  const porPagina = ref(7);
   const mostrarModalCrearEditar = ref(false);
   const mostrarModalEliminar = ref(false);
   const usuarioEditar = ref<Usuario | null>(null);

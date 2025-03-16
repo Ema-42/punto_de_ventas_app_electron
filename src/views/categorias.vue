@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="h-full flex flex-col overflow-hidden">
     <CrearEditarCategoria
       :mostrar="mostrarModalCrearEditar"
       :categoria="categoriaEditar"
@@ -89,108 +89,123 @@
     </div>
 
     <!-- Contador de categorías -->
-    <div class="mb-4 text-gray-600">
+    <div class="mb-2 text-gray-600">
       Total: {{ categoriasFiltradas.length }} categorías encontradas
     </div>
 
-    <!-- Tabla de categorías -->
-    <div class="overflow-x-auto bg-white shadow-lg rounded-lg">
-      <table class="w-full border-collapse">
-        <thead>
-          <tr class="bg-gradient-to-r from-red-500 to-red-600 text-white">
-            <th class="p-3 text-left rounded-tl-lg">ID</th>
-            <th class="p-3 text-left">Nombre</th>
-            <th class="p-3 text-left">Fecha de creación</th>
-            <th class="p-3 text-center rounded-tr-lg">Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr
-            v-for="categoria in paginatedCategorias"
-            :key="categoria.id"
-            class="border-b hover:bg-gray-100 transition"
-          >
-            <td class="p-3  h-16">
-              <span
-                class="bg-gray-200 text-gray-700 px-2 py-1 rounded-full text-xs font-bold"
-              >
-                {{ categoria.id }}
-              </span>
-            </td>
-            <td class="p-3 font-medium">{{ categoria.nombre }}</td>
-            <td class="p-3 text-gray-600">
-              {{ formatearFecha(categoria.fecha_creacion) }}
-            </td>
-            <td class="p-3 flex justify-center space-x-3">
-              <button
-                @click="editarCategoria(categoria)"
-                class="bg-blue-100 p-2 rounded-full hover:bg-blue-200 transition"
-                title="Editar"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="h-5 w-5 text-blue-600"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
+    <!-- Tabla de categorías con altura fija -->
+    <div class="flex-1 overflow-hidden bg-white shadow-lg rounded-lg flex flex-col">
+      <div class="overflow-x-auto">
+        <table class="w-full border-collapse">
+          <thead>
+            <tr class="bg-gradient-to-r from-red-500 to-red-600 text-white">
+              <th class="p-3 text-left rounded-tl-lg w-16">ID</th>
+              <th class="p-3 text-left w-1/2">Nombre</th>
+              <th class="p-3 text-left w-1/3">Fecha de creación</th>
+              <th class="p-3 text-center rounded-tr-lg w-32">Acciones</th>
+            </tr>
+          </thead>
+        </table>
+      </div>
+      
+      <div class="flex-1 overflow-y-auto">
+        <table class="w-full border-collapse">
+          <thead class="hidden">
+            <tr>
+              <th class="p-3 w-16"></th>
+              <th class="p-3 w-1/2"></th>
+              <th class="p-3 w-1/3"></th>
+              <th class="p-3 w-32"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              v-for="categoria in paginatedCategorias"
+              :key="categoria.id"
+              class="border-b hover:bg-gray-100 transition"
+            >
+              <td class="p-3 h-16">
+                <span
+                  class="bg-gray-200 text-gray-700 px-2 py-1 rounded-full text-xs font-bold"
                 >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-                  />
-                </svg>
-              </button>
-              <button
-                @click="confirmarEliminar(categoria)"
-                class="bg-red-100 p-2 rounded-full hover:bg-red-200 transition"
-                title="Eliminar"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="h-5 w-5 text-red-600"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
+                  {{ categoria.id }}
+                </span>
+              </td>
+              <td class="p-3 font-medium">{{ categoria.nombre }}</td>
+              <td class="p-3 text-gray-600">
+                {{ formatearFecha(categoria.fecha_creacion) }}
+              </td>
+              <td class="p-3 flex justify-center space-x-3">
+                <button
+                  @click="editarCategoria(categoria)"
+                  class="bg-blue-100 p-2 rounded-full hover:bg-blue-200 transition"
+                  title="Editar"
                 >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                  />
-                </svg>
-              </button>
-            </td>
-          </tr>
-          <tr v-if="paginatedCategorias.length === 0">
-            <td colspan="4" class="p-6 text-center text-gray-500">
-              No se encontraron categorías
-              <div class="mt-2">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="h-10 w-10 mx-auto text-gray-400"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-5 w-5 text-blue-600"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                    />
+                  </svg>
+                </button>
+                <button
+                  @click="confirmarEliminar(categoria)"
+                  class="bg-red-100 p-2 rounded-full hover:bg-red-200 transition"
+                  title="Eliminar"
                 >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                  />
-                </svg>
-              </div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-5 w-5 text-red-600"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                    />
+                  </svg>
+                </button>
+              </td>
+            </tr>
+            <tr v-if="paginatedCategorias.length === 0">
+              <td colspan="4" class="p-6 text-center text-gray-500">
+                No se encontraron categorías
+                <div class="mt-2">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-10 w-10 mx-auto text-gray-400"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
+                  </svg>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
 
     <!-- Paginación -->
-    <div class="flex justify-between items-center mt-6">
+    <div class="flex justify-between items-center mt-4 mb-2">
       <div class="text-sm text-gray-600">
         Mostrando {{ paginatedCategorias.length }} de
         {{ categoriasFiltradas.length }} categorías
@@ -263,7 +278,7 @@ const categorias = ref<Categoria[]>([]);
 const categoriasFiltradas = ref<Categoria[]>([]);
 const searchQuery = ref("");
 const pagina = ref(1);
-const porPagina = ref(8);
+const porPagina = ref(7);
 const mostrarModalCrearEditar = ref(false);
 const mostrarModalEliminar = ref(false);
 const categoriaEditar = ref<Categoria | null>(null);

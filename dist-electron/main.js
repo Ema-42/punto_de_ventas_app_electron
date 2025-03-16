@@ -2717,6 +2717,7 @@ function validarDetallesUnicos(detalles) {
   }
 }
 const crearIngresoConDetalles = async (data) => {
+  console.log("DATA", data);
   try {
     if (!data.detalles || data.detalles.length === 0) {
       throw new Error("No se puede crear un ingreso sin detalles.");

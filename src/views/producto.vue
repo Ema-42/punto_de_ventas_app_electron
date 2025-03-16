@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="h-full flex flex-col overflow-hidden">
     <CrearEditarProducto
       :mostrar="mostrarModalCrearEditar"
       :producto="productoEditar"
@@ -89,53 +89,116 @@
     </div>
 
     <!-- Contador de productos -->
-    <div class="mb-4 text-gray-600">
+    <div class="mb-2 text-gray-600">
       Total: {{ productosFiltrados.length }} productos encontrados
     </div>
 
-    <!-- Tabla de productos -->
-    <div class="overflow-x-auto bg-white shadow-lg rounded-lg">
-      <table class="w-full border-collapse">
-        <thead>
-          <tr class="bg-gradient-to-r from-red-500 to-red-600 text-white">
-            <th class="p-3 text-left rounded-tl-lg">ID</th>
-            <th class="p-3 text-left">Imagen</th>
-            <th class="p-3 text-left">Nombre</th>
-            <th class="p-3 text-left">Precio</th>
-            <th class="p-3 text-left">Categoría</th>
-            <th class="p-3 text-left">Stock</th>
-            <th class="p-3 text-left">Fecha de creación</th>
-            <th class="p-3 text-center rounded-tr-lg">Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr
-            v-for="producto in paginatedProductos"
-            :key="producto.id"
-            class="border-b hover:bg-gray-100 transition"
-          >
-            <td class="p-3">
-              <span
-                class="bg-gray-200 text-gray-700 px-2 py-1 rounded-full text-xs font-bold"
-              >
-                {{ producto.id }}
-              </span>
-            </td>
-            <td class="px-3">
-              <div class="w-16 h-16 flex items-center justify-center">
-                <img 
-                  v-if="producto.imagen_url" 
-                  :src="'local://' + producto.imagen_url" 
-                  alt="Imagen del producto" 
-                  class="max-h-16 max-w-16 object-contain rounded"
-                />
-                <div 
-                  v-else 
-                  class="w-16 h-16 bg-gray-100 rounded flex items-center justify-center"
+    <!-- Tabla de productos con altura fija -->
+    <div class="flex-1 overflow-hidden bg-white shadow-lg rounded-lg flex flex-col">
+      <div class="overflow-x-auto">
+        <table class="w-full border-collapse">
+          <thead>
+            <tr class="bg-gradient-to-r from-red-500 to-red-600 text-white">
+              <th class="p-3 text-left rounded-tl-lg w-16">ID</th>
+              <th class="p-3 text-left w-24">Imagen</th>
+              <th class="p-3 text-left w-48">Nombre</th>
+              <th class="p-3 text-left w-24">Precio</th>
+              <th class="p-3 text-left w-32">Categoría</th>
+              <th class="p-3 text-left w-24">Stock</th>
+              <th class="p-3 text-left w-40">Fecha de creación</th>
+              <th class="p-3 text-center rounded-tr-lg w-32">Acciones</th>
+            </tr>
+          </thead>
+        </table>
+      </div>
+      
+      <div class="flex-1 overflow-y-auto">
+        <table class="w-full border-collapse">
+          <thead class="hidden">
+            <tr>
+              <th class="p-3 w-16"></th>
+              <th class="p-3 w-24"></th>
+              <th class="p-3 w-48"></th>
+              <th class="p-3 w-24"></th>
+              <th class="p-3 w-32"></th>
+              <th class="p-3 w-24"></th>
+              <th class="p-3 w-40"></th>
+              <th class="p-3 w-32"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              v-for="producto in paginatedProductos"
+              :key="producto.id"
+              class="border-b hover:bg-gray-100 transition"
+            >
+              <td class="p-3">
+                <span
+                  class="bg-gray-200 text-gray-700 px-2 py-1 rounded-full text-xs font-bold"
+                >
+                  {{ producto.id }}
+                </span>
+              </td>
+              <td class="px-3">
+                <div class="w-16 h-16 flex items-center justify-center">
+                  <img 
+                    v-if="producto.imagen_url" 
+                    :src="'local://' + producto.imagen_url" 
+                    alt="Imagen del producto" 
+                    class="max-h-16 max-w-16 object-contain rounded"
+                  />
+                  <div 
+                    v-else 
+                    class="w-16 h-16 bg-gray-100 rounded flex items-center justify-center"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="h-8 w-8 text-gray-400"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                      />
+                    </svg>
+                  </div>
+                </div>
+              </td>
+              <td class="p-3 font-medium">{{ producto.nombre }}</td>
+              <td class="p-3">${{ formatearPrecio(producto.precio) }}</td>
+              <td class="p-3">
+                <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-sm font-medium">
+                  {{ producto.categoria.nombre }}
+                </span>
+              </td>
+              <td class="p-3">
+                <span 
+                  :class="[
+                    'px-2 py-1 rounded-full text-sm font-medium',
+                    producto.maneja_stock 
+                      ? (producto.stock > 10 ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800')
+                      : 'bg-gray-100 text-gray-800'
+                  ]"
+                >
+                  {{ producto.maneja_stock ? producto.stock : 'N/A' }}
+                </span>
+              </td>
+              <td class="p-3 text-gray-600">
+                {{ formatearFecha(producto.fecha_creacion) }}
+              </td>
+              <td class="p-3 flex justify-center space-x-3 ">
+                <button
+                  @click="editarProducto(producto)"
+                  class="bg-blue-100 p-2 rounded-full hover:bg-blue-200 transition"
+                  title="Editar"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    class="h-8 w-8 text-gray-400"
+                    class="h-5 w-5 text-blue-600"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
@@ -144,104 +207,60 @@
                       stroke-linecap="round"
                       stroke-linejoin="round"
                       stroke-width="2"
-                      d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                      d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                    />
+                  </svg>
+                </button>
+                <button
+                  @click="confirmarEliminar(producto)"
+                  class="bg-red-100 p-2 rounded-full hover:bg-red-200 transition"
+                  title="Eliminar"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-5 w-5 text-red-600"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                    />
+                  </svg>
+                </button>
+              </td>
+            </tr>
+            <tr v-if="paginatedProductos.length === 0">
+              <td colspan="8" class="p-6 text-center text-gray-500">
+                No se encontraron productos
+                <div class="mt-2">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-10 w-10 mx-auto text-gray-400"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                     />
                   </svg>
                 </div>
-              </div>
-            </td>
-            <td class="p-3 font-medium">{{ producto.nombre }}</td>
-            <td class="p-3">${{ formatearPrecio(producto.precio) }}</td>
-            <td class="p-3">
-              <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-sm font-medium">
-                {{ producto.categoria.nombre }}
-              </span>
-            </td>
-            <td class="p-3">
-              <span 
-                :class="[
-                  'px-2 py-1 rounded-full text-sm font-medium',
-                  producto.maneja_stock 
-                    ? (producto.stock > 10 ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800')
-                    : 'bg-gray-100 text-gray-800'
-                ]"
-              >
-                {{ producto.maneja_stock ? producto.stock : 'N/A' }}
-              </span>
-            </td>
-            <td class="p-3 text-gray-600">
-              {{ formatearFecha(producto.fecha_creacion) }}
-            </td>
-            <td class="p-3 flex justify-center space-x-3 ">
-              <button
-                @click="editarProducto(producto)"
-                class="bg-blue-100 p-2 rounded-full hover:bg-blue-200 transition"
-                title="Editar"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="h-5 w-5 text-blue-600"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-                  />
-                </svg>
-              </button>
-              <button
-                @click="confirmarEliminar(producto)"
-                class="bg-red-100 p-2 rounded-full hover:bg-red-200 transition"
-                title="Eliminar"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="h-5 w-5 text-red-600"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                  />
-                </svg>
-              </button>
-            </td>
-          </tr>
-          <tr v-if="paginatedProductos.length === 0">
-            <td colspan="8" class="p-6 text-center text-gray-500">
-              No se encontraron productos
-              <div class="mt-2">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="h-10 w-10 mx-auto text-gray-400"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                  />
-                </svg>
-              </div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
 
     <!-- Paginación -->
-    <div class="flex justify-between items-center mt-6">
+    <div class="flex justify-between items-center mt-4 mb-2">
       <div class="text-sm text-gray-600">
         Mostrando {{ paginatedProductos.length }} de
         {{ productosFiltrados.length }} productos
@@ -329,7 +348,7 @@ const productosFiltrados = ref<Producto[]>([]);
 const categorias = ref<Categoria[]>([]);
 const searchQuery = ref("");
 const pagina = ref(1);
-const porPagina = ref(8);
+const porPagina = ref(7); // Exactamente 8 productos por página
 const mostrarModalCrearEditar = ref(false);
 const mostrarModalEliminar = ref(false);
 const productoEditar = ref<Producto | null>(null);

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="h-full flex flex-col overflow-hidden">
     <CrearEditarMesa
       :mostrar="mostrarModalCrearEditar"
       :mesa="mesaEditar"
@@ -89,119 +89,136 @@
     </div>
 
     <!-- Contador de mesas -->
-    <div class="mb-4 text-gray-600">
+    <div class="mb-2 text-gray-600">
       Total: {{ mesasFiltradas.length }} mesas encontradas
     </div>
 
-    <!-- Tabla de mesas -->
-    <div class="overflow-x-auto bg-white shadow-lg rounded-lg">
-      <table class="w-full border-collapse">
-        <thead>
-          <tr class="bg-gradient-to-r from-red-500 to-red-600 text-white">
-            <th class="p-3 text-left rounded-tl-lg">ID</th>
-            <th class="p-3 text-left">N° Mesa</th>
-            <th class="p-3 text-left">Estado</th>
-            <th class="p-3 text-left">Fecha de creación</th>
-            <th class="p-3 text-center rounded-tr-lg">Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr
-            v-for="mesa in paginatedMesas"
-            :key="mesa.id"
-            class="border-b hover:bg-gray-100 transition"
-          >
-            <td class="p-3  h-16">
-              <span
-                class="bg-gray-200 text-gray-700 px-2 py-1 rounded-full text-xs font-bold"
-              >
-                {{ mesa.id }}
-              </span>
-            </td>
-            <td
-              class="px-3 w-16 py-1.5 text-center font-medium bg-emerald-500 text-white rounded-lg shadow-md inline-block hover:bg-emerald-700 transition-colors"
+    <!-- Tabla de mesas con altura fija -->
+    <div class="flex-1 overflow-hidden bg-white shadow-lg rounded-lg flex flex-col">
+      <div class="overflow-x-auto">
+        <table class="w-full border-collapse">
+          <thead>
+            <tr class="bg-gradient-to-r from-red-500 to-red-600 text-white">
+              <th class="p-3 text-left rounded-tl-lg w-16">ID</th>
+              <th class="p-3 text-left w-24">N° Mesa</th>
+              <th class="p-3 text-left w-32">Estado</th>
+              <th class="p-3 text-left w-1/2">Fecha de creación</th>
+              <th class="p-3 text-center rounded-tr-lg w-32">Acciones</th>
+            </tr>
+          </thead>
+        </table>
+      </div>
+      
+      <div class="flex-1 overflow-y-auto">
+        <table class="w-full border-collapse">
+          <thead class="hidden">
+            <tr>
+              <th class="p-3 w-16"></th>
+              <th class="p-3 w-24"></th>
+              <th class="p-3 w-32"></th>
+              <th class="p-3 w-1/2"></th>
+              <th class="p-3 w-32"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              v-for="mesa in paginatedMesas"
+              :key="mesa.id"
+              class="border-b hover:bg-gray-100 transition"
             >
-              {{ mesa.numero }}
-            </td>
-
-            <td class="p-3">
-              <span :class="getEstadoClase(mesa.estado)">
-                {{mesa.estado}}
-              </span>
-            </td>
-            <td class="p-3 text-gray-600">
-              {{ formatearFecha(mesa.fecha_creacion) }}
-            </td>
-            <td class="p-3 flex justify-center space-x-3">
-              <button
-                @click="editarMesa(mesa)"
-                class="bg-blue-100 p-2 rounded-full hover:bg-blue-200 transition"
-                title="Editar"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="h-5 w-5 text-blue-600"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
+              <td class="p-3 h-16">
+                <span
+                  class="bg-gray-200 text-gray-700 px-2 py-1 rounded-full text-xs font-bold"
                 >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-                  />
-                </svg>
-              </button>
-              <button
-                @click="confirmarEliminar(mesa)"
-                class="bg-red-100 p-2 rounded-full hover:bg-red-200 transition"
-                title="Eliminar"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="h-5 w-5 text-red-600"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
+                  {{ mesa.id }}
+                </span>
+              </td>
+              <td class="p-3">
+                <span
+                  class="px-3 py-1.5 text-center font-medium bg-emerald-500 text-white rounded-lg shadow-md inline-block hover:bg-emerald-700 transition-colors"
                 >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                  />
-                </svg>
-              </button>
-            </td>
-          </tr>
-          <tr v-if="paginatedMesas.length === 0">
-            <td colspan="5" class="p-6 text-center text-gray-500">
-              No se encontraron mesas
-              <div class="mt-2">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="h-10 w-10 mx-auto text-gray-400"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
+                  {{ mesa.numero }}
+                </span>
+              </td>
+              <td class="p-3">
+                <span :class="getEstadoClase(mesa.estado)">
+                  {{mesa.estado}}
+                </span>
+              </td>
+              <td class="p-3 text-gray-600">
+                {{ formatearFecha(mesa.fecha_creacion) }}
+              </td>
+              <td class="p-3 flex justify-center space-x-3">
+                <button
+                  @click="editarMesa(mesa)"
+                  class="bg-blue-100 p-2 rounded-full hover:bg-blue-200 transition"
+                  title="Editar"
                 >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                  />
-                </svg>
-              </div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-5 w-5 text-blue-600"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                    />
+                  </svg>
+                </button>
+                <button
+                  @click="confirmarEliminar(mesa)"
+                  class="bg-red-100 p-2 rounded-full hover:bg-red-200 transition"
+                  title="Eliminar"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-5 w-5 text-red-600"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                    />
+                  </svg>
+                </button>
+              </td>
+            </tr>
+            <tr v-if="paginatedMesas.length === 0">
+              <td colspan="5" class="p-6 text-center text-gray-500">
+                No se encontraron mesas
+                <div class="mt-2">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-10 w-10 mx-auto text-gray-400"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
+                  </svg>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
 
     <!-- Paginación -->
-    <div class="flex justify-between items-center mt-6">
+    <div class="flex justify-between items-center mt-4 mb-2">
       <div class="text-sm text-gray-600">
         Mostrando {{ paginatedMesas.length }} de
         {{ mesasFiltradas.length }} mesas
@@ -276,7 +293,7 @@ const mesas = ref<Mesa[]>([]);
 const mesasFiltradas = ref<Mesa[]>([]);
 const searchQuery = ref("");
 const pagina = ref(1);
-const porPagina = ref(8);
+const porPagina = ref(7);
 const mostrarModalCrearEditar = ref(false);
 const mostrarModalEliminar = ref(false);
 const mesaEditar = ref<Mesa | null>(null);
