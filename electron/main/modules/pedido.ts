@@ -78,6 +78,85 @@ export const getPedidos = async () => {
   }
 };
 
+export const getPedidosHoy = async () => {
+  try {
+    // Obtener la fecha actual y configurar el inicio y fin del día
+    const hoy = new Date();
+    const inicioDia = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate(), 0, 0, 0);
+    const finDia = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate(), 23, 59, 59);
+
+    const pedidos = await prisma.pedido.findMany({
+      where: { 
+        eliminado: false,
+        fecha_creacion: {
+          gte: inicioDia,
+          lte: finDia
+        }
+      },
+      select: {
+        id: true,
+        num_pedido_dia: true,
+        pedido_padre_id: true,
+        mesa: {
+          select: {
+            id: true,
+            numero: true,
+          },
+        },
+        mesera: {
+          select: {
+            id: true,
+            nombre: true,
+          },
+        },
+        cajero: {
+          select: {
+            id: true,
+            nombre: true,
+          },
+        },
+        estado: true,
+        fecha_creacion: true,
+        fecha_concluido: true,
+        tipo_pago: true,
+        para_llevar: true,
+        total: true,
+        detalles: {
+          where: { eliminado: false },
+          select: {
+            id: true,
+            pedido_id: true,
+            producto: {
+              select: {
+                id: true,
+                nombre: true,
+                imagen_url: true,
+                maneja_stock: true,
+                categoria:true
+              },
+            },
+            cantidad: true,
+            precio_unitario: true,
+          },
+        },
+      },
+      orderBy: { fecha_creacion: "desc" },
+    });
+
+    return pedidos.map((p) => ({
+      ...p,
+      total: p.total?.toFixed(2), // Convierte Decimal a string con 2 decimales
+      detalles: p.detalles.map((d) => ({
+        ...d,
+        precio_unitario: d.precio_unitario?.toFixed(2), // Convierte Decimal a string con 2 decimales
+      })),
+    }));
+  } catch (error) {
+    console.error("Error en pedidos:", error);
+    return error;
+  }
+};
+
 export const gePedidoById = async (id: number) => {
   try {
     const pedido = await prisma.pedido.findUnique({

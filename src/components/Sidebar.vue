@@ -1,12 +1,7 @@
 <template>
   <div class="flex">
     <!-- Sidebar -->
-    <div
-      :class="[
-        'h-screen bg-red-600 text-white',
-        isOpen ? 'w-64' : 'w-16'
-      ]"
-    >
+    <div :class="['h-screen bg-red-600 text-white', isOpen ? 'w-64' : 'w-16']">
       <div class="p-4 flex justify-between items-center">
         <button @click="toggleSidebar">
           <img :src="menuicon" alt="Menú" class="w-6 h-6" />
@@ -33,35 +28,41 @@
         </ul>
       </nav>
     </div>
-
-    
   </div>
 </template>
 
 <script setup>
 import { ref } from "vue";
-import menuicon from '../assets/iconos/menu.svg'
-import inicio from '../assets/iconos/inicio.svg'
-import vender from '../assets/iconos/vender.svg'
-import producto from '../assets/iconos/productos.svg'
-import categoria from '../assets/iconos/categoria.svg'
-import mesa from '../assets/iconos/mesa.svg'
-import home from '../assets/iconos/home.svg'
-import usuario from '../assets/iconos/usuario.svg'
-import ingreso from '../assets/iconos/ingreso.svg'
-import gestionpedidos from '../assets/iconos/cash.svg'
+import menuicon from "../assets/iconos/menu.svg";
+import vender from "../assets/iconos/vender.svg";
+import producto from "../assets/iconos/productos.svg";
+import categoria from "../assets/iconos/categoria.svg";
+import mesa from "../assets/iconos/mesa.svg";
+import home from "../assets/iconos/home.svg";
+import usuario from "../assets/iconos/usuario.svg";
+import ingreso from "../assets/iconos/ingreso.svg";
+import gestionpedidos from "../assets/iconos/cash.svg";
+import { useAuthStore } from "../stores/auth";
+import { Roles } from "../../electron/main/modules/enums";
+
+const authStore = useAuthStore();
+const userName = ref(authStore.user.rol);
 
 const isOpen = ref(false);
 
 const menuItems = [
-  { text: "Inicio", icon: home , route:"/home"},
-  { text: "Vender", icon: vender ,route:"/pedidos" },
-  { text: "Productos", icon: producto, route:"/productos" },
-  { text: "Categorias de Productos", icon: categoria, route:"/categorias" },
-  { text: "Mesas", icon: mesa, route:"/mesas" },
-  { text: "Usuarios", icon: usuario, route:"/usuarios" },
-  { text: "Ingresos", icon: ingreso, route:"/ingresos" },
-  { text: "Gestion de Pedidos", icon: gestionpedidos, route:"/gestion-pedidos" },
+  { text: "Inicio", icon: home, route: "/home" },
+  { text: "Vender", icon: vender, route: "/pedidos" },
+  { text: "Productos", icon: producto, route: "/productos" },
+  { text: "Categorias de Productos", icon: categoria, route: "/categorias" },
+  { text: "Mesas", icon: mesa, route: "/mesas" },
+  { text: "Usuarios", icon: usuario, route: "/usuarios" },
+  { text: "Ingresos", icon: ingreso, route: "/ingresos" },
+  {
+    text: "Gestion de Pedidos",
+    icon: gestionpedidos,
+    route: "/gestion-pedidos",
+  },
 ];
 
 const toggleSidebar = () => {
