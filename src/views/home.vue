@@ -92,12 +92,12 @@
             <div
               class="w-full lg:w-1/2 bg-blue-500 text-white py-2 px-4 rounded-md text-center font-medium shadow-sm"
             >
-              {{CantidadPedidosEnMesa}} pedidos en mesa
+              {{ CantidadPedidosEnMesa }} pedidos en mesa
             </div>
             <div
               class="w-full lg:w-1/2 bg-emerald-500 text-white py-2 px-4 rounded-md text-center font-medium shadow-sm"
             >
-            {{CantidadPedidosParaLlevar}} pedidos para llevar
+              {{ CantidadPedidosParaLlevar }} pedidos para llevar
             </div>
           </div>
         </div>
@@ -388,7 +388,7 @@ interface PedidosHoy {
   mesera: {};
   cajero: {};
   estado: string;
-  para_lelvar:boolean;
+  para_lelvar: boolean;
   fecha_creacion: string;
   fecha_concluido: any;
   tipo_pago: string;
@@ -449,8 +449,6 @@ const getProductosStockBajo = async () => {
     (a: ProductoStock, b: ProductoStock) => a.stock - b.stock
   );
 };
-
-
 
 // Datos para productos más vendidos
 const getProductosMasVendidos = async () => {
@@ -656,7 +654,7 @@ const getPedidosHoy = async () => {
   return pedidos.value;
 };
 const setCantidadTipoPedidos = async () => {
-  pedidos.value.forEach(pedido => {
+  pedidos.value.forEach((pedido) => {
     if (pedido.para_llevar) {
       CantidadPedidosParaLlevar.value++;
     } else {
@@ -693,7 +691,7 @@ const getPedidos = async () => {
 };
 
 onMounted(async () => {
-  await  getPedidosHoy();
+  await getPedidosHoy();
   setCantidadPedidosPorHora();
   getMeserosConPedidos();
   getMesas();
