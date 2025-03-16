@@ -391,10 +391,7 @@ const calcularSubtotalNuevo = computed(() => {
 const cargarUsuarios = async () => {
   try {
     const data = await window.api.getUsuarios();
-    // Filtrar usuarios con rol ADMIN
-    usuarios.value = data.filter(
-      (usuario: Usuario) => usuario.rol && usuario.rol.nombre === Roles.ADMIN
-    );
+    usuarios.value = data
     if (usuarios.value.length > 0) {
       //formData.value.usuario_id = usuarios.value[0].id;
       formData.value.usuario_id = authStore.user?.id || 0;

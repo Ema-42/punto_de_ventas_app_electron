@@ -523,25 +523,35 @@
               <!-- Información del restaurante (solo visible cuando el pedido está guardado) -->
               <div v-if="pedidoGuardado" class="text-center mb-4">
                 <p class="font-bold text-lg">CHICHARRONERIA 6 DE AGOSTO</p>
-                <p>Dirección: Avenida 6 de Agosto Nº 200</p>
-                <p>Cel: 73424254 - 73461249</p>
+                <p>
+                  <span class="font-bold">Dirección: </span>Avenida 6 de Agosto
+                  Nº 200
+                </p>
+                <p><span class="font-bold">Cel: </span>73424254 - 73461249</p>
+                <p><span class="font-bold">Sucre</span></p>
               </div>
 
               <div class="mb-4">
                 <div class="flex justify-between">
-                  <p>TICKET #: {{ numeroPedidoDia }}</p>
-                  <p>Fecha: {{ new Date().toLocaleString() }}</p>
+                  <p>
+                    <span class="font-bold">TICKET #:</span
+                    >{{ numeroPedidoDia }}
+                  </p>
+                  <p>
+                    <span class="font-bold">Fecha:</span>
+                    {{ new Date().toLocaleString() }}
+                  </p>
                 </div>
                 <div class="flex justify-between">
                   <p>
-                    Mesero:
+                    <span class="font-bold">Mesero:</span>
                     {{
                       meseros.find((m) => m.id === formData.mesera_id)
                         ?.nombre || ""
                     }}
                   </p>
                   <p v-if="formData.mesa_id">
-                    Mesa:
+                    <span class="font-bold">Mesa:</span>
                     {{
                       mesaStore.mesas.find((m) => m.id === formData.mesa_id)
                         ?.numero || ""
@@ -549,8 +559,14 @@
                   </p>
                 </div>
                 <div class="flex justify-between">
-                  <p>Tipo de pago: {{ formData.tipo_pago }}</p>
-                  <p>Llevar: {{ formData.para_llevar ? "SI" : "NO" }}</p>
+                  <p>
+                    <span class="font-bold">Pago:</span>
+                    {{ formData.tipo_pago }}
+                  </p>
+                  <p>
+                    <span class="font-bold">Llevar:</span>
+                    {{ formData.para_llevar ? "SI" : "NO" }}
+                  </p>
                 </div>
               </div>
 
@@ -558,7 +574,7 @@
                 <div class="grid grid-cols-12 font-bold">
                   <div class="col-span-6">Producto</div>
                   <div class="col-span-2 text-center">Cant</div>
-                  <div class="col-span-4 text-right">Precio</div>
+                  <div class="col-span-4 text-right">Precio Unitario</div>
                 </div>
               </div>
 
@@ -568,14 +584,14 @@
                   :key="index"
                   class="grid grid-cols-12 mb-1"
                 >
-                  <div class="col-span-6 truncate">
+                  <div class="col-span-6 truncate font-semibold uppercase">
                     {{ detalle.producto?.nombre }}
                   </div>
                   <div class="col-span-2 text-center">
                     {{ detalle.cantidad }}
                   </div>
                   <div class="col-span-4 text-right">
-                    ${{
+                    {{
                       (
                         detalle.cantidad *
                         parseFloat(detalle.precio_unitario.toString())
@@ -588,7 +604,7 @@
               <div class="border-t border-gray-300 pt-2 mb-4">
                 <div class="flex justify-between font-bold">
                   <span>TOTAL:</span>
-                  <span>${{ calcularTotal() }}</span>
+                  <span>Bs. {{ calcularTotal() }}</span>
                 </div>
               </div>
 
@@ -1136,12 +1152,12 @@ const imprimirTicket = () => {
     if (printDocument) {
       printDocument.open();
       printDocument.write(`
-    <html>
+     <html>
           <head>
             <title>Ticket de Pedido</title>
             <style>
               body {
-                font-family: arial;
+                font-family: Tahoma, Verdana, Arial, sans-serif;
                 font-size: 14px;
                 width: 80mm;
                 margin: 0px;
@@ -1150,7 +1166,8 @@ const imprimirTicket = () => {
               .mb-4 { margin-bottom: 16px; }
               .font-bold { font-weight: bold; }
               .text-lg { font-size: 16px; }
-              .border-t, .border-b { border-top: 1px solid #000000; border-bottom: 1px solid #000000; }
+              .border-t { border-top: 1px solid #000000}
+              .border-b {border-bottom: 1px solid #000000;}
               .py-2 { padding-top: 8px; padding-bottom: 8px; }
               .grid { display: grid; }
               .grid-cols-12 { grid-template-columns: repeat(12, minmax(0, 1fr)); }
@@ -1162,10 +1179,18 @@ const imprimirTicket = () => {
               .truncate { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
               .mb-1 { margin-bottom: 4px; }
               .pt-2 { padding-top: 8px; }
+              .pt-3 { padding-top: 12px; }
               .mt-6 { margin-top: 24px; }
               .flex { display: flex; }
+              .text-center p {
+                margin-top: 0;
+                margin-bottom: 0;
+                padding-top: 5px;
+                padding-bottom: 0;
+                line-height: 1.2; /* Opcional: para ajustar el espacio entre líneas */
+              }
               .justify-between { justify-content: space-between;   p {
-                  padding-top: 0;
+                  padding-top: 5px;
                   padding-bottom: 0;
                   margin-top: 0;
                   margin-bottom: 0;
@@ -1173,6 +1198,14 @@ const imprimirTicket = () => {
               .pl-2 { padding-left: 8px; }
               .mt-1 { margin-top: 4px; }
               .mt-2 { margin-top: 8px; }
+              div p {
+              }
+              .font-semibold {
+                  font-weight: 600;
+              }
+              .uppercase {
+                  text-transform: uppercase;
+              }
             </style>
           </head>
           <body>
