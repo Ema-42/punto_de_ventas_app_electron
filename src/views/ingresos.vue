@@ -1,5 +1,5 @@
 <template>
-  <div class="">
+  <div class="h-full flex flex-col overflow-hidden">
     <CrearIngreso
       :mostrar="mostrarModalCrear"
       @cerrar="mostrarModalCrear = false"
@@ -172,112 +172,103 @@
     </div>
 
     <!-- Contador de ingresos -->
-    <div class="mb-4 text-gray-600">
+    <div class="mb-2 text-gray-600">
       Total: {{ ingresosFiltrados.length }} ingresos encontrados
     </div>
 
-    <!-- Tabla de ingresos -->
-    <div class="overflow-x-auto bg-white shadow-lg rounded-lg">
-      <table class="w-full border-collapse">
-        <thead>
-          <tr class="bg-gradient-to-r from-red-500 to-red-600 text-white">
-            <th class="p-3 text-left w-12">
-              <input
-                type="checkbox"
-                class="h-4 w-4 text-white border-white rounded"
-                :checked="seleccionarTodos"
-                @change="seleccionarTodosIngresos"
-              />
-            </th>
-            <th class="p-3 text-left">ID</th>
-            <th class="p-3 text-left">Fecha</th>
-            <th class="p-3 text-left">Usuario</th>
-            <th class="p-3 text-left">Estado</th>
-            <th class="p-3 text-right">Total</th>
-            <th class="p-3 text-center rounded-tr-lg">Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr
-            v-for="ingreso in paginatedIngresos"
-            :key="ingreso.id"
-            class="border-b hover:bg-gray-100 transition"
-          >
-            <td class="p-3">
-              <input
-                type="checkbox"
-                :value="ingreso.id"
-                v-model="ingresosSeleccionados"
-                class="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300 rounded"
-              />
-            </td>
-            <td class="p-3">
-              <span
-                class="bg-gray-200 text-gray-700 px-2 py-1 rounded-full text-xs font-bold"
-              >
-                {{ ingreso.id }}
-              </span>
-            </td>
-            <td class="p-3 text-gray-600">
-              {{ formatearFecha(ingreso.fecha_ingreso) }}
-            </td>
-            <td class="p-3">
-              <div class="flex items-center">
-                <div
-                  class="w-8 h-8 rounded-full bg-red-100 flex items-center justify-center mr-2"
+    <!-- Tabla de ingresos con altura fija -->
+    <div class="flex-1 overflow-hidden bg-white shadow-lg rounded-lg flex flex-col">
+      <div class="overflow-x-auto">
+        <table class="w-full border-collapse">
+          <thead>
+            <tr class="bg-gradient-to-r from-red-500 to-red-600 text-white">
+              <th class="p-3 text-left w-12">
+                <input
+                  type="checkbox"
+                  class="h-4 w-4 text-white border-white rounded"
+                  :checked="seleccionarTodos"
+                  @change="seleccionarTodosIngresos"
+                />
+              </th>
+              <th class="p-3 text-left w-16">ID</th>
+              <th class="p-3 text-left w-1/5">Fecha</th>
+              <th class="p-3 text-left w-1/4">Usuario</th>
+              <th class="p-3 text-left w-1/6">Estado</th>
+              <th class="p-3 text-right w-1/6">Total</th>
+              <th class="p-3 text-center rounded-tr-lg w-32">Acciones</th>
+            </tr>
+          </thead>
+        </table>
+      </div>
+      
+      <div class="flex-1 overflow-y-auto">
+        <table class="w-full border-collapse">
+          <thead class="hidden">
+            <tr>
+              <th class="p-3 w-12"></th>
+              <th class="p-3 w-16"></th>
+              <th class="p-3 w-1/5"></th>
+              <th class="p-3 w-1/4"></th>
+              <th class="p-3 w-1/6"></th>
+              <th class="p-3 w-1/6"></th>
+              <th class="p-3 w-32"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              v-for="ingreso in paginatedIngresos"
+              :key="ingreso.id"
+              class="border-b hover:bg-gray-100 transition"
+            >
+              <td class="p-3 h-16">
+                <input
+                  type="checkbox"
+                  :value="ingreso.id"
+                  v-model="ingresosSeleccionados"
+                  class="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300 rounded"
+                />
+              </td>
+              <td class="p-3">
+                <span
+                  class="bg-gray-200 text-gray-700 px-2 py-1 rounded-full text-xs font-bold"
                 >
-                  <span class="text-sm font-medium text-red-600">{{
-                    ingreso.usuario.nombre.charAt(0)
-                  }}</span>
+                  {{ ingreso.id }}
+                </span>
+              </td>
+              <td class="p-3 text-gray-600">
+                {{ formatearFecha(ingreso.fecha_ingreso) }}
+              </td>
+              <td class="p-3">
+                <div class="flex items-center">
+                  <div
+                    class="w-8 h-8 rounded-full bg-red-100 flex items-center justify-center mr-2"
+                  >
+                    <span class="text-sm font-medium text-red-600">{{
+                      ingreso.usuario.nombre.charAt(0)
+                    }}</span>
+                  </div>
+                  <span class="text-gray-700">{{ ingreso.usuario.nombre }}</span>
                 </div>
-                <span class="text-gray-700">{{ ingreso.usuario.nombre }}</span>
-              </div>
-            </td>
-            <td class="p-3">
-              <span :class="getEstadoClase(ingreso.estado)">
-                {{ ingreso.estado }}
-              </span>
-            </td>
-            <td class="p-3 text-right font-medium">
-              <span class="text-gray-700"
-                >${{ parseFloat(ingreso.total).toFixed(2) }}</span
-              >
-            </td>
-            <td class="p-3 flex justify-center space-x-2">
-              <button
-                @click="verDetalles(ingreso)"
-                class="bg-blue-100 p-2 rounded-full hover:bg-blue-200 transition"
-                title="Ver detalles"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="h-5 w-5 text-blue-600"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
+              </td>
+              <td class="p-3">
+                <span :class="getEstadoClase(ingreso.estado)">
+                  {{ ingreso.estado }}
+                </span>
+              </td>
+              <td class="p-3 text-right font-medium">
+                <span class="text-gray-700"
+                  >${{ parseFloat(ingreso.total).toFixed(2) }}</span
                 >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                  />
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-                  />
-                </svg>
-              </button>
-              <button
-                @click="imprimirIngreso(ingreso)"
-                class="bg-red-100 p-2 rounded-full hover:bg-red-200 transition"
-                title="Imprimir"
-              >
-              <svg
+              </td>
+              <td class="p-3 flex justify-center space-x-2">
+                <button
+                  @click="verDetalles(ingreso)"
+                  class="bg-blue-100 p-2 rounded-full hover:bg-blue-200 transition"
+                  title="Ver detalles"
+                >
+                  <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    class="h-5 w-5 text-red-600"
+                    class="h-5 w-5 text-blue-600"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
@@ -286,59 +277,66 @@
                       stroke-linecap="round"
                       stroke-linejoin="round"
                       stroke-width="2"
-                      d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+                      d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                    />
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
                     />
                   </svg>
-              </button>
-              <!--               <button
-                @click="abrirModalCambiarEstado(ingreso)"
-                class="bg-yellow-100 p-2 rounded-full hover:bg-yellow-200 transition"
-                title="Cambiar estado"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="h-5 w-5 text-yellow-600"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
+                </button>
+                <button
+                  @click="imprimirIngreso(ingreso)"
+                  class="bg-red-100 p-2 rounded-full hover:bg-red-200 transition"
+                  title="Imprimir"
                 >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
-                  />
-                </svg>
-              </button> -->
-            </td>
-          </tr>
-          <tr v-if="paginatedIngresos.length === 0">
-            <td colspan="7" class="p-6 text-center text-gray-500">
-              No se encontraron ingresos
-              <div class="mt-2">
                 <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="h-10 w-10 mx-auto text-gray-400"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                  />
-                </svg>
-              </div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="h-5 w-5 text-red-600"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+                      />
+                    </svg>
+                </button>
+              </td>
+            </tr>
+            <tr v-if="paginatedIngresos.length === 0">
+              <td colspan="7" class="p-6 text-center text-gray-500">
+                No se encontraron ingresos
+                <div class="mt-2">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-10 w-10 mx-auto text-gray-400"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
+                  </svg>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
 
     <!-- Paginación -->
-    <div class="flex justify-between items-center mt-6">
+    <div class="flex justify-between items-center mt-4 mb-2">
       <div class="text-sm text-gray-600">
         Mostrando {{ paginatedIngresos.length }} de
         {{ ingresosFiltrados.length }} ingresos

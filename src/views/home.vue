@@ -1,5 +1,5 @@
 <template>
-  <div class="h-full flex flex-col">
+  <div class="h-full flex flex-col overflow-hidden">
     <!-- Header con Reloj y Filtros -->
     <div
       class="flex flex-col md:flex-row justify-between items-center gap-2 bg-gradient-to-r bg-gray-100 p-3 rounded-lg shadow-md"
@@ -41,46 +41,47 @@
       </div>
     </div>
 
-    <!-- Contenedor principal con flex-1 para ocupar el espacio restante -->
-    <div class="flex-1 grid grid-cols-1 lg:grid-cols-4 gap-3 mt-3 min-h-0">
-      <!-- Columna izquierda: Estadísticas -->
-      <div class="col-span-1 flex flex-col gap-3">
-        <!-- Pedidos de Hoy -->
-        <div
-          class="bg-sky-100 p-3 rounded-lg shadow-md border-l-4 border-l-sky-500 hover:shadow-lg transition-shadow"
-        >
-          <h3 class="text-gray-700 text-sm font-medium mb-2">Pedidos de Hoy</h3>
-          <div class="flex justify-between flex-col items-center">
-            <div class="text-3xl font-bold text-sky-700 mb-2">
-              {{ totalPedidos }}
-            </div>
-            <div class="flex gap-3">
-              <div class="bg-sky-200 px-3 py-1 rounded-lg">
-                <div class="text-gray-600 text-sm font-medium">
-                  {{ cantidadPedidosCompletados }} Completados
-                </div>
+    <!-- Contenedor principal con scroll interno -->
+    <div class="flex-1 overflow-auto mt-3">
+      <div class="grid grid-cols-1 lg:grid-cols-4 gap-3">
+        <!-- Columna izquierda: Estadísticas -->
+        <div class="col-span-1 flex flex-col gap-3">
+          <!-- Pedidos de Hoy -->
+          <div
+            class="bg-sky-100 p-3 rounded-lg shadow-md border-l-4 border-l-sky-500 hover:shadow-lg transition-shadow"
+          >
+            <h3 class="text-gray-700 text-sm font-medium mb-2">Pedidos de Hoy</h3>
+            <div class="flex justify-between flex-col items-center">
+              <div class="text-3xl font-bold text-sky-700 mb-2">
+                {{ totalPedidos }}
               </div>
-              <div class="bg-yellow-100 px-3 py-1 rounded-lg">
-                <div class="text-gray-600 text-sm font-medium">
-                  {{ cantidadPedidosEnPreparacion }} En Preparación.
+              <div class="flex gap-3">
+                <div class="bg-sky-200 px-3 py-1 rounded-lg">
+                  <div class="text-gray-600 text-sm font-medium">
+                    {{ cantidadPedidosCompletados }} Completados
+                  </div>
+                </div>
+                <div class="bg-yellow-100 px-3 py-1 rounded-lg">
+                  <div class="text-gray-600 text-sm font-medium">
+                    {{ cantidadPedidosEnPreparacion }} En Preparación.
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-        <!-- Ingresos del Día -->
-        <div
-          class="bg-emerald-100 p-3 rounded-lg shadow-md border-l-4 border-l-emerald-500 hover:shadow-lg transition-shadow"
-        >
-          <h3 class="text-gray-700 text-sm font-medium mb-2">
-            Ingresos del Día
-          </h3>
-          <div class="flex flex-col items-center">
-            <div class="text-3xl font-bold text-green-800 mb-2">
-              {{ totalIngresosDelDia }} Bs.
+          <!-- Ingresos del Día -->
+          <div
+            class="bg-emerald-100 p-3 rounded-lg shadow-md border-l-4 border-l-emerald-500 hover:shadow-lg transition-shadow"
+          >
+            <h3 class="text-gray-700 text-sm font-medium mb-2">
+              Ingresos del Día
+            </h3>
+            <div class="flex flex-col items-center">
+              <div class="text-3xl font-bold text-green-800 mb-2">
+                {{ totalIngresosDelDia }} Bs.
+              </div>
             </div>
           </div>
-        </div>
 
         <div
           class="bg-indigo-100 p-3 rounded-lg shadow-md border-l-4 border-l-indigo-500 hover:shadow-lg transition-shadow"
@@ -102,105 +103,105 @@
           </div>
         </div>
 
-        <!-- Meseros -->
-        <div
-          class="bg-amber-50 p-3 rounded-lg shadow-md border-l-4 border-l-amber-500 hover:shadow-lg transition-shadow"
-        >
-          <h3 class="text-gray-700 text-sm font-medium mb-2">
-            Meseras, En orden de disponibilidad
-          </h3>
-          <div class="space-y-2 overflow-y-auto">
-            <div
-              v-for="mesero in meseros"
-              :key="mesero.id"
-              class="flex justify-between items-center p-2 bg-amber-100 rounded-lg"
-            >
-              <div class="flex items-center gap-2">
-                <span class="text-sm font-medium text-gray-700">
-                  👩🏻 {{ mesero.nombre }}
-                </span>
-              </div>
-              <div class="text-sm text-gray-500">
-                <span class="font-medium text-gray-700">{{
-                  mesero.mesasAsignadas
-                }}</span>
-                mesas /
-                <span class="font-medium text-gray-700">{{
-                  mesero.mesasAtendidas
-                }}</span>
-                atendidas
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Columna central y derecha: Gráficos, Productos y Mesas -->
-      <div class="lg:col-span-3 grid grid-cols-1 lg:grid-cols-3">
-        <!-- Gráfico de Ventas del Día -->
-        <div
-          class="lg:col-span-2 bg-white p-3 rounded-lg shadow-md flex flex-col lg:mr-4"
-        >
-          <h3 class="text-gray-700 font-semibold mb-2">Ventas del Día</h3>
-          <div class="flex-1 min-h-0">
-            <canvas ref="ventasDiaChart" class="min-h-96"></canvas>
-          </div>
-        </div>
-
-        <!-- Vista de Mesas -->
-        <div
-          class="mt-4 lg:mt-0 lg:col-span-1 bg-gray-50 p-3 rounded-lg shadow-md border-l-4 border-l-gray-400 hover:shadow-lg transition-shadow flex flex-col overflow-y-auto"
-        >
-          <h3 class="text-gray-700 font-semibold mb-2">Vista de Mesas</h3>
-
-          <!-- Resumen de estado de mesas -->
-          <div class="flex justify-between mb-3 text-sm">
-            <div class="px-2 py-1 bg-green-100 rounded text-green-700">
-              {{ mesasEstados.libres.length }} Libres
-            </div>
-            <div class="px-2 py-1 bg-red-100 rounded text-red-700">
-              {{ mesasEstados.ocupadas.length }} Ocupadas
-            </div>
-            <div class="px-2 py-1 bg-yellow-100 rounded text-yellow-700">
-              {{ mesasEstados.reservadas.length }} Reservadas
-            </div>
-            <div class="px-2 py-1 bg-gray-200 rounded text-gray-700">
-              {{ mesasEstados.mantenimiento.length }} Mantenimiento
-            </div>
-          </div>
-
-          <div class="grid grid-cols-6 gap-2 overflow-y-auto flex-1">
-            <div
-              v-for="mesa in mesas"
-              :key="mesa.numero"
-              :class="[
-                'p-2 rounded-lg text-center cursor-pointer transition-colors',
-                mesa.estado === EstadosMesa.LIBRE
-                  ? 'border border-green-300 bg-green-100 hover:bg-green-200'
-                  : mesa.estado === EstadosMesa.OCUPADA
-                  ? 'border border-red-300 bg-red-100 hover:bg-red-200'
-                  : mesa.estado === EstadosMesa.MANTENIMIENTO
-                  ? 'border border-gray-300 bg-gray-200 hover:bg-gray-300'
-                  : 'border border-yellow-300 bg-yellow-100 hover:bg-yellow-200',
-              ]"
-            >
+          <!-- Meseros -->
+          <div
+            class="bg-amber-50 p-3 rounded-lg shadow-md border-l-4 border-l-amber-500 hover:shadow-lg transition-shadow"
+          >
+            <h3 class="text-gray-700 text-sm font-medium mb-2">
+              Meseras, En orden de disponibilidad
+            </h3>
+            <div class="space-y-2 max-h-32 overflow-y-auto">
               <div
-                class="font-medium text-lg"
+                v-for="mesero in meseros"
+                :key="mesero.id"
+                class="flex justify-between items-center p-2 bg-amber-100 rounded-lg"
+              >
+                <div class="flex items-center gap-2">
+                  <span class="text-sm font-medium text-gray-700">
+                    👩🏻 {{ mesero.nombre }}
+                  </span>
+                </div>
+                <div class="text-sm text-gray-500">
+                  <span class="font-medium text-gray-700">{{
+                    mesero.mesasAsignadas
+                  }}</span>
+                  mesas /
+                  <span class="font-medium text-gray-700">{{
+                    mesero.mesasAtendidas
+                  }}</span>
+                  atendidas
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Columna central y derecha: Gráficos, Productos y Mesas -->
+        <div class="lg:col-span-3 grid grid-cols-1 lg:grid-cols-3 gap-3">
+          <!-- Gráfico de Ventas del Día -->
+          <div
+            class="lg:col-span-2 bg-white p-3 rounded-lg shadow-md flex flex-col"
+          >
+            <h3 class="text-gray-700 font-semibold mb-2">Ventas del Día</h3>
+            <div class="flex-1">
+              <canvas ref="ventasDiaChart" style="max-height: 250px"></canvas>
+            </div>
+          </div>
+
+          <!-- Vista de Mesas -->
+          <div
+            class="lg:col-span-1 bg-gray-50 p-3 rounded-lg shadow-md border-l-4 border-l-gray-400 hover:shadow-lg transition-shadow flex flex-col"
+          >
+            <h3 class="text-gray-700 font-semibold mb-2">Vista de Mesas</h3>
+
+            <!-- Resumen de estado de mesas -->
+            <div class="flex justify-between mb-3 text-sm">
+              <div class="px-2 py-1 bg-green-100 rounded text-green-700">
+                {{ mesasEstados.libres.length }} Libres
+              </div>
+              <div class="px-2 py-1 bg-red-100 rounded text-red-700">
+                {{ mesasEstados.ocupadas.length }} Ocupadas
+              </div>
+              <div class="px-2 py-1 bg-yellow-100 rounded text-yellow-700">
+                {{ mesasEstados.reservadas.length }} Reservadas
+              </div>
+              <div class="px-2 py-1 bg-gray-200 rounded text-gray-700">
+                {{ mesasEstados.mantenimiento.length }} Mantenimiento
+              </div>
+            </div>
+
+            <div class="grid grid-cols-6 gap-2 overflow-y-auto max-h-40">
+              <div
+                v-for="mesa in mesas"
+                :key="mesa.numero"
                 :class="[
+                  'p-2 rounded-lg text-center cursor-pointer transition-colors',
                   mesa.estado === EstadosMesa.LIBRE
-                    ? 'text-green-700'
+                    ? 'border border-green-300 bg-green-100 hover:bg-green-200'
                     : mesa.estado === EstadosMesa.OCUPADA
-                    ? 'text-red-700'
+                    ? 'border border-red-300 bg-red-100 hover:bg-red-200'
                     : mesa.estado === EstadosMesa.MANTENIMIENTO
-                    ? 'text-gray-700'
-                    : 'text-yellow-700',
+                    ? 'border border-gray-300 bg-gray-200 hover:bg-gray-300'
+                    : 'border border-yellow-300 bg-yellow-100 hover:bg-yellow-200',
                 ]"
               >
-                {{ mesa.numero }}
+                <div
+                  class="font-medium text-lg"
+                  :class="[
+                    mesa.estado === EstadosMesa.LIBRE
+                      ? 'text-green-700'
+                      : mesa.estado === EstadosMesa.OCUPADA
+                      ? 'text-red-700'
+                      : mesa.estado === EstadosMesa.MANTENIMIENTO
+                      ? 'text-gray-700'
+                      : 'text-yellow-700',
+                  ]"
+                >
+                  {{ mesa.numero }}
+                </div>
               </div>
             </div>
           </div>
-        </div>
 
         <!-- Productos Más Vendidos -->
         <div

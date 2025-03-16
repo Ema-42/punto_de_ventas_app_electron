@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="h-full flex flex-col overflow-hidden">
     <CrearEditarPedido
       :mostrar="mostrarModalCrearEditar"
       :pedido="pedidoAgregar"

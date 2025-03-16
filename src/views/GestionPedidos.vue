@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col">
+  <div class="h-full flex flex-col overflow-hidden">
     <!-- Encabezado con título -->
     <div class="bg-gradient-to-r bg-gray-100 p-4 rounded-lg shadow-md mb-4">
       <div
@@ -40,7 +40,7 @@
     />
 
     <!-- Contador de pedidos -->
-    <div class="mb-4 text-gray-600 flex justify-between items-center">
+    <div class="mb-2 text-gray-600 flex justify-between items-center">
       <div>Total: {{ pedidosFiltrados.length }} pedidos encontrados</div>
       <div class="font-medium text-red-600">
         Total seleccionados: ${{ totalPedidosSeleccionados.toFixed(2) }}
@@ -48,9 +48,9 @@
     </div>
 
     <!-- Tabla de pedidos con encabezados fijos -->
-    <div class="flex-grow flex flex-col">
-      <!-- Tabla con scroll -->
-      <div class="flex-grow overflow-auto">
+    <div class="flex-1 overflow-hidden bg-white shadow-lg rounded-lg flex flex-col">
+      <div class="flex-1 overflow-y-auto">
+        <!-- Aquí irá el cuerpo de la tabla con scroll -->
         <TablaPedidos
           :pedidos="pedidosFiltrados"
           :pagina="pagina"
@@ -61,71 +61,73 @@
           @seleccionar-pedido="toggleSeleccionPedido"
           @ver-detalle="verDetallePedido"
           @exportar-pedido="exportarPedidoIndividual"
+          :solo-cuerpo="true"
         />
-        <!-- Paginación (fuera del scroll) con estilo de Ingresos -->
-        <div class="flex justify-between items-center mt-6">
-          <div class="text-sm text-gray-600">
-            Mostrando
-            {{
-              Math.min((pagina - 1) * porPagina + 1, pedidosFiltrados.length)
-            }}
-            -
-            {{ Math.min(pagina * porPagina, pedidosFiltrados.length) }}
-            de {{ pedidosFiltrados.length }} pedidos
-          </div>
-          <div class="flex space-x-2">
-            <button
-              @click="pagina > 1 ? pagina-- : null"
-              :disabled="pagina <= 1"
-              class="px-4 py-2 border rounded-lg shadow-sm bg-white hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed transition"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-5 w-5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M15 19l-7-7 7-7"
-                />
-              </svg>
-            </button>
-            <span class="px-4 py-2 text-gray-700 bg-white border rounded-lg">
-              {{ pagina }} /
-              {{ Math.ceil(pedidosFiltrados.length / porPagina) || 1 }}
-            </span>
-            <button
-              @click="
-                pagina < Math.ceil(pedidosFiltrados.length / porPagina)
-                  ? pagina++
-                  : null
-              "
-              :disabled="
-                pagina >= Math.ceil(pedidosFiltrados.length / porPagina)
-              "
-              class="px-4 py-2 border rounded-lg shadow-sm bg-white hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed transition"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-5 w-5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M9 5l7 7-7 7"
-                />
-              </svg>
-            </button>
-          </div>
-        </div>
+      </div>
+    </div>
+
+    <!-- Paginación -->
+    <div class="flex justify-between items-center mt-4 mb-2">
+      <div class="text-sm text-gray-600">
+        Mostrando
+        {{
+          Math.min((pagina - 1) * porPagina + 1, pedidosFiltrados.length)
+        }}
+        -
+        {{ Math.min(pagina * porPagina, pedidosFiltrados.length) }}
+        de {{ pedidosFiltrados.length }} pedidos
+      </div>
+      <div class="flex space-x-2">
+        <button
+          @click="pagina > 1 ? pagina-- : null"
+          :disabled="pagina <= 1"
+          class="px-4 py-2 border rounded-lg shadow-sm bg-white hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed transition"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-5 w-5"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M15 19l-7-7 7-7"
+            />
+          </svg>
+        </button>
+        <span class="px-4 py-2 text-gray-700 bg-white border rounded-lg">
+          {{ pagina }} /
+          {{ Math.ceil(pedidosFiltrados.length / porPagina) || 1 }}
+        </span>
+        <button
+          @click="
+            pagina < Math.ceil(pedidosFiltrados.length / porPagina)
+              ? pagina++
+              : null
+          "
+          :disabled="
+            pagina >= Math.ceil(pedidosFiltrados.length / porPagina)
+          "
+          class="px-4 py-2 border rounded-lg shadow-sm bg-white hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed transition"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-5 w-5"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M9 5l7 7-7 7"
+            />
+          </svg>
+        </button>
       </div>
     </div>
 
