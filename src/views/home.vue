@@ -82,6 +82,26 @@
           </div>
         </div>
 
+        <div
+          class="bg-indigo-100 p-3 rounded-lg shadow-md border-l-4 border-l-indigo-500 hover:shadow-lg transition-shadow"
+        >
+          <h3 class="text-gray-700 text-sm font-medium mb-2">
+            Tipos de Pedido de Hoy
+          </h3>
+          <div class="flex flex-col lg:flex-row items-center gap-2 w-full">
+            <div
+              class="w-full lg:w-1/2 bg-blue-500 text-white py-2 px-4 rounded-md text-center font-medium shadow-sm"
+            >
+              {{CantidadPedidosEnMesa}} pedidos en mesa
+            </div>
+            <div
+              class="w-full lg:w-1/2 bg-emerald-500 text-white py-2 px-4 rounded-md text-center font-medium shadow-sm"
+            >
+            {{CantidadPedidosParaLlevar}} pedidos para llevar
+            </div>
+          </div>
+        </div>
+
         <!-- Meseros -->
         <div
           class="bg-amber-50 p-3 rounded-lg shadow-md border-l-4 border-l-amber-500 hover:shadow-lg transition-shadow"
@@ -187,18 +207,20 @@
           class="col-span-1 lg:col-span-6 grid grid-cols-1 lg:grid-cols-2 gap-2 mt-4"
         >
           <div class="col-span-1">
-            <div class="bg-violet-100 p-3 rounded-lg shadow-md border-l-4 border-l-violet-400 hover:shadow-lg transition-shadow">
-              <div class="flex justify-between items-center mb-3">
-                <h3 class="text-gray-700 font-semibold">
+            <div
+              class="bg-violet-100 p-3 rounded-lg shadow-md border-l-4 border-l-violet-400 hover:shadow-lg transition-shadow"
+            >
+              <div class="justify-between items-center mb-3">
+                <h3 class="text-gray-700 font-semibold pb-2">
                   Productos Más Vendidos Hoy
                 </h3>
                 <div class="flex space-x-1">
                   <button
-                    v-for="categoria in categorias"
+                    v-for="categoria in categoriasArray"
                     :key="categoria.id"
                     @click="categoriaSeleccionada = categoria.id"
                     :class="[
-                      'px-3 py-1 text-xs rounded-md transition-colors',
+                      'px-3 py-1 text-sm rounded-md transition-colors',
                       categoriaSeleccionada === categoria.id
                         ? 'bg-violet-900 bg-opacity-70 text-white'
                         : 'bg-white text-gray-700 hover:bg-gray-200',
@@ -209,7 +231,7 @@
                   <button
                     @click="categoriaSeleccionada = null"
                     :class="[
-                      'px-3 py-1 text-xs rounded-md transition-colors',
+                      'px-3 py-1 text-sm rounded-md transition-colors',
                       categoriaSeleccionada === null
                         ? 'bg-violet-900 bg-opacity-70 text-white'
                         : 'bg-white text-gray-700 hover:bg-gray-200',
@@ -219,7 +241,31 @@
                   </button>
                 </div>
               </div>
-              <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-3">
+              <div
+                class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-3 lg:h-[182px] overflow-y-auto"
+              >
+                <div
+                  v-if="productosFiltrados.length === 0"
+                  class="col-span-2 flex flex-col items-center py-4 justify-center bg-violet-950 bg-opacity-10 rounded-lg"
+                >
+                  No se encontró ningun pedido el dia de hoy
+                  <div class=" ">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="h-10 w-10 mx-auto text-gray-400"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                      />
+                    </svg>
+                  </div>
+                </div>
                 <div
                   v-for="producto in productosFiltrados"
                   :key="producto.id"
@@ -237,10 +283,10 @@
                       {{ producto.nombre }}
                     </div>
                     <div class="flex justify-between text-sm">
-                      <span class="text-gray-500"
+                      <span class="text-gray-700"
                         >{{ producto.cantidad }} uds.</span
                       >
-                      <span class="text-gray-500">{{
+                      <span class="text-gray-700">{{
                         getCategoriaName(producto.categoriaId)
                       }}</span>
                     </div>
@@ -249,8 +295,10 @@
               </div>
             </div>
           </div>
-          <div class="col-span-1 mt-2 lg:mt-0  mb-5 lg:mb-0">
-            <div class="p-3 rounded-lg shadow-md bg-red-100 border-l-4 border-l-red-400 hover:shadow-lg transition-shadow">
+          <div class="col-span-1 mt-2 lg:mt-0 mb-5 lg:mb-0">
+            <div
+              class="p-3 rounded-lg shadow-md bg-red-100 border-l-4 border-l-red-400 hover:shadow-lg transition-shadow"
+            >
               <h3 class="text-gray-700 text-sm font-medium mb-2">
                 Alertas de Productos con Stock
               </h3>
@@ -264,10 +312,10 @@
                     :key="producto.id"
                     class="flex justify-between items-center p-2 bg-red-200 bg-opacity-60 rounded-lg mb-1"
                   >
-                    <span class="text-sm text-gray-700">{{
+                    <span class="text-s text-gray-700">{{
                       producto.nombre
                     }}</span>
-                    <span class="text-sm font-medium text-red-600"
+                    <span class="text-s font-medium text-red-600"
                       >{{ producto.stock }} uds.</span
                     >
                   </div>
@@ -298,6 +346,10 @@ const cantidadPedidosCompletados = ref(0);
 const totalPedidos = ref(0);
 const CantidadPedidosPorHora = ref([0]);
 const productosStockBajo = ref<ProductoStock[]>([]);
+const productosVendidos = ref<ProductoAcumulado[]>([]);
+const categoriasArray = ref<Categoria[]>([]);
+const CantidadPedidosEnMesa = ref(0);
+const CantidadPedidosParaLlevar = ref(0);
 
 // Interfaces
 interface Mesa {
@@ -317,21 +369,57 @@ interface Categoria {
   nombre: string;
 }
 
-interface ProductoVendido {
-  id: number;
-  nombre: string;
-  cantidad: number;
-  ranking: number;
-  categoriaId: number;
-}
-
 interface Pedido {
   id: number;
   estado: string;
   eliminado: boolean;
   fecha_creacion: string;
+  para_llevar?: boolean;
   total: string;
   mesera?: { id: number };
+}
+
+interface PedidosHoy {
+  id: number;
+  num_pedido_dia: number;
+  eliminado: boolean;
+  pedido_padre_id: any;
+  mesa: Mesa;
+  mesera: {};
+  cajero: {};
+  estado: string;
+  para_lelvar:boolean;
+  fecha_creacion: string;
+  fecha_concluido: any;
+  tipo_pago: string;
+  para_llevar: boolean;
+  total: string;
+  detalles: Detalle[];
+}
+
+interface Detalle {
+  id: number;
+  pedido_id: number;
+  producto: Producto;
+  cantidad: number;
+  precio_unitario: string;
+}
+
+interface Producto {
+  id: number;
+  nombre: string;
+  imagen_url: string;
+  maneja_stock: boolean;
+  categoria: Categoria;
+}
+
+interface ProductoAcumulado {
+  id: number;
+  nombre: string;
+  cantidad: number;
+  categoriaId: number;
+  imagen_url?: string;
+  ranking?: number;
 }
 
 interface MeseroAtencion {
@@ -360,35 +448,58 @@ const getProductosStockBajo = async () => {
   productosStockBajo.value = productosFiltrados.sort(
     (a: ProductoStock, b: ProductoStock) => a.stock - b.stock
   );
-
-  console.log(productosStockBajo.value);
 };
 
-// Datos para categorías
-const categorias = ref<Categoria[]>([
-  { id: 1, nombre: "Hamburguesas" },
-  { id: 2, nombre: "Bebidas" },
-]);
+
 
 // Datos para productos más vendidos
-const productosVendidos = ref<ProductoVendido[]>([
-  {
-    id: 1,
-    nombre: "Hamburguesa Clásica",
-    cantidad: 45,
-    ranking: 1,
-    categoriaId: 1,
-  },
-  { id: 2, nombre: "Refresco Cola", cantidad: 38, ranking: 2, categoriaId: 2 },
-  {
-    id: 4,
-    nombre: "Hamburguesa Doble",
-    cantidad: 32,
-    ranking: 4,
-    categoriaId: 1,
-  },
-  { id: 8, nombre: "Agua Mineral", cantidad: 20, ranking: 8, categoriaId: 2 },
-]);
+const getProductosMasVendidos = async () => {
+  // Obtener los pedidos del día
+  const listaPedidos = pedidos.value;
+  // Objeto para acumular cantidades por producto
+  const productosMap: Record<number, ProductoAcumulado> = {};
+  const categoriasMap: Record<number, Categoria> = {};
+  // Recorrer todos los pedidos y sus detalles
+  listaPedidos.forEach((pedido: any) => {
+    pedido.detalles.forEach((detalle: Detalle) => {
+      const producto = detalle.producto;
+      const id = producto.id;
+      const categoriaId = producto.categoria.id;
+      // Si el producto ya existe en el mapa, acumular cantidad
+      if (productosMap[id]) {
+        productosMap[id].cantidad += detalle.cantidad;
+      } else {
+        // Si es la primera vez que vemos este producto, inicializarlo
+        productosMap[id] = {
+          id: producto.id,
+          nombre: producto.nombre,
+          cantidad: detalle.cantidad,
+          categoriaId: categoriaId,
+          imagen_url: producto.imagen_url,
+        };
+      }
+      // Agregamos la categoría al mapa de categorías si no existe
+      if (!categoriasMap[categoriaId]) {
+        categoriasMap[categoriaId] = {
+          id: categoriaId,
+          nombre: producto.categoria.nombre,
+        };
+      }
+    });
+  });
+  // Convertir el mapa de categorías a un array
+  const categorias = Object.values(categoriasMap);
+  // Convertir el mapa de productos a un array
+  const productosArray = Object.values(productosMap);
+  // Ordenar por cantidad descendente
+  productosArray.sort((a, b) => b.cantidad - a.cantidad);
+  // Asignar ranking
+  productosArray.forEach((producto, index) => {
+    producto.ranking = index + 1;
+  });
+  productosVendidos.value = productosArray;
+  categoriasArray.value = categorias;
+};
 
 // Productos filtrados por categoría
 const productosFiltrados = computed(() => {
@@ -410,7 +521,7 @@ const NuevoPedido = (): void => {
 };
 
 const getCategoriaName = (categoriaId: number): string => {
-  const categoria = categorias.value.find((cat) => cat.id === categoriaId);
+  const categoria = categoriasArray.value.find((cat) => cat.id === categoriaId);
   return categoria ? categoria.nombre : "";
 };
 
@@ -473,7 +584,7 @@ const inicializarGraficos = (): void => {
 };
 
 const setCantidadPedidosPorHora = async () => {
-  const pedidosHoy = await getPedidosHoy();
+  const pedidosHoy = pedidos.value;
 
   const hoy = new Date();
   hoy.setHours(0, 0, 0, 0);
@@ -539,16 +650,19 @@ const getMesas = async () => {
 };
 
 const getPedidosHoy = async () => {
-  const data: Pedido[] = await window.api.getPedidos();
-  // Obtener la fecha de hoy en formato YYYY-MM-DD
-  const today = format(new Date(), "yyyy-MM-dd");
+  const data: Pedido[] = await window.api.getPedidosHoy();
   // Filtrar los pedidos que sean del día de hoy y no estén eliminados
-  pedidos.value = data.filter(
-    (pedido) =>
-      format(new Date(pedido.fecha_creacion), "yyyy-MM-dd") === today &&
-      !pedido.eliminado
-  );
+  pedidos.value = data;
   return pedidos.value;
+};
+const setCantidadTipoPedidos = async () => {
+  pedidos.value.forEach(pedido => {
+    if (pedido.para_llevar) {
+      CantidadPedidosParaLlevar.value++;
+    } else {
+      CantidadPedidosEnMesa.value++;
+    }
+  });
 };
 
 const getMeserosConPedidos = async () => {
@@ -558,22 +672,20 @@ const getMeserosConPedidos = async () => {
 const totalIngresosDelDia = ref("0.00");
 
 const getPedidos = async () => {
-  pedidosHoy.value = await getPedidosHoy();
-
   // Total de pedidos del día
-  totalPedidos.value = pedidosHoy.value.length;
+  totalPedidos.value = pedidos.value.length;
 
   // Cantidad de pedidos en preparación
-  cantidadPedidosEnPreparacion.value = pedidosHoy.value.filter(
+  cantidadPedidosEnPreparacion.value = pedidos.value.filter(
     (pedido) => pedido.estado === EstadoPedido.EN_PREPARACION
   ).length;
 
-  cantidadPedidosCompletados.value = pedidosHoy.value.filter(
+  cantidadPedidosCompletados.value = pedidos.value.filter(
     (pedido) => pedido.estado === EstadoPedido.COMPLETADO
   ).length;
 
   // Calcular el total de ingresos del día sumando 'total' de cada pedido
-  const totalIngresos = pedidosHoy.value.reduce(
+  const totalIngresos = pedidos.value.reduce(
     (sum, pedido) => sum + (Number(pedido.total) || 0),
     0
   );
@@ -581,10 +693,13 @@ const getPedidos = async () => {
 };
 
 onMounted(async () => {
+  await  getPedidosHoy();
   setCantidadPedidosPorHora();
   getMeserosConPedidos();
   getMesas();
   getPedidos();
+  setCantidadTipoPedidos();
+  getProductosMasVendidos();
   getProductosStockBajo();
   relojInterval = setInterval(actualizarReloj, 1000);
   setTimeout(() => {

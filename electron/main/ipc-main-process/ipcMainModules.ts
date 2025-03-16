@@ -42,6 +42,7 @@ import {
   gePedidoById,
   getNumeroPedidoDia,
   getPedidos,
+  getPedidosHoy,
 } from "../modules/pedido";
 import {
   crearIngresoConDetalles,
@@ -140,6 +141,10 @@ export default () => {
 
   ipcMain.handle("get-pedidos", async () => {
     return await getPedidos();
+  });
+
+  ipcMain.handle("get-pedidos-hoy", async () => {
+    return await getPedidosHoy();
   });
 
   ipcMain.handle("get-numero-pedido-dia", async () => {

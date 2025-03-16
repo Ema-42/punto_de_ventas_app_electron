@@ -404,7 +404,6 @@
           class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md max-h-[90vh] overflow-y-auto"
         >
           <div class="flex justify-between items-center mb-4">
-            <h3 class="text-lg font-bold">Vista previa del ticket</h3>
             <button
               @click="mostrarVistaPrevia = false"
               class="text-gray-500 hover:text-gray-700"
@@ -412,33 +411,42 @@
               <span class="text-2xl">&times;</span>
             </button>
           </div>
-          <div class="bg-white p-4 font-mono text-sm" id="ticket-preview">
+          <div class="bg-white font-mono text-sm" id="ticket-preview">
             <div class="text-center mb-4">
-              <p class="font-bold text-lg">RESTAURANTE EJEMPLO</p>
-              <p>Dirección: Calle Principal #123</p>
-              <p>Tel: (123) 456-7890</p>
+              <p class="font-bold text-lg">CHICHARRONERIA 6 DE AGOSTO</p>
+              <p>
+                <span class="font-bold">Dirección:</span> Avenida 6 de Agosto Nº
+                200
+              </p>
+              <p>Cel: 73424254 - 73461249</p>
             </div>
 
             <div class="mb-4">
-              <p>
-                TICKET #:
-                {{
-                  pedidoParaImprimir?.num_pedido_dia || pedidoParaImprimir?.id
-                }}
-              </p>
-              <p>
-                Fecha: {{ formatearFecha(pedidoParaImprimir?.fecha_creacion) }}
-              </p>
-              <p>Mesero: {{ pedidoParaImprimir?.mesera.nombre }}</p>
-              <p>Cajero: {{ pedidoParaImprimir?.cajero.nombre }}</p>
-              <p v-if="pedidoParaImprimir?.mesa_id">
+              <div class="flex justify-between">
+                <p>
+                  TICKET #:
+                  {{
+                    pedidoParaImprimir?.num_pedido_dia || pedidoParaImprimir?.id
+                  }}
+                </p>
+                <p>
+                  Fecha: {{ formatearFecha(pedidoParaImprimir?.fecha_creacion) }}
+                </p>
+              </div>
+              <div class="flex justify-between">
+                <p>Mesero: {{ pedidoParaImprimir?.mesera.nombre }}</p>
+                <p v-if="pedidoParaImprimir?.mesa?.id">
                 Mesa: {{ pedidoParaImprimir?.mesa?.numero || "" }}
               </p>
+              </div>
+              <div class="flex justify-between
+              ">
               <p>
                 Tipo de pago:
                 {{ pedidoParaImprimir?.tipo_pago || "No especificado" }}
               </p>
-              <p>Estado: {{ getEstadoEtiqueta(pedidoParaImprimir?.estado) }}</p>
+              <P>Llevar: {{ pedidoParaImprimir?.para_llevar? "SI":"NO" }}</P>
+              </div>
             </div>
 
             <div class="border-t border-b border-gray-300 py-2 mb-4">
@@ -775,7 +783,7 @@ const imprimirTicket = () => {
     const printIframe = document.createElement("iframe");
     printIframe.style.position = "absolute";
     //@ts-ignore
-    print.style.position = "absolute";
+    //print.style.position = "absolute";
     printIframe.style.top = "-9999px";
     document.body.appendChild(printIframe);
 
@@ -790,17 +798,16 @@ const imprimirTicket = () => {
             <title>Ticket de Pedido</title>
             <style>
               body {
-                font-family: monospace;
-                font-size: 12px;
+                font-family: arial;
+                font-size: 14px;
                 width: 80mm;
-                margin: 0;
-                padding: 10px;
+                margin: 0px;
               }
               .text-center { text-align: center; }
               .mb-4 { margin-bottom: 16px; }
               .font-bold { font-weight: bold; }
               .text-lg { font-size: 16px; }
-              .border-t, .border-b { border-top: 1px solid #ddd; border-bottom: 1px solid #ddd; }
+              .border-t, .border-b { border-top: 1px solid #000000; border-bottom: 1px solid #000000; }
               .py-2 { padding-top: 8px; padding-bottom: 8px; }
               .grid { display: grid; }
               .grid-cols-12 { grid-template-columns: repeat(12, minmax(0, 1fr)); }
@@ -814,7 +821,12 @@ const imprimirTicket = () => {
               .pt-2 { padding-top: 8px; }
               .mt-6 { margin-top: 24px; }
               .flex { display: flex; }
-              .justify-between { justify-content: space-between; }
+              .justify-between { justify-content: space-between;   p {
+                  padding-top: 0;
+                  padding-bottom: 0;
+                  margin-top: 0;
+                  margin-bottom: 0;
+                } }
               .pl-2 { padding-left: 8px; }
               .mt-1 { margin-top: 4px; }
               .mt-2 { margin-top: 8px; }
@@ -868,4 +880,3 @@ onMounted(() => {
   }
 });
 </script>
-

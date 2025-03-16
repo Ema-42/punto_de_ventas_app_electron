@@ -559,9 +559,7 @@ const cargarPedidos = async () => {
   try {
     // Carga desde API
     if (window.api && window.api.getPedidos) {
-      const data = await window.api.getPedidos();
-      console.log(data,data.length);
-      
+      const data = await window.api.getPedidos();      
       pedidos.value = data || [];
       cargarPedidosHijos();
     }

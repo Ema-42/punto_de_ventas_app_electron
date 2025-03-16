@@ -34,6 +34,7 @@ electron.contextBridge.exposeInMainWorld("api", {
   getOneRoleById: (id) => electron.ipcRenderer.invoke("get-one-role", id),
   //pedidos
   getPedidos: () => electron.ipcRenderer.invoke("get-pedidos"),
+  getPedidosHoy: () => electron.ipcRenderer.invoke("get-pedidos-hoy"),
   getNumeroPedidoDia: () => electron.ipcRenderer.invoke("get-numero-pedido-dia"),
   editEstadoPedidoById: (id, estado) => electron.ipcRenderer.invoke("edit-estado-pedido", { id, estado }),
   getOnePedidoById: (id) => electron.ipcRenderer.invoke("get-one-pedido", id),

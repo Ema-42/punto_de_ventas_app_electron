@@ -2364,6 +2364,89 @@ const getPedidos = async () => {
     return error;
   }
 };
+const getPedidosHoy = async () => {
+  try {
+    const hoy = /* @__PURE__ */ new Date();
+    const inicioDia = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate(), 0, 0, 0);
+    const finDia = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate(), 23, 59, 59);
+    const pedidos = await prisma$1.pedido.findMany({
+      where: {
+        eliminado: false,
+        fecha_creacion: {
+          gte: inicioDia,
+          lte: finDia
+        }
+      },
+      select: {
+        id: true,
+        num_pedido_dia: true,
+        pedido_padre_id: true,
+        mesa: {
+          select: {
+            id: true,
+            numero: true
+          }
+        },
+        mesera: {
+          select: {
+            id: true,
+            nombre: true
+          }
+        },
+        cajero: {
+          select: {
+            id: true,
+            nombre: true
+          }
+        },
+        estado: true,
+        fecha_creacion: true,
+        fecha_concluido: true,
+        tipo_pago: true,
+        para_llevar: true,
+        total: true,
+        detalles: {
+          where: { eliminado: false },
+          select: {
+            id: true,
+            pedido_id: true,
+            producto: {
+              select: {
+                id: true,
+                nombre: true,
+                imagen_url: true,
+                maneja_stock: true,
+                categoria: true
+              }
+            },
+            cantidad: true,
+            precio_unitario: true
+          }
+        }
+      },
+      orderBy: { fecha_creacion: "desc" }
+    });
+    return pedidos.map((p) => {
+      var _a;
+      return {
+        ...p,
+        total: (_a = p.total) == null ? void 0 : _a.toFixed(2),
+        // Convierte Decimal a string con 2 decimales
+        detalles: p.detalles.map((d) => {
+          var _a2;
+          return {
+            ...d,
+            precio_unitario: (_a2 = d.precio_unitario) == null ? void 0 : _a2.toFixed(2)
+            // Convierte Decimal a string con 2 decimales
+          };
+        })
+      };
+    });
+  } catch (error) {
+    console.error("Error en pedidos:", error);
+    return error;
+  }
+};
 const gePedidoById = async (id) => {
   var _a;
   try {
@@ -3059,6 +3142,9 @@ const ipcMainModules = () => {
   });
   ipcMain.handle("get-pedidos", async () => {
     return await getPedidos();
+  });
+  ipcMain.handle("get-pedidos-hoy", async () => {
+    return await getPedidosHoy();
   });
   ipcMain.handle("get-numero-pedido-dia", async () => {
     return await getNumeroPedidoDia();

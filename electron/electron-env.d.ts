@@ -74,6 +74,7 @@ interface Window {
     editarIngresoConDetalles: (data: EditarIngresoConDetalles) => Promise<any>;
     //pedidos
     getPedidos: () => Promise<any>;
+    getPedidosHoy: () => Promise<any>;
     getNumeroPedidoDia: () => Promise<number>;
     cambiarEstadoPedido: (id: number, estado: string) => Promise<any>;
     getOnePedidoById: (id: number) => Promise<any>;
