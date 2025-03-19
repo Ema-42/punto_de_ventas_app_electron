@@ -118,50 +118,63 @@
             <label class="block text-gray-700 text-sm font-bold mb-2">
               Tipo de Pago
             </label>
-            <div class="flex gap-4">
-              <label class="inline-flex items-center">
-                <input
-                  type="radio"
-                  v-model="formData.tipo_pago"
-                  value="EFECTIVO"
-                  class="form-radio h-5 w-5 text-red-600"
-                />
-                <span class="ml-2 text-gray-700">Efectivo</span>
-              </label>
-              <label class="inline-flex items-center">
-                <input
-                  type="radio"
-                  v-model="formData.tipo_pago"
-                  value="TRANSFERENCIA"
-                  class="form-radio h-5 w-5 text-red-600"
-                />
-                <span class="ml-2 text-gray-700">QR</span>
-              </label>
+            <div class="flex">
+              <button
+                type="button"
+                @click="formData.tipo_pago = TipoPago.EFECTIVO"
+                :class="[
+                  'px-4 py-2 rounded-l-lg text-sm font-medium transition ',
+                  formData.tipo_pago === 'EFECTIVO'
+                    ? 'bg-red-600 text-white'
+                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300',
+                ]"
+              >
+                Efectivo
+              </button>
+              <button
+                type="button"
+                @click="formData.tipo_pago = TipoPago.TRANSFERENCIA"
+                :class="[
+                  'px-4 py-2 rounded-r-lg text-sm font-medium transition ',
+                  formData.tipo_pago === 'TRANSFERENCIA'
+                    ? 'bg-red-600 text-white'
+                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300',
+                ]"
+              >
+                QR
+              </button>
             </div>
           </div>
+
           <div v-if="props.pedido?.id == 0">
             <label class="block text-gray-700 text-sm font-bold mb-2">
               Para llevar
             </label>
-            <div class="flex gap-4">
-              <label class="inline-flex items-center">
-                <input
-                  type="radio"
-                  v-model="formData.para_llevar"
-                  :value="true"
-                  class="form-radio h-5 w-5 text-red-600"
-                />
-                <span class="ml-2 text-gray-700">SI</span>
-              </label>
-              <label class="inline-flex items-center">
-                <input
-                  type="radio"
-                  v-model="formData.para_llevar"
-                  :value="false"
-                  class="form-radio h-5 w-5 text-red-600"
-                />
-                <span class="ml-2 text-gray-700">NO</span>
-              </label>
+            <div class="flex">
+              <button
+                type="button"
+                @click="formData.para_llevar = true"
+                :class="[
+                  'px-4 py-2 rounded-l-lg text-sm font-medium transition ',
+                  formData.para_llevar === true
+                    ? 'bg-red-600 text-white'
+                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300',
+                ]"
+              >
+                SI
+              </button>
+              <button
+                type="button"
+                @click="formData.para_llevar = false"
+                :class="[
+                  'px-4 py-2 rounded-r-lg text-sm font-medium transition ',
+                  formData.para_llevar === false
+                    ? 'bg-red-600 text-white'
+                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300',
+                ]"
+              >
+                NO
+              </button>
             </div>
           </div>
         </div>
@@ -201,29 +214,30 @@
 
             <!-- Categorías de productos -->
             <div class="mb-4">
-              <div class="flex flex-wrap gap-2 mb-2">
+              <div class="flex flex-wrap mb-2">
                 <button
                   type="button"
                   @click="categoriaSeleccionada = ''"
                   :class="[
-                    'px-3 py-1 rounded-full text-sm font-medium transition',
+                    'px-3 py-1 rounded-l-lg text-sm font-medium transition',
                     categoriaSeleccionada === ''
                       ? 'bg-red-600 text-white'
                       : 'bg-gray-200 text-gray-700 hover:bg-gray-300',
                   ]"
                 >
-                  Ver Todo
+                  Ver Todos
                 </button>
                 <button
-                  v-for="categoria in categorias"
+                  v-for="(categoria, index) in categorias"
                   :key="categoria.id"
                   type="button"
                   @click="categoriaSeleccionada = categoria.id"
                   :class="[
-                    'px-3 py-1 rounded-full text-sm font-medium transition',
+                    'px-3 py-1 text-sm font-medium transition',
                     categoriaSeleccionada === categoria.id
                       ? 'bg-red-600 text-white'
                       : 'bg-gray-200 text-gray-700 hover:bg-gray-300',
+                    index === categorias.length - 1 ? 'rounded-r-lg' : '',
                   ]"
                 >
                   {{ categoria.nombre }}
@@ -257,21 +271,22 @@
 
             <!-- Grid de productos -->
             <div
-              class="grid grid-cols-2 sm:grid-cols-3 gap-3 h-[calc(100vh-500px)] overflow-y-auto"
+              class="grid grid-cols-2 sm:grid-cols-4 gap-2 h-[calc(100vh-500px)] overflow-y-auto"
             >
               <div
                 v-for="producto in productosFiltrados"
                 :key="producto.id"
-                class="border rounded-lg p-2 hover:bg-gray-50 cursor-pointer transition"
+                class="border rounded-lg hover:bg-gray-200 cursor-pointer transition"
                 @click="agregarProductoADetalle(producto)"
               >
                 <div class="flex flex-col items-center">
-                  <div class="w-16 h-16 mb-2">
+                  <div class="w-full h-24 mb-2">
                     <img
                       v-if="producto.imagen_url"
                       :src="'local://' + producto.imagen_url"
-                      class="w-full h-full object-cover rounded-lg shadow-sm"
+                      class="w-full h-full object-cover rounded-t-lg shadow-sm"
                       alt=""
+                      @error="producto.imagen_url = ''"
                     />
                     <div
                       v-else
@@ -280,24 +295,28 @@
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         class="h-8 w-8 text-gray-400"
-                        fill="none"
                         viewBox="0 0 24 24"
-                        stroke="currentColor"
+                        fill="currentColor"
                       >
                         <path
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="2"
-                          d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4"
+                          d="M2 3a1 1 0 011-1h18a1 1 0 011 1v18a1 1 0 01-1 1H3a1 1 0 01-1-1V3zm16 14l-4-5-3 4-2-3-5 6h14z"
                         />
                       </svg>
                     </div>
                   </div>
-                  <div class="text-center">
-                    <p class="font-medium text-sm truncate w-full">
+                  <div class="w-full">
+                    <p
+                      class="font-medium text-sm truncate w-full text-center pb-2"
+                    >
                       {{ producto.nombre }}
                     </p>
-                    <p class="text-gray-600 text-xs">${{ producto.precio }}</p>
+                    <div class="border-t border-gray-300 pb-2"></div>
+
+                    <span
+                      class="text-red-600 text-sm px-2 rounded-lg font-bold"
+                    >
+                      {{ producto.precio }}Bs
+                    </span>
                   </div>
                 </div>
               </div>
@@ -335,7 +354,7 @@
                       <th
                         class="w-1/10 px-3 py-3 text-center text-sm font-medium text-white uppercase tracking-wider"
                       >
-                        Acción
+                        Quitar
                       </th>
                     </tr>
                   </thead>
@@ -361,15 +380,11 @@
                               <svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 class="h-4 w-4 text-gray-400"
-                                fill="none"
                                 viewBox="0 0 24 24"
-                                stroke="currentColor"
+                                fill="currentColor"
                               >
                                 <path
-                                  stroke-linecap="round"
-                                  stroke-linejoin="round"
-                                  stroke-width="2"
-                                  d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4"
+                                  d="M2 3a1 1 0 011-1h18a1 1 0 011 1v18a1 1 0 01-1 1H3a1 1 0 01-1-1V3zm16 14l-4-5-3 4-2-3-5 6h14z"
                                 />
                               </svg>
                             </div>
@@ -384,7 +399,7 @@
                         </div>
                       </td>
                       <td
-                        class="px-3 py-2 whitespace-nowrap text-sm text-gray-500"
+                        class="px-3 py-2 whitespace-nowrap text-sm text-gray-700"
                       >
                         ${{ detalle.precio_unitario }}
                       </td>
@@ -441,12 +456,13 @@
                       <td
                         class="px-3 py-2 whitespace-nowrap text-sm text-gray-900 font-medium text-center"
                       >
-                        ${{
+                        {{
                           (
                             detalle.cantidad *
                             parseFloat(detalle.precio_unitario.toString())
                           ).toFixed(2)
                         }}
+                        Bs.
                       </td>
                       <td
                         class="px-3 py-2 whitespace-nowrap text-center text-xs font-medium"
@@ -488,7 +504,7 @@
                 <div class="flex justify-between items-center">
                   <span class="font-bold">Total:</span>
                   <span class="text-xl font-bold text-red-600"
-                    >${{ calcularTotal() }}</span
+                    >{{ calcularTotal() }} Bs.</span
                   >
                 </div>
               </div>
@@ -511,14 +527,7 @@
           <div
             class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md max-h-[90vh] overflow-y-auto"
           >
-            <div class="flex justify-between items-center mb-4">
-              <button
-                @click="mostrarVistaPrevia = false"
-                class="text-gray-500 hover:text-gray-700"
-              >
-                <span class="text-2xl">&times;</span>
-              </button>
-            </div>
+            <div class="flex justify-between items-center mb-4"></div>
             <div class="bg-white font-mono text-sm" id="ticket-preview">
               <!-- Información del restaurante (solo visible cuando el pedido está guardado) -->
               <div v-if="pedidoGuardado" class="text-center mb-4">
@@ -635,7 +644,7 @@
                 <div class="mb-3">
                   <label class="block text-sm font-bold mb-1">Cambio:</label>
                   <div class="text-xl font-bold text-green-600">
-                    ${{ calcularCambio() }}
+                    {{ calcularCambio() }} Bs.
                   </div>
                 </div>
               </div>
@@ -908,9 +917,7 @@ const meseros = computed(() => {
 });
 
 const cajeros = computed(() => {
-  return usuarios.value.filter((u: Usuario) =>
-    [Roles.CAJERO, Roles.ADMIN].includes(u.rol.nombre)
-  );
+  return usuarios.value.filter((u: Usuario) => u.id === authStore.user?.id);
 });
 
 const detallesActivos = computed(() => {
@@ -1138,7 +1145,8 @@ const confirmarPedido = async () => {
 const imprimirTicket = () => {
   try {
     // Obtener el contenido del ticket
-    const ticketContent = document.getElementById("ticket-preview");
+    const ticketContent =
+      document.getElementById("ticket-preview")?.innerHTML || "";
 
     // Crear un iframe para imprimir
     const printIframe = document.createElement("iframe");
@@ -1146,13 +1154,13 @@ const imprimirTicket = () => {
     printIframe.style.top = "-9999px";
     document.body.appendChild(printIframe);
 
-    // Escribir el contenido en el iframe
     const printDocument =
       printIframe.contentDocument || printIframe.contentWindow?.document;
+
     if (printDocument) {
       printDocument.open();
       printDocument.write(`
-     <html>
+        <html>
           <head>
             <title>Ticket de Pedido</title>
             <style>
@@ -1161,6 +1169,9 @@ const imprimirTicket = () => {
                 font-size: 14px;
                 width: 80mm;
                 margin: 0px;
+              }
+              .ticket {
+                page-break-after: always; /* Cada ticket en una hoja nueva */
               }
               .text-center { text-align: center; }
               .mb-4 { margin-bottom: 16px; }
@@ -1175,7 +1186,6 @@ const imprimirTicket = () => {
               .col-span-2 { grid-column: span 2 / span 2; }
               .col-span-4 { grid-column: span 4 / span 4; }
               .text-right { text-align: right; }
-              .text-center { text-align: center; }
               .truncate { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
               .mb-1 { margin-bottom: 4px; }
               .pt-2 { padding-top: 8px; }
@@ -1187,48 +1197,45 @@ const imprimirTicket = () => {
                 margin-bottom: 0;
                 padding-top: 5px;
                 padding-bottom: 0;
-                line-height: 1.2; /* Opcional: para ajustar el espacio entre líneas */
+                line-height: 1.2;
               }
-              .justify-between { justify-content: space-between;   p {
+              .justify-between {
+                justify-content: space-between;
+                p {
                   padding-top: 5px;
                   padding-bottom: 0;
                   margin-top: 0;
                   margin-bottom: 0;
-                } }
+                }
+              }
               .pl-2 { padding-left: 8px; }
               .mt-1 { margin-top: 4px; }
               .mt-2 { margin-top: 8px; }
-              div p {
-              }
-              .font-semibold {
-                  font-weight: 600;
-              }
-              .uppercase {
-                  text-transform: uppercase;
-              }
+              .font-semibold { font-weight: 600; }
+              .uppercase { text-transform: uppercase; }
             </style>
           </head>
           <body>
-            ${ticketContent?.innerHTML || ""}
+            <div class="ticket">${ticketContent}</div>
+            <div class="ticket">${ticketContent}</div>
           </body>
         </html>
       `);
       printDocument.close();
 
-      // Imprimir y eliminar el iframe
-      printIframe.contentWindow?.focus();
-      printIframe.contentWindow?.print();
-
-      // Eliminar el iframe después de imprimir
+      // Esperar a que el contenido se cargue antes de imprimir
       setTimeout(() => {
-        document.body.removeChild(printIframe);
-        if (pedidoGuardado.value) {
-        }
+        printIframe.contentWindow?.focus();
+        printIframe.contentWindow?.print();
+
+        // Eliminar el iframe después de imprimir
+        setTimeout(() => {
+          document.body.removeChild(printIframe);
+        }, 500);
       }, 500);
     }
   } catch (error) {
     console.error("Error al imprimir ticket:", error);
-    errorMensaje.value = "Error al imprimir el ticket";
   }
 };
 

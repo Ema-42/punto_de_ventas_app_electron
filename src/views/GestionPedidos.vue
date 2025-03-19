@@ -48,7 +48,9 @@
     </div>
 
     <!-- Tabla de pedidos con encabezados fijos -->
-    <div class="flex-1 overflow-hidden bg-white shadow-lg rounded-lg flex flex-col">
+    <div
+      class="flex-1 overflow-hidden bg-white shadow-lg rounded-lg flex flex-col"
+    >
       <div class="flex-1 overflow-y-auto">
         <!-- Aquí irá el cuerpo de la tabla con scroll -->
         <TablaPedidos
@@ -70,9 +72,7 @@
     <div class="flex justify-between items-center mt-4 mb-2">
       <div class="text-sm text-gray-600">
         Mostrando
-        {{
-          Math.min((pagina - 1) * porPagina + 1, pedidosFiltrados.length)
-        }}
+        {{ Math.min((pagina - 1) * porPagina + 1, pedidosFiltrados.length) }}
         -
         {{ Math.min(pagina * porPagina, pedidosFiltrados.length) }}
         de {{ pedidosFiltrados.length }} pedidos
@@ -108,9 +108,7 @@
               ? pagina++
               : null
           "
-          :disabled="
-            pagina >= Math.ceil(pedidosFiltrados.length / porPagina)
-          "
+          :disabled="pagina >= Math.ceil(pedidosFiltrados.length / porPagina)"
           class="px-4 py-2 border rounded-lg shadow-sm bg-white hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed transition"
         >
           <svg
@@ -272,7 +270,7 @@ const aplicarFiltros = () => {
   if (filtros.value.busqueda && filtros.value.busqueda.trim() !== "") {
     const busqueda = filtros.value.busqueda.toLowerCase();
     resultado = resultado.filter((pedido) => {
-      // Verificar que pedido.id y pedido.num_pedido_dia no sean null o undefined
+      // Verificar que las propiedades no sean null o undefined y realizar la búsqueda
       const idMatch =
         pedido.id !== null &&
         pedido.id !== undefined &&
@@ -281,7 +279,16 @@ const aplicarFiltros = () => {
         pedido.num_pedido_dia !== null &&
         pedido.num_pedido_dia !== undefined &&
         pedido.num_pedido_dia.toString().includes(busqueda);
-      return idMatch || numPedidoMatch;
+      const tipoPagoMatch =
+        pedido.tipo_pago !== null &&
+        pedido.tipo_pago !== undefined &&
+        pedido.tipo_pago.toLowerCase().includes(busqueda);
+      const meseraNombreMatch =
+        pedido.mesera?.nombre !== null &&
+        pedido.mesera?.nombre !== undefined &&
+        pedido.mesera.nombre.toLowerCase().includes(busqueda);
+
+      return idMatch || numPedidoMatch || tipoPagoMatch || meseraNombreMatch;
     });
   }
 

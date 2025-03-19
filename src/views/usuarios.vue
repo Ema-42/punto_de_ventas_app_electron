@@ -94,13 +94,15 @@
     </div>
 
     <!-- Tabla de usuarios con altura fija -->
-    <div class="flex-1 overflow-hidden bg-white shadow-lg rounded-lg flex flex-col">
+    <div
+      class="flex-1 overflow-hidden bg-white shadow-lg rounded-lg flex flex-col"
+    >
       <div class="overflow-x-auto">
         <table class="w-full border-collapse">
           <thead>
             <tr class="bg-gradient-to-r from-red-500 to-red-600 text-white">
-              <th class="p-3 text-left rounded-tl-lg w-16">ID</th>
-              <th class="p-3 text-left w-1/3">Nombre</th>
+              <th class="p-3 text-left rounded-tl-lg w-12">ID</th>
+              <th class="p-3 text-left w-1/4">Nombre</th>
               <th class="p-3 text-left w-1/4">Rol</th>
               <th class="p-3 text-left w-1/4">Fecha de creación</th>
               <th class="p-3 text-center rounded-tr-lg w-32">Acciones</th>
@@ -108,7 +110,7 @@
           </thead>
         </table>
       </div>
-      
+
       <div class="flex-1 overflow-y-auto">
         <table class="w-full border-collapse">
           <thead class="hidden">
@@ -135,7 +137,9 @@
               </td>
               <td class="p-3 font-medium">{{ usuario.nombre }}</td>
               <td class="p-3">
-                <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-sm font-medium">
+                <span
+                  class="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-sm font-medium"
+                >
                   {{ usuario.rol.nombre }}
                 </span>
               </td>
@@ -265,142 +269,141 @@
     </div>
   </div>
 </template>
-  
-  <script setup lang="ts">
-  import { ref, computed, onMounted } from "vue";
-  import CrearEditarUsuario from "../components/Usuarios/CrearEditarUsuario.vue";
-  import EliminarUsuario from "../components/Usuarios/EliminarUsuario.vue";
-  
-  //para los mensajes https://vue-toastification.maronato.dev/
-  import { useToast } from "vue-toastification";
-  const toast = useToast();
-  
-  interface Usuario {
-    id: number;
-    nombre: string;
-    password: string;
-    rol: {id: number, nombre:string,eliminado:boolean}
-    rol_id: number;
-    eliminado?: boolean;
-    fecha_creacion?: string;
+
+<script setup lang="ts">
+import { ref, computed, onMounted } from "vue";
+import CrearEditarUsuario from "../components/Usuarios/CrearEditarUsuario.vue";
+import EliminarUsuario from "../components/Usuarios/EliminarUsuario.vue";
+
+//para los mensajes https://vue-toastification.maronato.dev/
+import { useToast } from "vue-toastification";
+const toast = useToast();
+
+interface Usuario {
+  id: number;
+  nombre: string;
+  password: string;
+  rol: { id: number; nombre: string; eliminado: boolean };
+  rol_id: number;
+  eliminado?: boolean;
+  fecha_creacion?: string;
+}
+
+interface Rol {
+  id: number;
+  nombre: string;
+}
+
+// Estado
+const usuarios = ref<Usuario[]>([]);
+const usuariosFiltrados = ref<Usuario[]>([]);
+const roles = ref<Rol[]>([]);
+const searchQuery = ref("");
+const pagina = ref(1);
+const porPagina = ref(7);
+const mostrarModalCrearEditar = ref(false);
+const mostrarModalEliminar = ref(false);
+const usuarioEditar = ref<Usuario | null>(null);
+const usuarioEliminar = ref<Usuario | null>(null);
+
+// Computed
+const totalPaginas = computed(() =>
+  Math.ceil(usuariosFiltrados.value.length / porPagina.value)
+);
+
+const paginatedUsuarios = computed(() => {
+  const inicio = (pagina.value - 1) * porPagina.value;
+  const fin = inicio + porPagina.value;
+  return usuariosFiltrados.value.slice(inicio, fin);
+});
+
+// Métodos
+const cargarUsuarios = async () => {
+  // Aquí normalmente harías una llamada a tu API
+  const data = await window.api.getUsuarios();
+  usuarios.value = data;
+  usuariosFiltrados.value = data;
+};
+
+const cargarRoles = async () => {
+  // Aquí normalmente harías una llamada a tu API para obtener los roles
+  const data = await window.api.getRoles();
+  roles.value = data;
+};
+
+const buscarUsuarios = () => {
+  if (!searchQuery.value) {
+    usuariosFiltrados.value = [...usuarios.value];
+  } else {
+    const query = searchQuery.value.toLowerCase();
+    usuariosFiltrados.value = usuarios.value.filter(
+      (usuario) =>
+        usuario.nombre.toLowerCase().includes(query) ||
+        usuario.rol.nombre.toLowerCase().includes(query)
+    );
   }
-  
-  interface Rol {
-    id: number;
-    nombre: string;
+  pagina.value = 1;
+};
+
+const abrirModalCrear = () => {
+  usuarioEditar.value = null;
+  mostrarModalCrearEditar.value = true;
+};
+
+const editarUsuario = (usuario: Usuario) => {
+  usuarioEditar.value = usuario;
+  mostrarModalCrearEditar.value = true;
+};
+
+const guardarUsuario = () => {
+  cargarUsuarios();
+  buscarUsuarios();
+  mostrarModalCrearEditar.value = false;
+  usuarioEditar.value
+    ? toast.info("Usuario editado con éxito!")
+    : toast.success("Usuario guardado con éxito!");
+};
+
+const confirmarEliminar = (usuario: Usuario) => {
+  usuarioEliminar.value = usuario;
+  mostrarModalEliminar.value = true;
+};
+
+const eliminarUsuario = () => {
+  toast.error("Usuario eliminado con éxito!");
+  cargarUsuarios();
+  buscarUsuarios();
+  mostrarModalEliminar.value = false;
+};
+
+const formatearFecha = (fecha?: string) => {
+  if (!fecha) return "";
+  const date = new Date(fecha);
+  return date.toLocaleDateString("es-ES", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+  });
+};
+
+const prevPage = () => {
+  if (pagina.value > 1) {
+    pagina.value--;
   }
-  
-  // Estado
-  const usuarios = ref<Usuario[]>([]);
-  const usuariosFiltrados = ref<Usuario[]>([]);
-  const roles = ref<Rol[]>([]);
-  const searchQuery = ref("");
-  const pagina = ref(1);
-  const porPagina = ref(7);
-  const mostrarModalCrearEditar = ref(false);
-  const mostrarModalEliminar = ref(false);
-  const usuarioEditar = ref<Usuario | null>(null);
-  const usuarioEliminar = ref<Usuario | null>(null);
-  
-  // Computed
-  const totalPaginas = computed(() =>
-    Math.ceil(usuariosFiltrados.value.length / porPagina.value)
-  );
-  
-  const paginatedUsuarios = computed(() => {
-    const inicio = (pagina.value - 1) * porPagina.value;
-    const fin = inicio + porPagina.value;
-    return usuariosFiltrados.value.slice(inicio, fin);
-  });
-  
-  // Métodos
-  const cargarUsuarios = async () => {
-    // Aquí normalmente harías una llamada a tu API
-    const data = await window.api.getUsuarios();
-    usuarios.value = data;
-    usuariosFiltrados.value = data;
-  };
-  
-  const cargarRoles = async () => {
-    // Aquí normalmente harías una llamada a tu API para obtener los roles
-    const data = await window.api.getRoles();
-    roles.value = data;
-  };
-  
-  const buscarUsuarios = () => {
-    if (!searchQuery.value) {
-      usuariosFiltrados.value = [...usuarios.value];
-    } else {
-      const query = searchQuery.value.toLowerCase();
-      usuariosFiltrados.value = usuarios.value.filter(
-        (usuario) =>
-          usuario.nombre.toLowerCase().includes(query) ||
-          usuario.rol.nombre.toLowerCase().includes(query)
-      );
-    }
-    pagina.value = 1;
-  };
-  
-  const abrirModalCrear = () => {
-    usuarioEditar.value = null;
-    mostrarModalCrearEditar.value = true;
-  };
-  
-  const editarUsuario = (usuario: Usuario) => {
-    usuarioEditar.value = usuario;
-    mostrarModalCrearEditar.value = true;
-  };
-  
-  const guardarUsuario = () => {
-    cargarUsuarios();
-    buscarUsuarios();
-    mostrarModalCrearEditar.value = false;
-    usuarioEditar.value
-      ? toast.info("Usuario editado con éxito!")
-      : toast.success("Usuario guardado con éxito!");
-  };
-  
-  const confirmarEliminar = (usuario: Usuario) => {
-    usuarioEliminar.value = usuario;
-    mostrarModalEliminar.value = true;
-  };
-  
-  const eliminarUsuario = () => {
-    toast.error("Usuario eliminado con éxito!");
-    cargarUsuarios();
-    buscarUsuarios();
-    mostrarModalEliminar.value = false;
-  };
-  
-  const formatearFecha = (fecha?: string) => {
-    if (!fecha) return "";
-    const date = new Date(fecha);
-    return date.toLocaleDateString("es-ES", {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-      second: "2-digit",
-    });
-  };
-  
-  
-  const prevPage = () => {
-    if (pagina.value > 1) {
-      pagina.value--;
-    }
-  };
-  
-  const nextPage = () => {
-    if (pagina.value < totalPaginas.value) {
-      pagina.value++;
-    }
-  };
-  
-  // Ciclo de vida
-  onMounted(() => {
-    cargarUsuarios();
-    cargarRoles();
-  });
-  </script>
+};
+
+const nextPage = () => {
+  if (pagina.value < totalPaginas.value) {
+    pagina.value++;
+  }
+};
+
+// Ciclo de vida
+onMounted(() => {
+  cargarUsuarios();
+  cargarRoles();
+});
+</script>

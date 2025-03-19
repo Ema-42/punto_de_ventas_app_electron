@@ -4,12 +4,12 @@
       <!-- Buscador más compacto -->
       <div class="relative md:col-span-3">
         <label class="block text-sm font-medium text-gray-700 mb-1"
-          >Buscar por ID</label
+          >Buscar por (ID, Num Pedido,Mesera,Tipo Pago)</label
         >
         <input
           v-model="filtrosLocales.busqueda"
           type="text"
-          placeholder="Buscar por ID..."
+          placeholder="Buscar Pedido"
           class="border p-2 rounded-lg shadow-sm w-full focus:ring-2 focus:ring-red-400 outline-none pl-10 bg-white"
           @input="emitirCambios"
         />
@@ -98,7 +98,7 @@
           <label
             for="incluirDetalles"
             class="text-sm font-medium text-gray-700"
-            >Detalles</label
+            >Incluir detalles de cada pedido</label
           >
         </div>
         
@@ -113,7 +113,7 @@
           <label
             for="incluirRanking"
             class="text-sm font-medium text-gray-700"
-            >Top Productos</label
+            >Incluir un Top Productos, para ver los productos mas vendidos</label
           >
         </div>
         
