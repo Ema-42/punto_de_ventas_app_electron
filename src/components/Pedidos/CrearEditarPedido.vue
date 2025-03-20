@@ -24,7 +24,7 @@
 
       <form @submit.prevent="guardar">
         <!-- Información básica del pedido -->
-        <div class="grid grid-cols-1 md:grid-cols-5 gap-4 mb-6">
+        <div class="grid grid-cols-1 md:grid-cols-5 gap-4 mb-4">
           <div>
             <label
               class="block text-gray-700 text-sm font-bold mb-2"
@@ -114,9 +114,9 @@
             </select>
           </div>
 
-          <div>
+          <div class="ml-auto mr-auto">
             <label class="block text-gray-700 text-sm font-bold mb-2">
-              Tipo de Pago
+              Tipo de Pago 💵
             </label>
             <div class="flex">
               <button
@@ -146,9 +146,9 @@
             </div>
           </div>
 
-          <div v-if="props.pedido?.id == 0">
+          <div v-if="props.pedido?.id == 0" class="ml-auto mr-auto">
             <label class="block text-gray-700 text-sm font-bold mb-2">
-              Para llevar
+              Para llevar 🛵
             </label>
             <div class="flex">
               <button
@@ -276,8 +276,14 @@
               <div
                 v-for="producto in productosFiltrados"
                 :key="producto.id"
-                class="border rounded-lg hover:bg-gray-200 cursor-pointer transition"
-                @click="agregarProductoADetalle(producto)"
+                class="border rounded-lg bg-gray-100 hover:bg-gray-200 cursor-pointer transition"
+                @click="
+                  () => {
+                    agregarProductoADetalle(producto);
+                    playAddSound();
+                  }
+                "
+                @mouseenter="playHoverSound"
               >
                 <div class="flex flex-col items-center">
                   <div class="w-full h-24 mb-2">
@@ -310,7 +316,7 @@
                     >
                       {{ producto.nombre }}
                     </p>
-                    <div class="border-t border-gray-300 pb-2"></div>
+                    <div class="border-t border-gray-300 pb-1"></div>
 
                     <span
                       class="text-red-600 text-sm px-2 rounded-lg font-bold"
@@ -469,7 +475,12 @@
                       >
                         <button
                           type="button"
-                          @click="eliminarDetalle(index)"
+                          @click="
+                            () => {
+                              eliminarDetalle(index);
+                              playRemoveSound();
+                            }
+                          "
                           class="text-red-600 hover:text-red-900"
                         >
                           <svg
@@ -911,6 +922,38 @@ const cerrarFormulario = () => {
   }
 };
 
+//efectos de sonido
+// Audio elements
+let hoverSound: HTMLAudioElement | null = null;
+let addSound: HTMLAudioElement | null = null;
+let removeSound: HTMLAudioElement | null = null;
+
+// Play hover sound
+const playHoverSound = (): void => {
+  if (hoverSound) {
+    hoverSound.currentTime = 0;
+    hoverSound.play().catch((e: Error) => console.log("Audio play error:", e));
+  }
+};
+
+// Play add sound
+const playAddSound = (): void => {
+  if (addSound) {
+    addSound.currentTime = 0;
+    addSound.play().catch((e: Error) => console.log("Audio play error:", e));
+    console.log("Playing add sound");
+  }
+};
+
+// Play remove sound
+const playRemoveSound = (): void => {
+  if (removeSound) {
+    removeSound.currentTime = 0;
+    removeSound.play().catch((e: Error) => console.log("Audio play error:", e));
+    console.log("Playing remove sound");
+  }
+};
+
 // Computed
 const meseros = computed(() => {
   return usuarios.value.filter((u) => u.rol.nombre === Roles.MESERO);
@@ -1340,5 +1383,18 @@ onMounted(async () => {
     cargarCategorias(),
   ]);
   filtrarProductos();
+  // Create audio elements once on component mount
+  hoverSound = new Audio();
+  addSound = new Audio();
+  removeSound = new Audio();
+  hoverSound.src =
+    "https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3";
+  addSound.src =
+    "https://assets.mixkit.co/active_storage/sfx/1113/1113-preview.mp3";
+  removeSound.src =
+    "https://assets.mixkit.co/active_storage/sfx/1113/1113-preview.mp3";
+  hoverSound.load();
+  addSound.load();
+  removeSound.load();
 });
 </script>
