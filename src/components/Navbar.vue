@@ -7,7 +7,8 @@
       <div class="bg-red-600 dark:bg-red-700 p-2 rounded-lg shadow-md">
         <!-- <img src="/placeholder.svg" alt="Logo" class="h-8 w-8 object-contain" /> -->
       </div>
-      <span class="text-red-600 dark:text-red-400 text-xl tracking-tight font-black"
+      <span
+        class="text-red-600 dark:text-red-400 text-xl tracking-tight font-black"
         >CHICHARRONERIA 6 DE AGOSTO</span
       >
     </div>
@@ -32,8 +33,9 @@
           viewBox="0 0 24 24"
           fill="currentColor"
         >
+          <!-- Icono de sol (modo claro) -->
           <path
-            d="M12 2a1 1 0 011 1v2a1 1 0 11-2 0V3a1 1 0 011-1zM4.22 5.47a1 1 0 010 1.42L3.05 8.06a1 1 0 11-1.42-1.42l1.17-1.17a1 1 0 011.42 0zM21 11h-2a1 1 0 110-2h2a1 1 0 110 2zM12 20a1 1 0 011-1v-2a1 1 0 10-2 0v2a1 1 0 011 1zM18.78 5.47a1 1 0 00-1.42 0l-1.17 1.17a1 1 0 101.42 1.42l1.17-1.17a1 1 0 000-1.42zM4.22 18.53a1 1 0 000 1.42L5.39 21.1a1 1 0 101.42-1.42l-1.17-1.17a1 1 0 00-1.42 0zM18.78 18.53a1 1 0 00-1.42 0l-1.17 1.17a1 1 0 001.42 1.42l1.17-1.17a1 1 0 000-1.42z"
+            d="M12 18a6 6 0 110-12 6 6 0 010 12zm0-2a4 4 0 100-8 4 4 0 000 8zM11 1h2v3h-2V1zm0 19h2v3h-2v-3zM3.515 4.929l1.414-1.414L7.05 5.636 5.636 7.05 3.515 4.93zM16.95 18.364l1.414-1.414 2.121 2.121-1.414 1.414-2.121-2.121zm2.121-14.85l1.414 1.415-2.121 2.121-1.414-1.414 2.121-2.121zM5.636 16.95l1.414 1.414-2.121 2.121-1.414-1.414 2.121-2.121zM23 11v2h-3v-2h3zM4 11v2H1v-2h3z"
           />
         </svg>
         <svg
@@ -43,8 +45,9 @@
           viewBox="0 0 24 24"
           fill="currentColor"
         >
+          <!-- Icono de luna (modo oscuro) -->
           <path
-            d="M17.293 14.707a1 1 0 01-1.414-1.414 6 6 0 10-8.486 8.486 1 1 0 01-1.414 1.414A8 8 0 1117.293 14.707z"
+            d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 007.92 12.446a9 9 0 11-8.313-12.454z"
           />
         </svg>
       </button>
@@ -57,8 +60,12 @@
         class="flex items-center space-x-3 py-2 px-3 rounded-full transition-all duration-200 hover:bg-green-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:focus:ring-gray-600 focus:ring-opacity-50"
       >
         <div class="flex flex-col items-end">
-          <span class="text-gray-800 dark:text-gray-200 font-medium">{{ userName }}</span>
-          <span class="text-xs text-gray-500 dark:text-gray-400">{{ authStore.user.rol }}</span>
+          <span class="text-gray-800 dark:text-gray-200 font-medium">{{
+            userName
+          }}</span>
+          <span class="text-xs text-gray-500 dark:text-gray-400">{{
+            authStore.user.rol
+          }}</span>
         </div>
         <div
           class="h-10 w-10 rounded-full border-2 border-green-600 dark:border-green-500 overflow-hidden flex items-center justify-center"
@@ -94,7 +101,9 @@
         </div>
         <ul class="py-1">
           <li class="px-1">
-            <div class="flex items-center px-3 py-2 text-sm text-gray-500 dark:text-gray-400 mx-1">
+            <div
+              class="flex items-center px-3 py-2 text-sm text-gray-500 dark:text-gray-400 mx-1"
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 class="h-5 w-5 mr-2 text-gray-400 dark:text-gray-500"
