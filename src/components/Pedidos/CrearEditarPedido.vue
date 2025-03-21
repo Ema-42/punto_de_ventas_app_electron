@@ -1,23 +1,23 @@
 <template>
   <div
     v-if="mostrar"
-    class="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50 overflow-y-auto"
+    class="fixed inset-0 bg-black bg-opacity-30 dark:bg-black dark:bg-opacity-50 flex items-center justify-center z-50 overflow-y-auto"
   >
     <div
-      class="bg-white rounded-lg shadow-xl p-6 w-full max-w-7xl transform transition-all my-8 mx-4"
+      class="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-6 w-full max-w-7xl transform transition-all my-8 mx-4"
     >
       <div class="flex justify-between items-center mb-4">
-        <h2 class="text-xl font-bold text-gray-800">
+        <h2 class="text-xl font-bold text-gray-800 dark:text-gray-100">
           {{ pedido?.pedido_padre_id ? "Agregar" : "Nuevo" }}
           Pedido Nº {{ numeroPedidoDia }}
           <span
             v-if="pedido?.pedido_padre_id"
-            class="px-3 py-1 bg-green-600 text-white text-lg font-semibold rounded-lg"
+            class="px-3 py-1 bg-green-600 dark:bg-green-700 text-white text-lg font-semibold rounded-lg"
           >
             En la mesa: {{ pedido.mesa?.numero }}
           </span>
         </h2>
-        <button @click="cerrar" class="text-gray-500 hover:text-gray-700">
+        <button @click="cerrar" class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200">
           <span class="text-2xl">&times;</span>
         </button>
       </div>
@@ -27,7 +27,7 @@
         <div class="grid grid-cols-1 md:grid-cols-5 gap-4 mb-4">
           <div>
             <label
-              class="block text-gray-700 text-sm font-bold mb-2"
+              class="block text-gray-700 dark:text-gray-200 text-sm font-bold mb-2"
               for="mesa"
             >
               Mesa
@@ -35,10 +35,10 @@
             <select
               v-model="formData.mesa_id"
               id="mesa"
-              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400"
+              class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400 dark:focus:ring-red-500 dark:bg-gray-700 dark:text-gray-100"
               :class="{
-                'bg-green-300 cursor-not-allowed': pedido?.pedido_padre_id,
-                'bg-white cursor-pointer': !pedido?.pedido_padre_id,
+                'bg-green-300 dark:bg-green-800 cursor-not-allowed': pedido?.pedido_padre_id,
+                'bg-white dark:bg-gray-700 cursor-pointer': !pedido?.pedido_padre_id,
               }"
               :disabled="!!pedido?.pedido_padre_id || formData.para_llevar"
             >
@@ -64,7 +64,7 @@
 
           <div>
             <label
-              class="block text-gray-700 text-sm font-bold mb-2"
+              class="block text-gray-700 dark:text-gray-200 text-sm font-bold mb-2"
               for="mesera"
             >
               Mesero/a
@@ -73,10 +73,10 @@
               v-model="formData.mesera_id"
               id="mesera"
               required
-              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400"
+              class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400 dark:focus:ring-red-500 dark:bg-gray-700 dark:text-gray-100"
               :class="{
-                'bg-green-200': pedido?.pedido_padre_id,
-                'bg-white': !pedido?.pedido_padre_id,
+                'bg-green-200 dark:bg-green-800': pedido?.pedido_padre_id,
+                'bg-white dark:bg-gray-700': !pedido?.pedido_padre_id,
               }"
             >
               <option value="" disabled>Seleccione un mesero/a</option>
@@ -92,7 +92,7 @@
 
           <div>
             <label
-              class="block text-gray-700 text-sm font-bold mb-2"
+              class="block text-gray-700 dark:text-gray-200 text-sm font-bold mb-2"
               for="cajero"
             >
               Cajero/a
@@ -101,7 +101,7 @@
               v-model="formData.cajero_id"
               id="cajero"
               required
-              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400 bg-white"
+              class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400 dark:focus:ring-red-500 bg-white dark:bg-gray-700 dark:text-gray-100"
             >
               <option value="" disabled>Seleccione un cajero/a</option>
               <option
@@ -115,7 +115,7 @@
           </div>
 
           <div class="ml-auto mr-auto">
-            <label class="block text-gray-700 text-sm font-bold mb-2">
+            <label class="block text-gray-700 dark:text-gray-200 text-sm font-bold mb-2">
               Tipo de Pago 💵
             </label>
             <div class="flex">
@@ -125,8 +125,8 @@
                 :class="[
                   'px-4 py-2 rounded-l-lg text-sm font-medium transition ',
                   formData.tipo_pago === 'EFECTIVO'
-                    ? 'bg-red-600 text-white'
-                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300',
+                    ? 'bg-red-600 dark:bg-red-700 text-white'
+                    : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600',
                 ]"
               >
                 Efectivo
@@ -137,8 +137,8 @@
                 :class="[
                   'px-4 py-2 rounded-r-lg text-sm font-medium transition ',
                   formData.tipo_pago === 'TRANSFERENCIA'
-                    ? 'bg-red-600 text-white'
-                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300',
+                    ? 'bg-red-600 dark:bg-red-700 text-white'
+                    : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600',
                 ]"
               >
                 QR
@@ -147,7 +147,7 @@
           </div>
 
           <div v-if="props.pedido?.id == 0" class="ml-auto mr-auto">
-            <label class="block text-gray-700 text-sm font-bold mb-2">
+            <label class="block text-gray-700 dark:text-gray-200 text-sm font-bold mb-2">
               Para llevar 🛵
             </label>
             <div class="flex">
@@ -157,8 +157,8 @@
                 :class="[
                   'px-4 py-2 rounded-l-lg text-sm font-medium transition ',
                   formData.para_llevar === true
-                    ? 'bg-red-600 text-white'
-                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300',
+                    ? 'bg-red-600 dark:bg-red-700 text-white'
+                    : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600',
                 ]"
               >
                 SI
@@ -169,8 +169,8 @@
                 :class="[
                   'px-4 py-2 rounded-r-lg text-sm font-medium transition ',
                   formData.para_llevar === false
-                    ? 'bg-red-600 text-white'
-                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300',
+                    ? 'bg-red-600 dark:bg-red-700 text-white'
+                    : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600',
                 ]"
               >
                 NO
@@ -181,7 +181,7 @@
 
         <!-- Estado (solo visible al editar) -->
         <div v-if="pedido?.id && !pedido.pedido_padre_id" class="mb-6">
-          <label class="block text-gray-700 text-sm font-bold mb-2">
+          <label class="block text-gray-700 dark:text-gray-200 text-sm font-bold mb-2">
             Estado
           </label>
           <div class="flex gap-4">
@@ -190,18 +190,18 @@
                 type="radio"
                 v-model="formData.estado"
                 value="EN_ATENCION"
-                class="form-radio h-5 w-5 text-yellow-600"
+                class="form-radio h-5 w-5 text-yellow-600 dark:text-yellow-500"
               />
-              <span class="ml-2 text-gray-700">En Atención</span>
+              <span class="ml-2 text-gray-700 dark:text-gray-200">En Atención</span>
             </label>
             <label class="inline-flex items-center">
               <input
                 type="radio"
                 v-model="formData.estado"
                 value="CONCLUIDO"
-                class="form-radio h-5 w-5 text-green-600"
+                class="form-radio h-5 w-5 text-green-600 dark:text-green-500"
               />
-              <span class="ml-2 text-gray-700">Concluido</span>
+              <span class="ml-2 text-gray-700 dark:text-gray-200">Concluido</span>
             </label>
           </div>
         </div>
@@ -210,7 +210,7 @@
         <div class="flex flex-col md:flex-row gap-6 mb-4">
           <!-- Columna izquierda: Productos -->
           <div class="w-full md:w-1/2">
-            <h3 class="text-lg font-semibold mb-2">Productos</h3>
+            <h3 class="text-lg font-semibold mb-2 dark:text-gray-100">Productos</h3>
 
             <!-- Categorías de productos -->
             <div class="mb-4">
@@ -221,8 +221,8 @@
                   :class="[
                     'px-3 py-1 rounded-l-lg text-sm font-medium transition',
                     categoriaSeleccionada === ''
-                      ? 'bg-red-600 text-white'
-                      : 'bg-gray-200 text-gray-700 hover:bg-gray-300',
+                      ? 'bg-red-600 dark:bg-red-700 text-white'
+                      : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600',
                   ]"
                 >
                   Ver Todos
@@ -235,8 +235,8 @@
                   :class="[
                     'px-3 py-1 text-sm font-medium transition',
                     categoriaSeleccionada === categoria.id
-                      ? 'bg-red-600 text-white'
-                      : 'bg-gray-200 text-gray-700 hover:bg-gray-300',
+                      ? 'bg-red-600 dark:bg-red-700 text-white'
+                      : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600',
                     index === categorias.length - 1 ? 'rounded-r-lg' : '',
                   ]"
                 >
@@ -249,12 +249,12 @@
                   v-model="searchProducto"
                   type="text"
                   placeholder="Buscar producto..."
-                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400 pl-10"
+                  class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400 dark:focus:ring-red-500 pl-10 dark:bg-gray-700 dark:text-gray-100 dark:placeholder-gray-400"
                   @input="filtrarProductos"
                 />
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  class="h-5 w-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+                  class="h-5 w-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -276,14 +276,12 @@
               <div
                 v-for="producto in productosFiltrados"
                 :key="producto.id"
-                class="border rounded-lg bg-gray-100 hover:bg-gray-200 cursor-pointer transition"
+                class="border dark:border-gray-600 rounded-lg bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 cursor-pointer transition"
                 @click="
                   () => {
                     agregarProductoADetalle(producto);
-                    playAddSound();
                   }
                 "
-                @mouseenter="playHoverSound"
               >
                 <div class="flex flex-col items-center">
                   <div class="w-full h-24 mb-2">
@@ -296,11 +294,11 @@
                     />
                     <div
                       v-else
-                      class="w-full h-full bg-gray-200 rounded-lg flex items-center justify-center"
+                      class="w-full h-full bg-gray-200 dark:bg-gray-600 rounded-lg flex items-center justify-center"
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
-                        class="h-8 w-8 text-gray-400"
+                        class="h-8 w-8 text-gray-400 dark:text-gray-500"
                         viewBox="0 0 24 24"
                         fill="currentColor"
                       >
@@ -312,14 +310,14 @@
                   </div>
                   <div class="w-full">
                     <p
-                      class="font-medium text-sm truncate w-full text-center pb-2"
+                      class="font-medium text-sm truncate w-full text-center pb-2 dark:text-gray-200"
                     >
                       {{ producto.nombre }}
                     </p>
-                    <div class="border-t border-gray-300 pb-1"></div>
+                    <div class="border-t border-gray-300 dark:border-gray-600 pb-1"></div>
 
                     <span
-                      class="text-red-600 text-sm px-2 rounded-lg font-bold"
+                      class="text-red-600 dark:text-red-400 text-sm px-2 rounded-lg font-bold"
                     >
                       {{ producto.precio }}Bs
                     </span>
@@ -331,11 +329,11 @@
 
           <!-- Columna derecha: Detalles del pedido -->
           <div class="w-full md:w-1/2">
-            <h3 class="text-lg font-semibold mb-2">Detalles del Pedido</h3>
-            <div class="border rounded-lg h-[calc(100vh-400px)] flex flex-col">
+            <h3 class="text-lg font-semibold mb-2 dark:text-gray-100">Detalles del Pedido</h3>
+            <div class="border dark:border-gray-600 rounded-lg h-[calc(100vh-400px)] flex flex-col">
               <div class="overflow-y-auto flex-grow rounded-lg">
-                <table class="min-w-full divide-y divide-gray-200 table-fixed">
-                  <thead class="bg-red-600 sticky top-0">
+                <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700 table-fixed">
+                  <thead class="bg-red-600 dark:bg-red-700 sticky top-0">
                     <tr>
                       <th
                         class="w-2/5 px-3 py-3 text-left text-sm font-medium text-white uppercase tracking-wider"
@@ -364,11 +362,11 @@
                       </th>
                     </tr>
                   </thead>
-                  <tbody class="bg-white divide-y divide-gray-200">
+                  <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                     <tr
                       v-for="(detalle, index) in detallesActivos"
                       :key="index"
-                      class="hover:bg-gray-50"
+                      class="hover:bg-gray-50 dark:hover:bg-gray-700"
                     >
                       <td class="px-3 py-2 whitespace-nowrap">
                         <div class="flex items-center">
@@ -381,11 +379,11 @@
                             />
                             <div
                               v-else
-                              class="h-8 w-8 rounded-full bg-gray-200 flex items-center justify-center"
+                              class="h-8 w-8 rounded-full bg-gray-200 dark:bg-gray-600 flex items-center justify-center"
                             >
                               <svg
                                 xmlns="http://www.w3.org/2000/svg"
-                                class="h-4 w-4 text-gray-400"
+                                class="h-4 w-4 text-gray-400 dark:text-gray-500"
                                 viewBox="0 0 24 24"
                                 fill="currentColor"
                               >
@@ -397,7 +395,7 @@
                           </div>
                           <div class="truncate max-w-[120px]">
                             <div
-                              class="text-sm font-medium text-gray-900 truncate"
+                              class="text-sm font-medium text-gray-900 dark:text-gray-100 truncate"
                             >
                               {{ detalle.producto?.nombre }}
                             </div>
@@ -405,7 +403,7 @@
                         </div>
                       </td>
                       <td
-                        class="px-3 py-2 whitespace-nowrap text-sm text-gray-700"
+                        class="px-3 py-2 whitespace-nowrap text-sm text-gray-700 dark:text-gray-300"
                       >
                         ${{ detalle.precio_unitario }}
                       </td>
@@ -414,7 +412,7 @@
                           <button
                             type="button"
                             @click="decrementarCantidad(index)"
-                            class="p-1 rounded-full bg-red-600 hover:bg-red-700"
+                            class="p-1 rounded-full bg-red-600 dark:bg-red-700 hover:bg-red-700 dark:hover:bg-red-600"
                           >
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
@@ -435,12 +433,12 @@
                             v-model.number="detalle.cantidad"
                             type="number"
                             min="1"
-                            class="mx-1 w-10 text-center border rounded-md text-sm"
+                            class="mx-1 w-10 text-center border dark:border-gray-600 rounded-md text-sm dark:bg-gray-700 dark:text-gray-100"
                           />
                           <button
                             type="button"
                             @click="incrementarCantidad(index)"
-                            class="p-1 rounded-full bg-red-600 hover:bg-red-700"
+                            class="p-1 rounded-full bg-red-600 dark:bg-red-700 hover:bg-red-700 dark:hover:bg-red-600"
                           >
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
@@ -460,7 +458,7 @@
                         </div>
                       </td>
                       <td
-                        class="px-3 py-2 whitespace-nowrap text-sm text-gray-900 font-medium text-center"
+                        class="px-3 py-2 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100 font-medium text-center"
                       >
                         {{
                           (
@@ -478,10 +476,9 @@
                           @click="
                             () => {
                               eliminarDetalle(index);
-                              playRemoveSound();
                             }
                           "
-                          class="text-red-600 hover:text-red-900"
+                          class="text-red-600 dark:text-red-400 hover:text-red-900 dark:hover:text-red-300"
                         >
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -503,7 +500,7 @@
                     <tr v-if="detallesActivos.length === 0">
                       <td
                         colspan="5"
-                        class="px-3 py-4 text-center text-gray-500 text-sm"
+                        class="px-3 py-4 text-center text-gray-500 dark:text-gray-400 text-sm"
                       >
                         No hay productos agregados
                       </td>
@@ -511,10 +508,10 @@
                   </tbody>
                 </table>
               </div>
-              <div class="bg-gray-50 p-4 border-t">
+              <div class="bg-gray-50 dark:bg-gray-700 p-4 border-t dark:border-gray-600">
                 <div class="flex justify-between items-center">
-                  <span class="font-bold">Total:</span>
-                  <span class="text-xl font-bold text-red-600"
+                  <span class="font-bold dark:text-gray-200">Total:</span>
+                  <span class="text-xl font-bold text-red-600 dark:text-red-400"
                     >{{ calcularTotal() }} Bs.</span
                   >
                 </div>
@@ -525,7 +522,7 @@
 
         <div
           v-if="errorMensaje"
-          class="mt-4 p-3 bg-red-600 text-white font-bold rounded-lg z-50"
+          class="mt-4 p-3 bg-red-600 dark:bg-red-700 text-white font-bold rounded-lg z-50"
         >
           {{ errorMensaje }}
         </div>
@@ -533,13 +530,13 @@
         <!-- Vista previa del ticket -->
         <div
           v-if="mostrarVistaPrevia"
-          class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 rounded-lg"
+          class="fixed inset-0 bg-black bg-opacity-40 dark:bg-black dark:bg-opacity-60 flex items-center justify-center z-50 rounded-lg"
         >
           <div
-            class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md max-h-[90vh] overflow-y-auto"
+            class="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-6 w-full max-w-md max-h-[90vh] overflow-y-auto"
           >
             <div class="flex justify-between items-center mb-4"></div>
-            <div class="bg-white font-mono text-sm" id="ticket-preview">
+            <div class="bg-white dark:bg-gray-800 font-mono text-sm dark:text-gray-200" id="ticket-preview">
               <!-- Información del restaurante (solo visible cuando el pedido está guardado) -->
               <div v-if="pedidoGuardado" class="text-center mb-4">
                 <p class="font-bold text-lg">CHICHARRONERIA 6 DE AGOSTO</p>
@@ -590,7 +587,7 @@
                 </div>
               </div>
 
-              <div class="border-t border-b border-gray-300 py-2 mb-4">
+              <div class="border-t border-b border-gray-300 dark:border-gray-600 py-2 mb-4">
                 <div class="grid grid-cols-12 font-bold">
                   <div class="col-span-6">Producto</div>
                   <div class="col-span-2 text-center">Cant</div>
@@ -621,7 +618,7 @@
                 </div>
               </div>
 
-              <div class="border-t border-gray-300 pt-2 mb-4">
+              <div class="border-t border-gray-300 dark:border-gray-600 pt-2 mb-4">
                 <div class="flex justify-between font-bold">
                   <span>TOTAL:</span>
                   <span>Bs. {{ calcularTotal() }}</span>
@@ -631,7 +628,7 @@
               <!-- Nuevo: Sección de pago (solo visible si el pedido no está guardado) -->
               <div
                 v-if="!pedidoGuardado"
-                class="border-t border-gray-300 pt-4 mb-4"
+                class="border-t border-gray-300 dark:border-gray-600 pt-4 mb-4"
               >
                 <div class="mb-3">
                   <label class="block text-sm font-bold mb-1"
@@ -647,14 +644,14 @@
                       type="number"
                       step="0.01"
                       min="0"
-                      class="w-full px-3 py-2 pl-7 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400"
+                      class="w-full px-3 py-2 pl-7 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400 dark:focus:ring-red-500 dark:bg-gray-700 dark:text-gray-100"
                       placeholder="0.00"
                     />
                   </div>
                 </div>
                 <div class="mb-3">
                   <label class="block text-sm font-bold mb-1">Cambio:</label>
-                  <div class="text-xl font-bold text-green-600">
+                  <div class="text-xl font-bold text-green-600 dark:text-green-400">
                     {{ calcularCambio() }} Bs.
                   </div>
                 </div>
@@ -672,7 +669,7 @@
                 type="button"
                 @click="confirmarPedido"
                 :disabled="guardando"
-                class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition flex items-center gap-2"
+                class="px-4 py-2 bg-green-600 dark:bg-green-700 text-white rounded-lg hover:bg-green-700 dark:hover:bg-green-600 transition flex items-center gap-2"
               >
                 <span>Confirmar Pedido</span>
                 <svg
@@ -716,7 +713,7 @@
                 v-if="pedidoGuardado"
                 type="button"
                 @click="imprimirTicket"
-                class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+                class="px-4 py-2 bg-blue-600 dark:bg-blue-700 text-white rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition"
               >
                 Imprimir
               </button>
@@ -724,7 +721,7 @@
               <button
                 type="button"
                 @click="cerrarFormulario"
-                class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition"
+                class="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition"
               >
                 Cerrar
               </button>
@@ -736,14 +733,14 @@
           <button
             type="button"
             @click="cerrar"
-            class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition"
+            class="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition"
           >
             Cancelar
           </button>
           <button
             type="submit"
             :disabled="detallesActivos.length === 0 || guardando"
-            class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+            class="px-4 py-2 bg-red-600 dark:bg-red-700 text-white rounded-lg hover:bg-red-700 dark:hover:bg-red-600 transition flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <span>{{
               pedido?.id ? "Agregar Pedido" : "Registrar Pedido"
@@ -919,38 +916,6 @@ const cerrarFormulario = () => {
     emit("cerrar");
   } else {
     mostrarVistaPrevia.value = false;
-  }
-};
-
-//efectos de sonido
-// Audio elements
-let hoverSound: HTMLAudioElement | null = null;
-let addSound: HTMLAudioElement | null = null;
-let removeSound: HTMLAudioElement | null = null;
-
-// Play hover sound
-const playHoverSound = (): void => {
-  if (hoverSound) {
-    hoverSound.currentTime = 0;
-    hoverSound.play().catch((e: Error) => console.log("Audio play error:", e));
-  }
-};
-
-// Play add sound
-const playAddSound = (): void => {
-  if (addSound) {
-    addSound.currentTime = 0;
-    addSound.play().catch((e: Error) => console.log("Audio play error:", e));
-    console.log("Playing add sound");
-  }
-};
-
-// Play remove sound
-const playRemoveSound = (): void => {
-  if (removeSound) {
-    removeSound.currentTime = 0;
-    removeSound.play().catch((e: Error) => console.log("Audio play error:", e));
-    console.log("Playing remove sound");
   }
 };
 
@@ -1383,18 +1348,5 @@ onMounted(async () => {
     cargarCategorias(),
   ]);
   filtrarProductos();
-  // Create audio elements once on component mount
-  hoverSound = new Audio();
-  addSound = new Audio();
-  removeSound = new Audio();
-  hoverSound.src =
-    "https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3";
-  addSound.src =
-    "https://assets.mixkit.co/active_storage/sfx/1113/1113-preview.mp3";
-  removeSound.src =
-    "https://assets.mixkit.co/active_storage/sfx/1113/1113-preview.mp3";
-  hoverSound.load();
-  addSound.load();
-  removeSound.load();
 });
 </script>

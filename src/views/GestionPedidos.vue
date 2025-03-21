@@ -1,15 +1,15 @@
 <template>
   <div class="h-full flex flex-col overflow-hidden">
     <!-- Encabezado con título -->
-    <div class="bg-gradient-to-r bg-gray-100 p-4 rounded-lg shadow-md mb-4">
+    <div class="bg-gradient-to-r bg-gray-100 dark:bg-gray-800 p-4 rounded-lg shadow-md mb-4">
       <div
         class="flex flex-col md:flex-row md:justify-between md:items-center gap-4"
       >
-        <h1 class="text-2xl font-bold text-gray-700 flex items-center">
+        <h1 class="text-2xl font-bold text-gray-700 dark:text-gray-100 flex items-center">
           Gestión de Pedidos
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            class="h-6 w-6 ml-2 text-red-500"
+            class="h-6 w-6 ml-2 text-red-500 dark:text-red-400"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -40,16 +40,16 @@
     />
 
     <!-- Contador de pedidos -->
-    <div class="mb-2 text-gray-600 flex justify-between items-center">
+    <div class="mb-2 text-gray-600 dark:text-gray-400 flex justify-between items-center">
       <div>Total: {{ pedidosFiltrados.length }} pedidos encontrados</div>
-      <div class="font-medium text-red-600">
+      <div class="font-medium text-red-600 dark:text-red-400">
         Total seleccionados: ${{ totalPedidosSeleccionados.toFixed(2) }}
       </div>
     </div>
 
     <!-- Tabla de pedidos con encabezados fijos -->
     <div
-      class="flex-1 overflow-hidden bg-white shadow-lg rounded-lg flex flex-col"
+      class="flex-1 overflow-hidden bg-white dark:bg-gray-800 shadow-lg rounded-lg flex flex-col"
     >
       <div class="flex-1 overflow-y-auto">
         <!-- Aquí irá el cuerpo de la tabla con scroll -->
@@ -70,7 +70,7 @@
 
     <!-- Paginación -->
     <div class="flex justify-between items-center mt-4 mb-2">
-      <div class="text-sm text-gray-600">
+      <div class="text-sm text-gray-600 dark:text-gray-400">
         Mostrando
         {{ Math.min((pagina - 1) * porPagina + 1, pedidosFiltrados.length) }}
         -
@@ -81,7 +81,7 @@
         <button
           @click="pagina > 1 ? pagina-- : null"
           :disabled="pagina <= 1"
-          class="px-4 py-2 border rounded-lg shadow-sm bg-white hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed transition"
+          class="px-4 py-2 border dark:border-gray-600 rounded-lg shadow-sm bg-white dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed transition dark:text-gray-200"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -98,7 +98,7 @@
             />
           </svg>
         </button>
-        <span class="px-4 py-2 text-gray-700 bg-white border rounded-lg">
+        <span class="px-4 py-2 text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 border dark:border-gray-600 rounded-lg">
           {{ pagina }} /
           {{ Math.ceil(pedidosFiltrados.length / porPagina) || 1 }}
         </span>
@@ -109,7 +109,7 @@
               : null
           "
           :disabled="pagina >= Math.ceil(pedidosFiltrados.length / porPagina)"
-          class="px-4 py-2 border rounded-lg shadow-sm bg-white hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed transition"
+          class="px-4 py-2 border dark:border-gray-600 rounded-lg shadow-sm bg-white dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed transition dark:text-gray-200"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"

@@ -4,13 +4,13 @@
     class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
   >
     <div
-      class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md transform transition-all"
+      class="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-6 w-full max-w-md transform transition-all"
     >
       <div class="flex justify-between items-center mb-4">
-        <h2 class="text-xl font-bold text-gray-800">
+        <h2 class="text-xl font-bold text-gray-800 dark:text-gray-100">
           {{ props.mesa ? "Editar" : "Nueva" }} Mesa
         </h2>
-        <button @click="cerrar" class="text-gray-500 hover:text-gray-700">
+        <button @click="cerrar" class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300">
           <span class="text-2xl">&times;</span>
         </button>
       </div>
@@ -18,7 +18,7 @@
       <form @submit.prevent="guardar">
         <div class="mb-4">
           <label
-            class="block text-gray-700 text-sm font-bold mb-2"
+            class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2"
             for="numero"
           >
             Número de Mesa
@@ -29,14 +29,14 @@
             type="number"
             required
             min="1"
-            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400"
+            class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400 dark:focus:ring-red-500 dark:bg-gray-700 dark:text-gray-100"
             placeholder="Ingrese el número de mesa"
           />
         </div>
 
         <div class="mb-4">
           <label
-            class="block text-gray-700 text-sm font-bold mb-2"
+            class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2"
             for="estado"
           >
             Estado
@@ -45,7 +45,7 @@
             v-model="formData.estado"
             id="estado"
             required
-            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400 bg-white"
+            class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400 dark:focus:ring-red-500 bg-white dark:bg-gray-700 dark:text-gray-100"
           >
             <option value="" disabled>Seleccione un estado</option>
             <option
@@ -56,20 +56,20 @@
               {{ estado.etiqueta }}
             </option>
           </select>
-          <span v-if="errorMensaje" style="color: red">{{ errorMensaje }}</span>
+          <span v-if="errorMensaje" class="text-red-500">{{ errorMensaje }}</span>
         </div>
 
         <div class="flex justify-end gap-2">
           <button
             type="button"
             @click="cerrar"
-            class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition"
+            class="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition"
           >
             Cancelar
           </button>
           <button
             type="submit"
-            class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition flex items-center gap-2"
+            class="px-4 py-2 bg-red-600 dark:bg-red-700 text-white rounded-lg hover:bg-red-700 dark:hover:bg-red-600 transition flex items-center gap-2"
           >
             <span>{{ props.mesa ? "Actualizar" : "Guardar" }}</span>
             <svg
@@ -90,6 +90,7 @@
     </div>
   </div>
 </template>
+
 
 <script setup lang="ts">
 import { ref, watch } from "vue";

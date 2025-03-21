@@ -3,35 +3,35 @@
     class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
   >
     <div
-      class="bg-white rounded-lg shadow-xl p-6 w-full max-w-3xl max-h-[90vh] overflow-y-auto"
+      class="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-6 w-full max-w-3xl max-h-[90vh] overflow-y-auto"
     >
       <div class="flex justify-between items-center mb-4">
-        <h2 class="text-xl font-bold text-gray-800">
+        <h2 class="text-xl font-bold text-gray-800 dark:text-gray-100">
           Pedido #{{ pedido.num_pedido_dia }}
         </h2>
         <button
           @click="$emit('cerrar')"
-          class="text-gray-500 hover:text-gray-700"
+          class="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
         >
           <span class="text-2xl">&times;</span>
         </button>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-        <div class="bg-gray-50 p-3 rounded-lg">
-          <div class="text-sm text-gray-500">Fecha</div>
-          <div class="font-medium">
+        <div class="bg-gray-50 dark:bg-gray-700 p-3 rounded-lg">
+          <div class="text-sm text-gray-500 dark:text-gray-400">Fecha</div>
+          <div class="font-medium dark:text-gray-200">
             {{ formatearFecha(pedido.fecha_creacion) }}
           </div>
         </div>
-        <div class="bg-gray-50 p-3 rounded-lg">
-          <div class="text-sm text-gray-500">Mesa</div>
-          <div class="font-medium">
+        <div class="bg-gray-50 dark:bg-gray-700 p-3 rounded-lg">
+          <div class="text-sm text-gray-500 dark:text-gray-400">Mesa</div>
+          <div class="font-medium dark:text-gray-200">
             {{ pedido.mesa ? `Mesa ${pedido.mesa.numero}` : "No especificada" }}
           </div>
         </div>
-        <div class="bg-gray-50 p-3 rounded-lg">
-          <div class="text-sm text-gray-500">Tipo de Pago</div>
+        <div class="bg-gray-50 dark:bg-gray-700 p-3 rounded-lg">
+          <div class="text-sm text-gray-500 dark:text-gray-400">Tipo de Pago</div>
           <div>
             <span :class="getTipoPagoClase(pedido.tipo_pago)">
               {{ pedido.tipo_pago || "No especificado" }}
@@ -41,66 +41,66 @@
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-        <div class="bg-gray-50 p-3 rounded-lg">
-          <div class="text-sm text-gray-500">Mesero</div>
+        <div class="bg-gray-50 dark:bg-gray-700 p-3 rounded-lg">
+          <div class="text-sm text-gray-500 dark:text-gray-400">Mesero</div>
           <div class="font-medium flex items-center">
             <div
-              class="w-8 h-8 rounded-full bg-red-100 flex items-center justify-center mr-2"
+              class="w-8 h-8 rounded-full bg-red-100 dark:bg-red-900 flex items-center justify-center mr-2"
             >
-              <span class="text-sm font-medium text-red-600">{{
+              <span class="text-sm font-medium text-red-600 dark:text-red-300">{{
                 pedido.mesera.nombre.charAt(0)
               }}</span>
             </div>
-            {{ pedido.mesera.nombre }}
+            <span class="dark:text-gray-200">{{ pedido.mesera.nombre }}</span>
           </div>
         </div>
-        <div class="bg-gray-50 p-3 rounded-lg">
-          <div class="text-sm text-gray-500">Cajero</div>
+        <div class="bg-gray-50 dark:bg-gray-700 p-3 rounded-lg">
+          <div class="text-sm text-gray-500 dark:text-gray-400">Cajero</div>
           <div class="font-medium flex items-center">
             <div
-              class="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center mr-2"
+              class="w-8 h-8 rounded-full bg-green-100 dark:bg-green-900 flex items-center justify-center mr-2"
             >
-              <span class="text-sm font-medium text-green-600">{{
+              <span class="text-sm font-medium text-green-600 dark:text-green-300">{{
                 pedido.cajero.nombre.charAt(0)
               }}</span>
             </div>
-            {{ pedido.cajero.nombre }}
+            <span class="dark:text-gray-200">{{ pedido.cajero.nombre }}</span>
           </div>
         </div>
-        <div class="bg-gray-50 p-3 rounded-lg">
-          <div class="text-sm text-gray-500">Para llevar</div>
-          <div class="font-medium flex items-center">
+        <div class="bg-gray-50 dark:bg-gray-700 p-3 rounded-lg">
+          <div class="text-sm text-gray-500 dark:text-gray-400">Para llevar</div>
+          <div class="font-medium flex items-center dark:text-gray-200">
             {{ pedido.para_llevar ? "SI" : "NO" }}
           </div>
         </div>
       </div>
 
       <div class="mb-4">
-        <h3 class="text-lg font-semibold text-gray-700 mb-2">Productos</h3>
-        <div class="overflow-x-auto bg-white border rounded-lg">
+        <h3 class="text-lg font-semibold text-gray-700 dark:text-gray-200 mb-2">Productos</h3>
+        <div class="overflow-x-auto bg-white dark:bg-gray-700 border dark:border-gray-600 rounded-lg">
           <table class="w-full border-collapse">
             <thead>
-              <tr class="bg-gray-100">
-                <th class="p-3 text-left">Producto</th>
-                <th class="p-3 text-center">Cantidad</th>
-                <th class="p-3 text-right">Precio Unitario</th>
-                <th class="p-3 text-right">Subtotal</th>
+              <tr class="bg-gray-100 dark:bg-gray-600">
+                <th class="p-3 text-left dark:text-gray-200">Producto</th>
+                <th class="p-3 text-center dark:text-gray-200">Cantidad</th>
+                <th class="p-3 text-right dark:text-gray-200">Precio Unitario</th>
+                <th class="p-3 text-right dark:text-gray-200">Subtotal</th>
               </tr>
             </thead>
             <tbody>
               <tr
                 v-for="detalle in pedido.detalles"
                 :key="detalle.id"
-                class="border-b"
+                class="border-b dark:border-gray-600"
               >
                 <td class="p-3">
                   <div class="flex items-center">
                     <div
-                      class="w-10 h-10 bg-gray-200 rounded-lg flex items-center justify-center mr-3"
+                      class="w-10 h-10 bg-gray-200 dark:bg-gray-600 rounded-lg flex items-center justify-center mr-3"
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
-                        class="h-6 w-6 text-gray-500"
+                        class="h-6 w-6 text-gray-500 dark:text-gray-400"
                         fill="none"
                         viewBox="0 0 24 24"
                         stroke="currentColor"
@@ -114,10 +114,10 @@
                       </svg>
                     </div>
                     <div>
-                      <div class="font-medium">
+                      <div class="font-medium dark:text-gray-200">
                         {{ detalle.producto.nombre }}
                       </div>
-                      <div class="text-xs text-gray-500">
+                      <div class="text-xs text-gray-500 dark:text-gray-400">
                         ID: {{ detalle.producto.id }}
                       </div>
                     </div>
@@ -125,15 +125,15 @@
                 </td>
                 <td class="p-3 text-center">
                   <span
-                    class="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs font-medium"
+                    class="bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-300 px-2 py-1 rounded-full text-xs font-medium"
                   >
                     {{ detalle.cantidad }}
                   </span>
                 </td>
-                <td class="p-3 text-right">
+                <td class="p-3 text-right dark:text-gray-200">
                   ${{ parseFloat(detalle.precio_unitario).toFixed(2) }}
                 </td>
-                <td class="p-3 text-right font-medium">
+                <td class="p-3 text-right font-medium dark:text-gray-200">
                   ${{
                     (
                       detalle.cantidad * parseFloat(detalle.precio_unitario)
@@ -143,9 +143,9 @@
               </tr>
             </tbody>
             <tfoot>
-              <tr class="bg-gray-50">
-                <td colspan="3" class="p-3 text-right font-bold">Total:</td>
-                <td class="p-3 text-right font-bold">
+              <tr class="bg-gray-50 dark:bg-gray-700">
+                <td colspan="3" class="p-3 text-right font-bold dark:text-gray-200">Total:</td>
+                <td class="p-3 text-right font-bold dark:text-gray-200">
                   ${{ parseFloat(pedido.total).toFixed(2) }}
                 </td>
               </tr>
@@ -157,13 +157,13 @@
       <div class="flex justify-end gap-2">
         <button
           @click="$emit('cerrar')"
-          class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition"
+          class="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition"
         >
           Cerrar
         </button>
         <button
           @click="exportarPedido"
-          class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition flex items-center gap-2"
+          class="px-4 py-2 bg-red-600 dark:bg-red-700 text-white rounded-lg hover:bg-red-700 dark:hover:bg-red-600 transition flex items-center gap-2"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"

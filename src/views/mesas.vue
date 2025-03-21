@@ -15,15 +15,15 @@
     />
 
     <!-- Encabezado con título y buscador -->
-    <div class="bg-gradient-to-r bg-gray-100 p-4 rounded-lg shadow-md mb-4">
+    <div class="bg-gradient-to-r bg-gray-100 dark:bg-gray-800 p-4 rounded-lg shadow-md mb-4">
       <div
         class="flex flex-col md:flex-row md:justify-between md:items-center gap-4"
       >
-        <h1 class="text-2xl font-bold text-gray-700 flex items-center">
+        <h1 class="text-2xl font-bold text-gray-700 dark:text-gray-100 flex items-center">
           Mesas
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            class="h-6 w-6 ml-2 text-red-500"
+            class="h-6 w-6 ml-2 text-red-500 dark:text-red-400"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -44,12 +44,12 @@
               v-model="searchQuery"
               type="text"
               placeholder="Buscar mesa..."
-              class="border p-2 rounded-lg shadow-sm w-full focus:ring-2 focus:ring-red-400 outline-none pl-10 bg-white"
+              class="border dark:border-gray-600 p-2 rounded-lg shadow-sm w-full focus:ring-2 focus:ring-red-400 dark:focus:ring-red-500 outline-none pl-10 bg-white dark:bg-gray-700 dark:text-gray-100 dark:placeholder-gray-400"
               @input="buscarMesas"
             />
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              class="h-5 w-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-red-600"
+              class="h-5 w-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-red-600 dark:text-red-400"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -66,7 +66,7 @@
           <!-- Botón de agregar mesa -->
           <button
             @click="abrirModalCrear"
-            class="bg-red-600 text-white px-4 py-2 rounded-lg shadow-md hover:bg-red-700 transition flex items-center gap-2 w-full sm:w-auto justify-center"
+            class="bg-red-600 dark:bg-red-700 text-white px-4 py-2 rounded-lg shadow-md hover:bg-red-700 dark:hover:bg-red-600 transition flex items-center gap-2 w-full sm:w-auto justify-center"
           >
             Agregar Mesa
             <svg
@@ -89,16 +89,16 @@
     </div>
 
     <!-- Contador de mesas -->
-    <div class="mb-2 text-gray-600">
+    <div class="mb-2 text-gray-600 dark:text-gray-300">
       Total: {{ mesasFiltradas.length }} mesas encontradas
     </div>
 
     <!-- Tabla de mesas con altura fija -->
-    <div class="flex-1 overflow-hidden bg-white shadow-lg rounded-lg flex flex-col">
+    <div class="flex-1 overflow-hidden bg-white dark:bg-gray-800 shadow-lg rounded-lg flex flex-col">
       <div class="overflow-x-auto">
         <table class="w-full border-collapse">
           <thead>
-            <tr class="bg-gradient-to-r from-red-500 to-red-600 text-white">
+            <tr class="bg-gradient-to-r from-red-500 to-red-600 dark:from-red-700 dark:to-red-800 text-white">
               <th class="p-3 text-left rounded-tl-lg w-16">ID</th>
               <th class="p-3 text-left w-24">N° Mesa</th>
               <th class="p-3 text-left w-32">Estado</th>
@@ -124,18 +124,18 @@
             <tr
               v-for="mesa in paginatedMesas"
               :key="mesa.id"
-              class="border-b hover:bg-gray-100 transition"
+              class="border-b dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-700 transition"
             >
               <td class="p-3 h-16">
                 <span
-                  class="bg-gray-200 text-gray-700 px-2 py-1 rounded-full text-xs font-bold"
+                  class="bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-200 px-2 py-1 rounded-full text-xs font-bold"
                 >
                   {{ mesa.id }}
                 </span>
               </td>
               <td class="p-3">
                 <span
-                  class="px-3 py-1.5 text-center font-medium bg-emerald-500 text-white rounded-lg shadow-md inline-block hover:bg-emerald-700 transition-colors"
+                  class="px-3 py-1.5 text-center font-medium bg-emerald-500 dark:bg-emerald-600 text-white rounded-lg shadow-md inline-block hover:bg-emerald-700 dark:hover:bg-emerald-700 transition-colors"
                 >
                   {{ mesa.numero }}
                 </span>
@@ -145,18 +145,18 @@
                   {{mesa.estado}}
                 </span>
               </td>
-              <td class="p-3 text-gray-600">
+              <td class="p-3 text-gray-600 dark:text-gray-400">
                 {{ formatearFecha(mesa.fecha_creacion) }}
               </td>
               <td class="p-3 flex justify-center space-x-3">
                 <button
                   @click="editarMesa(mesa)"
-                  class="bg-blue-100 p-2 rounded-full hover:bg-blue-200 transition"
+                  class="bg-blue-100 dark:bg-blue-900 p-2 rounded-full hover:bg-blue-200 dark:hover:bg-blue-800 transition"
                   title="Editar"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    class="h-5 w-5 text-blue-600"
+                    class="h-5 w-5 text-blue-600 dark:text-blue-300"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
@@ -171,12 +171,12 @@
                 </button>
                 <button
                   @click="confirmarEliminar(mesa)"
-                  class="bg-red-100 p-2 rounded-full hover:bg-red-200 transition"
+                  class="bg-red-100 dark:bg-red-900 p-2 rounded-full hover:bg-red-200 dark:hover:bg-red-800 transition"
                   title="Eliminar"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    class="h-5 w-5 text-red-600"
+                    class="h-5 w-5 text-red-600 dark:text-red-300"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
@@ -192,12 +192,12 @@
               </td>
             </tr>
             <tr v-if="paginatedMesas.length === 0">
-              <td colspan="5" class="p-6 text-center text-gray-500">
+              <td colspan="5" class="p-6 text-center text-gray-500 dark:text-gray-400">
                 No se encontraron mesas
                 <div class="mt-2">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    class="h-10 w-10 mx-auto text-gray-400"
+                    class="h-10 w-10 mx-auto text-gray-400 dark:text-gray-500"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
@@ -219,7 +219,7 @@
 
     <!-- Paginación -->
     <div class="flex justify-between items-center mt-4 mb-2">
-      <div class="text-sm text-gray-600">
+      <div class="text-sm text-gray-600 dark:text-gray-400">
         Mostrando {{ paginatedMesas.length }} de
         {{ mesasFiltradas.length }} mesas
       </div>
@@ -227,7 +227,7 @@
         <button
           @click="prevPage"
           :disabled="pagina === 1"
-          class="px-4 py-2 border rounded-lg shadow-sm bg-white hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed transition"
+          class="px-4 py-2 border dark:border-gray-600 rounded-lg shadow-sm bg-white dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed transition dark:text-gray-200"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -244,13 +244,13 @@
             />
           </svg>
         </button>
-        <span class="px-4 py-2 text-gray-700 bg-white border rounded-lg">
+        <span class="px-4 py-2 text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 border dark:border-gray-600 rounded-lg">
           {{ pagina }} / {{ totalPaginas || 1 }}
         </span>
         <button
           @click="nextPage"
           :disabled="pagina >= totalPaginas"
-          class="px-4 py-2 border rounded-lg shadow-sm bg-white hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed transition"
+          class="px-4 py-2 border dark:border-gray-600 rounded-lg shadow-sm bg-white dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed transition dark:text-gray-200"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"

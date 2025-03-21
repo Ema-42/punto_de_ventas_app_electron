@@ -1,21 +1,21 @@
 <template>
-  <div class="bg-white p-4 pt-2 rounded-lg shadow-md mb-4">
+  <div class="bg-white dark:bg-gray-800 p-4 pt-2 rounded-lg shadow-md mb-4">
     <div class="grid grid-cols-1 md:grid-cols-12 gap-4">
       <!-- Buscador más compacto -->
       <div class="relative md:col-span-3">
-        <label class="block text-sm font-medium text-gray-700 mb-1"
-          >Buscar por (ID, Num Pedido,Mesera,Tipo Pago)</label
+        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+          >Buscar por (ID, Num Pedido, Mesera, Tipo Pago)</label
         >
         <input
           v-model="filtrosLocales.busqueda"
           type="text"
           placeholder="Buscar Pedido"
-          class="border p-2 rounded-lg shadow-sm w-full focus:ring-2 focus:ring-red-400 outline-none pl-10 bg-white"
+          class="border dark:border-gray-600 p-2 rounded-lg shadow-sm w-full focus:ring-2 focus:ring-red-400 dark:focus:ring-red-500 outline-none pl-10 bg-white dark:bg-gray-700 dark:text-gray-100"
           @input="emitirCambios"
         />
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          class="h-5 w-5 absolute left-3 top-9 text-red-600"
+          class="h-5 w-5 absolute left-3 top-9 text-red-600 dark:text-red-400"
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
@@ -31,7 +31,7 @@
 
       <!-- Selector de periodo -->
       <div class="md:col-span-3">
-        <label class="block text-sm font-medium text-gray-700 mb-1"
+        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
           >Periodo</label
         >
         <div class="flex flex-wrap gap-2">
@@ -42,8 +42,8 @@
             class="px-3 py-1 rounded-md text-sm"
             :class="
               filtrosLocales.periodo === periodo.valor
-                ? 'bg-red-600 text-white'
-                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                ? 'bg-red-600 dark:bg-red-700 text-white'
+                : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-600'
             "
           >
             {{ periodo.etiqueta }}
@@ -55,24 +55,24 @@
       <div class="md:col-span-6" v-if="filtrosLocales.periodo === 'personalizado'">
         <div class="flex gap-2">
           <div class="flex-1">
-            <label class="block text-sm font-medium text-gray-700 mb-1"
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
               >Desde</label
             >
             <input
               v-model="filtrosLocales.fechaDesde"
               type="date"
-              class="border p-2 rounded-lg shadow-sm w-full focus:ring-2 focus:ring-red-400 outline-none bg-white"
+              class="border dark:border-gray-600 p-2 rounded-lg shadow-sm w-full focus:ring-2 focus:ring-red-400 dark:focus:ring-red-500 outline-none bg-white dark:bg-gray-700 dark:text-gray-100"
               @change="emitirCambios"
             />
           </div>
           <div class="flex-1">
-            <label class="block text-sm font-medium text-gray-700 mb-1"
+            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
               >Hasta</label
             >
             <input
               v-model="filtrosLocales.fechaHasta"
               type="date"
-              class="border p-2 rounded-lg shadow-sm w-full focus:ring-2 focus:ring-red-400 outline-none bg-white"
+              class="border dark:border-gray-600 p-2 rounded-lg shadow-sm w-full focus:ring-2 focus:ring-red-400 dark:focus:ring-red-500 outline-none bg-white dark:bg-gray-700 dark:text-gray-100"
               @change="emitirCambios"
             />
           </div>
@@ -81,9 +81,9 @@
     </div>
 
     <!-- Opciones de exportación (ahora más compactas y en la parte inferior) -->
-    <div class="mt-3 pt-1 border-t">
+    <div class="mt-3 pt-1 border-t dark:border-gray-700">
       <div class="flex flex-wrap items-center gap-3">
-        <h3 class="text-sm font-medium text-gray-700">
+        <h3 class="text-sm font-medium text-gray-700 dark:text-gray-300">
           Opciones de exportación:
         </h3>
         
@@ -93,11 +93,11 @@
             id="incluirDetalles"
             :checked="incluirDetalles"
             @change="$emit('toggle-incluir-detalles')"
-            class="mr-1 h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300 rounded"
+            class="mr-1 h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300 dark:border-gray-600 rounded"
           />
           <label
             for="incluirDetalles"
-            class="text-sm font-medium text-gray-700"
+            class="text-sm font-medium text-gray-700 dark:text-gray-300"
             >Incluir detalles de cada pedido</label
           >
         </div>
@@ -108,31 +108,31 @@
             id="incluirRanking"
             :checked="incluirRanking"
             @change="$emit('toggle-incluir-ranking')"
-            class="mr-1 h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300 rounded"
+            class="mr-1 h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300 dark:border-gray-600 rounded"
           />
           <label
             for="incluirRanking"
-            class="text-sm font-medium text-gray-700"
+            class="text-sm font-medium text-gray-700 dark:text-gray-300"
             >Incluir un Top Productos, para ver los productos mas vendidos</label
           >
         </div>
         
         <div class="flex-grow"></div>
         
-        <div class="text-sm text-gray-600">
+        <div class="text-sm text-gray-600 dark:text-gray-400">
           {{ pedidosSeleccionados.length }} pedidos - ${{ totalSeleccionados.toFixed(2) }}
         </div>
         
         <button
           @click="$emit('seleccionar-todos-filtrados')"
-          class="bg-gray-200 text-gray-700 px-3 py-1 rounded-md text-sm hover:bg-gray-300 transition"
+          class="bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 px-3 py-1 rounded-md text-sm hover:bg-gray-300 dark:hover:bg-gray-600 transition"
         >
           Seleccionar todos
         </button>
         
         <button
           @click="$emit('exportar-pdf')"
-          class="text-sm font-medium bg-red-600 text-white px-3 py-2 rounded-lg shadow-md hover:bg-red-700 transition flex items-center gap-1"
+          class="text-sm font-medium bg-red-600 dark:bg-red-700 text-white px-3 py-2 rounded-lg shadow-md hover:bg-red-700 dark:hover:bg-red-600 transition flex items-center gap-1"
           :disabled="pedidosSeleccionados.length === 0"
           :class="{
             'opacity-50 cursor-not-allowed':

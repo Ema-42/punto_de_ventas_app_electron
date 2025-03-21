@@ -1,9 +1,9 @@
 <template>
   <div class="relative">
     <!-- Tabla con encabezados fijos -->
-    <table class="w-full border-collapse bg-white rounded-lg shadow-md">
+    <table class="w-full border-collapse bg-white dark:bg-gray-800 rounded-lg shadow-md">
       <!-- Encabezados fijos con fondo degradado rojo -->
-      <thead class="bg-red-500 text-white sticky top-0 z-10">
+      <thead class="bg-red-500 dark:bg-red-700 text-white sticky top-0 z-10">
         <tr>
           <th class="p-3 text-left w-12 rounded-tl-lg">
             <input
@@ -27,12 +27,12 @@
       </thead>
       <tbody>
         <tr v-if="pedidosPaginados.length === 0">
-          <td colspan="10" class="p-4 text-center text-gray-500">
+          <td colspan="10" class="p-4 text-center text-gray-500 dark:text-gray-400">
             No se encontraron pedidos con los filtros seleccionados.
             <div class="mt-2">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                class="h-10 w-10 mx-auto text-gray-400"
+                class="h-10 w-10 mx-auto text-gray-400 dark:text-gray-500"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -50,8 +50,8 @@
 
         <template v-for="(grupo, index) in pedidosAgrupados" :key="index">
           <!-- Separador de fecha -->
-          <tr class="bg-amber-100">
-            <td colspan="11" class="p text-md font-medium text-gray-700">
+          <tr class="bg-amber-100 dark:bg-amber-900">
+            <td colspan="11" class="p text-md font-medium text-gray-700 dark:text-gray-200">
               {{ formatearFechaSeparador(grupo.fecha) }}
             </td>
           </tr>
@@ -60,30 +60,30 @@
           <tr
             v-for="pedido in grupo.pedidos"
             :key="pedido.id"
-            class="border-t hover:bg-gray-50"
+            class="border-t dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700"
           >
             <td class="p-3">
               <input
                 type="checkbox"
                 :checked="pedidosSeleccionados.includes(pedido.id)"
                 @change="$emit('seleccionar-pedido', pedido.id)"
-                class="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300 rounded"
+                class="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300 dark:border-gray-600 rounded"
               />
             </td>
             <td class="p-3">
               <span
-                class="bg-gray-200 text-gray-700 px-2 py-1 rounded-full text-xs font-bold"
+                class="bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-200 px-2 py-1 rounded-full text-xs font-bold"
               >
                 {{ pedido.id }}
               </span>
             </td>
-            <td class="p-3 font-medium">{{ pedido.num_pedido_dia }}</td>
-            <td class="p-3">{{ formatearHora(pedido.fecha_creacion) }}</td>
-            <td class="p-3">
+            <td class="p-3 font-medium dark:text-gray-200">{{ pedido.num_pedido_dia }}</td>
+            <td class="p-3 dark:text-gray-400">{{ formatearHora(pedido.fecha_creacion) }}</td>
+            <td class="p-3 dark:text-gray-400">
               {{ pedido.mesa ? `Mesa ${pedido.mesa.numero}` : "-" }}
             </td>
-            <td class="p-3">{{ pedido.mesera.nombre }}</td>
-            <td class="p-3">{{ pedido.cajero.nombre }}</td>
+            <td class="p-3 dark:text-gray-400">{{ pedido.mesera.nombre }}</td>
+            <td class="p-3 dark:text-gray-400">{{ pedido.cajero.nombre }}</td>
             <td class="p-3">
               <span
                 v-if="pedido.tipo_pago"
@@ -91,24 +91,24 @@
               >
                 {{ pedido.tipo_pago }}
               </span>
-              <span v-else>-</span>
+              <span v-else class="dark:text-gray-400">-</span>
             </td>
-            <td class="p-3 text-left font-medium">
+            <td class="p-3 text-left font-medium dark:text-gray-200">
               {{ pedido.para_llevar ? "SI" : "NO" }}
             </td>
-            <td class="p-3 text-right font-medium">
+            <td class="p-3 text-right font-medium dark:text-gray-200">
               ${{ parseFloat(pedido.total).toFixed(2) }}
             </td>
             <td class="p-3 text-center">
               <div class="flex justify-center gap-2">
                 <button
                   @click="$emit('ver-detalle', pedido)"
-                  class="bg-blue-100 p-2 rounded-full hover:bg-blue-200 transition"
+                  class="bg-blue-100 dark:bg-blue-900 p-2 rounded-full hover:bg-blue-200 dark:hover:bg-blue-800 transition"
                   title="Ver detalles"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    class="h-5 w-5 text-blue-600"
+                    class="h-5 w-5 text-blue-600 dark:text-blue-300"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
@@ -129,12 +129,12 @@
                 </button>
                 <button
                   @click="$emit('exportar-pedido', pedido)"
-                  class="bg-red-100 p-2 rounded-full hover:bg-red-200 transition"
+                  class="bg-red-100 dark:bg-red-900 p-2 rounded-full hover:bg-red-200 dark:hover:bg-red-800 transition"
                   title="Exportar a PDF"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    class="h-5 w-5 text-red-600"
+                    class="h-5 w-5 text-red-600 dark:text-red-300"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"

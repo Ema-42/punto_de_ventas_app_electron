@@ -1,13 +1,13 @@
 <template>
-  <div class="h-full flex flex-col">
+  <div class="h-full flex flex-col dark:bg-gray-900">
     <!-- Header con Reloj y Filtros -->
     <div
-      class="flex flex-col md:flex-row justify-between items-center gap-2 bg-gradient-to-r bg-gray-100 p-3 rounded-lg shadow-md"
+      class="flex flex-col md:flex-row justify-between items-center gap-2 bg-gradient-to-r bg-gray-100 dark:bg-gray-800 p-3 rounded-lg shadow-md"
     >
       <div class="flex items-center gap-4">
-        <h1 class="text-2xl font-bold text-gray-700">Pagina Inicial</h1>
+        <h1 class="text-2xl font-bold text-gray-700 dark:text-gray-100">Pagina Inicial</h1>
         <div
-          class="bg-gray-700 text-2xl md:text-2xl font-mono font-bold text-white px-2 rounded-lg shadow-lg inline-block border border-gray-700 tracking-widest tabular-nums backdrop-blur-sm"
+          class="bg-gray-700 dark:bg-gray-900 text-2xl md:text-2xl font-mono font-bold text-white px-2 rounded-lg shadow-lg inline-block border border-gray-700 dark:border-gray-600 tracking-widest tabular-nums backdrop-blur-sm"
         >
           {{ currentTime }}
         </div>
@@ -17,12 +17,12 @@
           <input
             type="date"
             v-model="selectedDate"
-            class="px-4 py-2 border rounded-lg focus:ring-2 focus:ring-red-400 outline-none"
+            class="px-4 py-2 border rounded-lg focus:ring-2 focus:ring-red-400 outline-none dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100"
           />
         </div>
         <button
           @click="NuevoPedido"
-          class="bg-red-600 text-white px-4 py-2 rounded-lg shadow-md hover:bg-red-700 transition flex items-center gap-2"
+          class="bg-red-600 dark:bg-red-700 text-white px-4 py-2 rounded-lg shadow-md hover:bg-red-700 dark:hover:bg-red-600 transition flex items-center gap-2"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -47,21 +47,21 @@
       <div class="col-span-1 flex flex-col gap-3">
         <!-- Pedidos de Hoy -->
         <div
-          class="bg-sky-100 p-3 rounded-lg shadow-md border-l-4 border-l-sky-500 hover:shadow-lg transition-shadow"
+          class="bg-sky-100 dark:bg-sky-900/30 p-3 rounded-lg shadow-md border-l-4 border-l-sky-500 dark:border-l-sky-400 hover:shadow-lg transition-shadow"
         >
-          <h3 class="text-gray-700 text-sm font-medium mb-2">Pedidos de Hoy</h3>
+          <h3 class="text-gray-700 dark:text-gray-200 text-sm font-medium mb-2">Pedidos de Hoy</h3>
           <div class="flex justify-between flex-col items-center">
-            <div class="text-3xl font-bold text-sky-700 mb-2">
+            <div class="text-3xl font-bold text-sky-700 dark:text-sky-300 mb-2">
               {{ totalPedidos }}
             </div>
             <div class="flex gap-3">
-              <div class="bg-sky-200 px-3 py-1 rounded-lg">
-                <div class="text-gray-600 text-sm font-medium">
+              <div class="bg-sky-200 dark:bg-sky-800 px-3 py-1 rounded-lg">
+                <div class="text-gray-600 dark:text-gray-200 text-sm font-medium">
                   {{ cantidadPedidosCompletados }} Completados
                 </div>
               </div>
-              <div class="bg-yellow-100 px-3 py-1 rounded-lg">
-                <div class="text-gray-600 text-sm font-medium">
+              <div class="bg-yellow-100 dark:bg-yellow-800/50 px-3 py-1 rounded-lg">
+                <div class="text-gray-600 dark:text-gray-200 text-sm font-medium">
                   {{ cantidadPedidosEnPreparacion }} En Preparación.
                 </div>
               </div>
@@ -70,32 +70,32 @@
         </div>
         <!-- Ingresos del Día -->
         <div
-          class="bg-emerald-100 p-3 rounded-lg shadow-md border-l-4 border-l-emerald-500 hover:shadow-lg transition-shadow"
+          class="bg-emerald-100 dark:bg-emerald-900/30 p-3 rounded-lg shadow-md border-l-4 border-l-emerald-500 dark:border-l-emerald-400 hover:shadow-lg transition-shadow"
         >
-          <h3 class="text-gray-700 text-sm font-medium mb-2">
+          <h3 class="text-gray-700 dark:text-gray-200 text-sm font-medium mb-2">
             Ingresos del Día
           </h3>
           <div class="flex flex-col items-center">
-            <div class="text-3xl font-bold text-green-800 mb-2">
+            <div class="text-3xl font-bold text-green-800 dark:text-green-300 mb-2">
               {{ totalIngresosDelDia }} Bs.
             </div>
           </div>
         </div>
 
         <div
-          class="bg-indigo-100 p-3 rounded-lg shadow-md border-l-4 border-l-indigo-500 hover:shadow-lg transition-shadow"
+          class="bg-indigo-100 dark:bg-indigo-900/30 p-3 rounded-lg shadow-md border-l-4 border-l-indigo-500 dark:border-l-indigo-400 hover:shadow-lg transition-shadow"
         >
-          <h3 class="text-gray-700 text-sm font-medium mb-2">
+          <h3 class="text-gray-700 dark:text-gray-200 text-sm font-medium mb-2">
             Tipos de Pedido de Hoy
           </h3>
           <div class="flex flex-col lg:flex-row items-center gap-2 w-full">
             <div
-              class="w-full lg:w-1/2 bg-blue-500 text-white py-2 px-4 rounded-md text-center font-medium shadow-sm"
+              class="w-full lg:w-1/2 bg-blue-500 dark:bg-blue-600 text-white py-2 px-4 rounded-md text-center font-medium shadow-sm"
             >
               {{ CantidadPedidosEnMesa }} pedidos en mesa
             </div>
             <div
-              class="w-full lg:w-1/2 bg-emerald-500 text-white py-2 px-4 rounded-md text-center font-medium shadow-sm"
+              class="w-full lg:w-1/2 bg-emerald-500 dark:bg-emerald-600 text-white py-2 px-4 rounded-md text-center font-medium shadow-sm"
             >
               {{ CantidadPedidosParaLlevar }} pedidos para llevar
             </div>
@@ -104,28 +104,28 @@
 
         <!-- Meseros -->
         <div
-          class="bg-amber-50 p-3 rounded-lg shadow-md border-l-4 border-l-amber-500 hover:shadow-lg transition-shadow"
+          class="bg-amber-50 dark:bg-amber-900/20 p-3 rounded-lg shadow-md border-l-4 border-l-amber-500 dark:border-l-amber-400 hover:shadow-lg transition-shadow"
         >
-          <h3 class="text-gray-700 text-sm font-medium mb-2">
+          <h3 class="text-gray-700 dark:text-gray-200 text-sm font-medium mb-2">
             Meseras, En orden de disponibilidad
           </h3>
           <div class="space-y-2 overflow-y-auto">
             <div
               v-for="mesero in meseros"
               :key="mesero.id"
-              class="flex justify-between items-center p-2 bg-amber-100 rounded-lg"
+              class="flex justify-between items-center p-2 bg-amber-100 dark:bg-amber-800/30 rounded-lg"
             >
               <div class="flex items-center gap-2">
-                <span class="text-sm font-medium text-gray-700">
+                <span class="text-sm font-medium text-gray-700 dark:text-gray-200">
                   👩🏻 {{ mesero.nombre }}
                 </span>
               </div>
-              <div class="text-sm text-gray-500">
-                <span class="font-medium text-gray-700">{{
+              <div class="text-sm text-gray-500 dark:text-gray-400">
+                <span class="font-medium text-gray-700 dark:text-gray-200">{{
                   mesero.mesasAsignadas
                 }}</span>
                 mesas /
-                <span class="font-medium text-gray-700">{{
+                <span class="font-medium text-gray-700 dark:text-gray-200">{{
                   mesero.mesasAtendidas
                 }}</span>
                 atendidas
@@ -139,9 +139,9 @@
       <div class="lg:col-span-3 grid grid-cols-1 lg:grid-cols-3">
         <!-- Gráfico de Ventas del Día -->
         <div
-          class="lg:col-span-2 bg-white p-3 rounded-lg shadow-md flex flex-col lg:mr-4"
+          class="lg:col-span-2 bg-white dark:bg-gray-800 p-3 rounded-lg shadow-md flex flex-col lg:mr-4"
         >
-          <h3 class="text-gray-700 font-semibold mb-2">Ventas del Día</h3>
+          <h3 class="text-gray-700 dark:text-gray-200 font-semibold mb-2">Ventas del Día</h3>
           <div class="flex-1 min-h-0">
             <canvas ref="ventasDiaChart" class="min-h-96"></canvas>
           </div>
@@ -149,22 +149,22 @@
 
         <!-- Vista de Mesas -->
         <div
-          class="mt-4 lg:mt-0 lg:col-span-1 bg-gray-50 p-3 rounded-lg shadow-md border-l-4 border-l-gray-400 hover:shadow-lg transition-shadow flex flex-col overflow-y-auto"
+          class="mt-4 lg:mt-0 lg:col-span-1 bg-gray-50 dark:bg-gray-800 p-3 rounded-lg shadow-md border-l-4 border-l-gray-400 dark:border-l-gray-500 hover:shadow-lg transition-shadow flex flex-col overflow-y-auto"
         >
-          <h3 class="text-gray-700 font-semibold mb-2">Vista de Mesas</h3>
+          <h3 class="text-gray-700 dark:text-gray-200 font-semibold mb-2">Vista de Mesas</h3>
 
           <!-- Resumen de estado de mesas -->
           <div class="flex justify-between mb-3 text-sm">
-            <div class="px-2 py-1 bg-green-100 rounded text-green-700">
+            <div class="px-2 py-1 bg-green-100 dark:bg-green-800/50 rounded text-green-700 dark:text-green-300">
               {{ mesasEstados.libres.length }} Libres
             </div>
-            <div class="px-2 py-1 bg-red-100 rounded text-red-700">
+            <div class="px-2 py-1 bg-red-100 dark:bg-red-800/50 rounded text-red-700 dark:text-red-300">
               {{ mesasEstados.ocupadas.length }} Ocupadas
             </div>
-            <div class="px-2 py-1 bg-yellow-100 rounded text-yellow-700">
+            <div class="px-2 py-1 bg-yellow-100 dark:bg-yellow-800/50 rounded text-yellow-700 dark:text-yellow-300">
               {{ mesasEstados.reservadas.length }} Reservadas
             </div>
-            <div class="px-2 py-1 bg-gray-200 rounded text-gray-700">
+            <div class="px-2 py-1 bg-gray-200 dark:bg-gray-700 rounded text-gray-700 dark:text-gray-300">
               {{ mesasEstados.mantenimiento.length }} Mantenimiento
             </div>
           </div>
@@ -176,24 +176,24 @@
               :class="[
                 'p-2 rounded-lg text-center cursor-pointer transition-colors',
                 mesa.estado === EstadosMesa.LIBRE
-                  ? 'border border-green-300 bg-green-100 hover:bg-green-200'
+                  ? 'border border-green-300 bg-green-100 dark:border-green-600 dark:bg-green-900/40 hover:bg-green-200 dark:hover:bg-green-800/60'
                   : mesa.estado === EstadosMesa.OCUPADA
-                  ? 'border border-red-300 bg-red-100 hover:bg-red-200'
+                  ? 'border border-red-300 bg-red-100 dark:border-red-600 dark:bg-red-900/40 hover:bg-red-200 dark:hover:bg-red-800/60'
                   : mesa.estado === EstadosMesa.MANTENIMIENTO
-                  ? 'border border-gray-300 bg-gray-200 hover:bg-gray-300'
-                  : 'border border-yellow-300 bg-yellow-100 hover:bg-yellow-200',
+                  ? 'border border-gray-300 bg-gray-200 dark:border-gray-600 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600'
+                  : 'border border-yellow-300 bg-yellow-100 dark:border-yellow-600 dark:bg-yellow-900/40 hover:bg-yellow-200 dark:hover:bg-yellow-800/60',
               ]"
             >
               <div
                 class="font-medium text-lg"
                 :class="[
                   mesa.estado === EstadosMesa.LIBRE
-                    ? 'text-green-700'
+                    ? 'text-green-700 dark:text-green-300'
                     : mesa.estado === EstadosMesa.OCUPADA
-                    ? 'text-red-700'
+                    ? 'text-red-700 dark:text-red-300'
                     : mesa.estado === EstadosMesa.MANTENIMIENTO
-                    ? 'text-gray-700'
-                    : 'text-yellow-700',
+                    ? 'text-gray-700 dark:text-gray-300'
+                    : 'text-yellow-700 dark:text-yellow-300',
                 ]"
               >
                 {{ mesa.numero }}
@@ -208,10 +208,10 @@
         >
           <div class="col-span-1">
             <div
-              class="bg-violet-100 p-3 rounded-lg shadow-md border-l-4 border-l-violet-400 hover:shadow-lg transition-shadow"
+              class="bg-violet-100 dark:bg-violet-900/30 p-3 rounded-lg shadow-md border-l-4 border-l-violet-400 dark:border-l-violet-500 hover:shadow-lg transition-shadow"
             >
               <div class="justify-between items-center mb-3">
-                <h3 class="text-gray-700 font-semibold pb-2">
+                <h3 class="text-gray-700 dark:text-gray-200 font-semibold pb-2">
                   Productos Más Vendidos Hoy
                 </h3>
                 <div class="flex space-x-1">
@@ -222,8 +222,8 @@
                     :class="[
                       'px-3 py-1 text-sm rounded-md transition-colors',
                       categoriaSeleccionada === categoria.id
-                        ? 'bg-violet-900 bg-opacity-70 text-white'
-                        : 'bg-white text-gray-700 hover:bg-gray-200',
+                        ? 'bg-violet-900 bg-opacity-70 text-white dark:bg-violet-700'
+                        : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-600',
                     ]"
                   >
                     {{ categoria.nombre }}
@@ -233,8 +233,8 @@
                     :class="[
                       'px-3 py-1 text-sm rounded-md transition-colors',
                       categoriaSeleccionada === null
-                        ? 'bg-violet-900 bg-opacity-70 text-white'
-                        : 'bg-white text-gray-700 hover:bg-gray-200',
+                        ? 'bg-violet-900 bg-opacity-70 text-white dark:bg-violet-700'
+                        : 'bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-600',
                     ]"
                   >
                     Todos
@@ -246,13 +246,14 @@
               >
                 <div
                   v-if="productosFiltrados.length === 0"
-                  class="col-span-2 flex flex-col items-center py-4 justify-center bg-violet-950 bg-opacity-10 rounded-lg"
+                  class="col-span-2 flex flex-col items-center py-4 justify-center bg-violet-950 bg-opacity-10 dark:bg-violet-800/20 rounded-lg"
                 >
-                  No se encontró ningun pedido el dia de hoy
+                  <span class="text-gray-700 dark:text-gray-200 text-sm font-medium mt-2"
+                    >No se encontró ningun pedido el dia de hoy</span>
                   <div class=" ">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
-                      class="h-10 w-10 mx-auto text-gray-400"
+                      class="h-10 w-10 mx-auto text-gray-400 dark:text-gray-500"
                       fill="none"
                       viewBox="0 0 24 24"
                       stroke="currentColor"
@@ -269,24 +270,24 @@
                 <div
                   v-for="producto in productosFiltrados"
                   :key="producto.id"
-                  class="flex items-center p-2 h-14 bg-violet-950 bg-opacity-10 rounded-lg"
+                  class="flex items-center p-2 h-14 bg-violet-950 bg-opacity-10 dark:bg-violet-800/30 rounded-lg"
                 >
                   <div
-                    class="w-10 h-10 bg-violet-950 bg-opacity-40 rounded-lg flex items-center justify-center mr-3"
+                    class="w-10 h-10 bg-violet-950 bg-opacity-40 dark:bg-violet-700 rounded-lg flex items-center justify-center mr-3"
                   >
                     <span class="text-white font-semibold">{{
                       producto.ranking
                     }}</span>
                   </div>
                   <div class="flex-1 min-w-0">
-                    <div class="font-medium text-gray-700 truncate">
+                    <div class="font-medium text-gray-700 dark:text-gray-200 truncate">
                       {{ producto.nombre }}
                     </div>
                     <div class="flex justify-between text-sm">
-                      <span class="text-gray-700"
+                      <span class="text-gray-700 dark:text-gray-300"
                         >{{ producto.cantidad }} uds.</span
                       >
-                      <span class="text-gray-700">{{
+                      <span class="text-gray-700 dark:text-gray-300">{{
                         getCategoriaName(producto.categoriaId)
                       }}</span>
                     </div>
@@ -297,25 +298,25 @@
           </div>
           <div class="col-span-1 mt-2 lg:mt-0 mb-5 lg:mb-0">
             <div
-              class="p-3 rounded-lg shadow-md bg-red-100 border-l-4 border-l-red-400 hover:shadow-lg transition-shadow"
+              class="p-3 rounded-lg shadow-md bg-red-100 dark:bg-red-900/30 border-l-4 border-l-red-400 dark:border-l-red-500 hover:shadow-lg transition-shadow"
             >
-              <h3 class="text-gray-700 text-sm font-medium mb-2">
+              <h3 class="text-gray-700 dark:text-gray-200 text-sm font-medium mb-2">
                 Alertas de Productos con Stock
               </h3>
               <div class="flex flex-col gap-2 overflow-y-auto lg:h-56">
-                <div class="text-2xl font-bold text- mb-1 text-gray-700">
+                <div class="text-2xl font-bold mb-1 text-gray-700 dark:text-gray-200">
                   {{ productosStockBajo.length }} productos
                 </div>
                 <div class="overflow-y-auto pr-2">
                   <div
                     v-for="producto in productosStockBajo"
                     :key="producto.id"
-                    class="flex justify-between items-center p-2 bg-red-200 bg-opacity-60 rounded-lg mb-1"
+                    class="flex justify-between items-center p-2 bg-red-200 dark:bg-red-800/40 bg-opacity-60 rounded-lg mb-1"
                   >
-                    <span class="text-s text-gray-700">{{
+                    <span class="text-s text-gray-700 dark:text-gray-200">{{
                       producto.nombre
                     }}</span>
-                    <span class="text-s font-medium text-red-600"
+                    <span class="text-s font-medium text-red-600 dark:text-red-400"
                       >{{ producto.stock }} uds.</span
                     >
                   </div>

@@ -1,5 +1,5 @@
 <template>
-  <div class="h-full flex flex-col overflow-hidden">
+  <div class="h-full flex flex-col overflow-hidden dark:bg-gray-900">
     <CrearEditarPedido
       :mostrar="mostrarModalCrearEditar"
       :pedido="pedidoAgregar"
@@ -21,15 +21,15 @@
     />
 
     <!-- Encabezado con título y buscador -->
-    <div class="bg-gradient-to-r bg-gray-100 p-4 rounded-lg shadow-md mb-4">
+    <div class="bg-gradient-to-r bg-gray-100 dark:bg-gray-800 p-4 rounded-lg shadow-md mb-4">
       <div
         class="flex flex-col md:flex-row md:justify-between md:items-center gap-4"
       >
-        <h1 class="text-2xl font-bold text-gray-700 flex items-center">
+        <h1 class="text-2xl font-bold text-gray-700 dark:text-gray-100 flex items-center">
           Pedidos
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            class="h-6 w-6 ml-2 text-red-500"
+            class="h-6 w-6 ml-2 text-red-500 dark:text-red-400"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -50,12 +50,12 @@
               v-model="searchQuery"
               type="text"
               placeholder="Buscar por mesero o # pedido..."
-              class="border p-2 rounded-lg shadow-sm w-full focus:ring-2 focus:ring-red-400 outline-none pl-10 bg-white"
+              class="border p-2 rounded-lg shadow-sm w-full focus:ring-2 focus:ring-red-400 outline-none pl-10 bg-white dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100 dark:placeholder-gray-400"
               @input="buscarPedidos"
             />
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              class="h-5 w-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-red-600"
+              class="h-5 w-5 absolute left-3 top-1/2 transform -translate-y-1/2 text-red-600 dark:text-red-400"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -72,7 +72,7 @@
           <!-- Botón para crear nuevo pedido -->
           <button
             @click="crearNuevoPedido"
-            class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition flex items-center gap-2"
+            class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 dark:bg-red-700 dark:hover:bg-red-600 transition flex items-center gap-2"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -98,8 +98,8 @@
     <div class="flex flex-col lg:flex-row gap-4">
       <!-- Pedidos Activos (3/4 del ancho) -->
       <div class="lg:w-3/4">
-        <div class="bg-white rounded-lg shadow-md p-4">
-          <h2 class="text-lg font-semibold mb-4">Pedidos Activos</h2>
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4">
+          <h2 class="text-lg font-semibold mb-4 dark:text-gray-100">Pedidos Activos</h2>
           <div
             class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 max-h-[calc(100vh-220px)] overflow-y-auto"
           >
@@ -109,13 +109,13 @@
               class="rounded-lg shadow-md p-3 border-l-4 hover:shadow-lg transition text-sm flex flex-col h-full"
               :class="
                 pedido.para_llevar
-                  ? 'bg-sky-50 border-sky-700'
-                  : 'bg-white border-red-600 text-black'
+                  ? 'bg-sky-50 dark:bg-sky-900/30 border-sky-700 dark:border-sky-500'
+                  : 'bg-white dark:bg-gray-700 border-red-600 dark:border-red-500 text-black dark:text-white'
               "
             >
               <div class="flex justify-between items-start">
                 <div>
-                  <h3 class="text-base font-semibold">
+                  <h3 class="text-base font-semibold dark:text-gray-100">
                     Pedido #{{ pedido.num_pedido_dia || pedido.id }}
                   </h3>
                   <div class="flex items-center gap-2 mt-1">
@@ -139,7 +139,7 @@
                       pedidosHijos[pedido.id] &&
                       pedidosHijos[pedido.id].length > 0
                     "
-                    class="mt-1 bg-blue-100 text-blue-800 text-xs font-medium px-2 py-1 rounded-full flex items-center"
+                    class="mt-1 bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-200 text-xs font-medium px-2 py-1 rounded-full flex items-center"
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -162,34 +162,34 @@
                   <span
                     :class="
                       pedido.para_llevar
-                        ? 'bg-sky-200 text-sky-800'
-                        : 'bg-green-100 text-green-700'
+                        ? 'bg-sky-200 text-sky-800 dark:bg-sky-800 dark:text-sky-100'
+                        : 'bg-green-100 text-green-700 dark:bg-green-800 dark:text-green-100'
                     "
                     class="px-2 py-1 rounded-md font-medium"
                   >
                     {{ getEstadoEtiqueta(pedido.estado) }}
                   </span>
-                  <span class="text-gray-500 text-xs mt-1">
+                  <span class="text-gray-500 dark:text-gray-400 text-xs mt-1">
                     {{ formatearFecha(pedido.fecha_creacion) }}
                   </span>
                 </div>
               </div>
 
               <div class="flex justify-between mt-2">
-                <span class="text-gray-600"
+                <span class="text-gray-600 dark:text-gray-300"
                   >Mesero: {{ pedido.mesera.nombre }}</span
                 >
-                <span class="font-medium text-gray-800"
+                <span class="font-medium text-gray-800 dark:text-gray-200"
                   >${{ pedido.total }}</span
                 >
               </div>
               <div
-                class="mt-auto flex justify-between pt-2 border-t border-gray-200"
+                class="mt-auto flex justify-between pt-2 border-t border-gray-200 dark:border-gray-600"
               >
                 <button
                   v-if="!pedido.para_llevar"
                   @click="agregarAPedido(pedido)"
-                  class="text-green-600 hover:text-green-800 flex items-center text-xs font-medium"
+                  class="text-green-600 dark:text-green-400 hover:text-green-800 dark:hover:text-green-300 flex items-center text-xs font-medium"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -210,7 +210,7 @@
                 <div class="flex gap-2">
                   <button
                     @click="confirmarCompletarPedido(pedido)"
-                    class="text-green-600 hover:text-green-800 flex items-center text-xs font-medium"
+                    class="text-green-600 dark:text-green-400 hover:text-green-800 dark:hover:text-green-300 flex items-center text-xs font-medium"
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -230,7 +230,7 @@
                   </button>
                   <button
                     @click="verDetalle(pedido)"
-                    class="text-blue-600 hover:text-blue-800 flex items-center text-xs font-medium"
+                    class="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 flex items-center text-xs font-medium"
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -263,58 +263,58 @@
 
       <!-- Pedidos Concluidos (1/4 del ancho) -->
       <div class="lg:w-1/4">
-        <div class="bg-white rounded-lg shadow-md p-4 h-full">
-          <h2 class="text-lg font-semibold mb-4">Pedidos Completados Hoy</h2>
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4 h-full">
+          <h2 class="text-lg font-semibold mb-4 dark:text-gray-100">Pedidos Completados Hoy</h2>
           <div
             class="overflow-x-auto max-h-[calc(100vh-220px)] overflow-y-auto"
           >
-            <table class="min-w-full divide-y divide-gray-200">
-              <thead class="bg-gray-50 sticky top-0 z-10">
+            <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+              <thead class="bg-gray-50 dark:bg-gray-700 sticky top-0 z-10">
                 <tr>
                   <th
-                    class="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                    class="px-2 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
                   >
                     N°
                   </th>
                   <th
-                    class="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                    class="px-2 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
                   >
                     Mesa
                   </th>
                   <th
-                    class="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                    class="px-2 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
                   >
                     Total
                   </th>
                   <th
-                    class="px-2 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
+                    class="px-2 py-3 text-center text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider"
                   >
                     Acciones
                   </th>
                 </tr>
               </thead>
-              <tbody class="bg-white divide-y divide-gray-200">
-                <tr v-for="pedido in pedidosConcluidos" :key="pedido.id">
+              <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                <tr v-for="pedido in pedidosConcluidos" :key="pedido.id" class="dark:hover:bg-gray-700">
                   <td class="px-2 py-3 whitespace-nowrap">
                     <span
-                      class="bg-gray-200 text-gray-700 px-2 py-1 rounded-full text-xs font-bold"
+                      class="bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-200 px-2 py-1 rounded-full text-xs font-bold"
                     >
                       {{ pedido.num_pedido_dia || pedido.id }}
                     </span>
                   </td>
-                  <td class="px-2 py-3 whitespace-nowrap text-xs">
+                  <td class="px-2 py-3 whitespace-nowrap text-xs dark:text-gray-300">
                     {{
                       pedido.mesa ? `Mesa ${pedido.mesa.numero}` : "Sin mesa"
                     }}
                   </td>
-                  <td class="px-2 py-3 whitespace-nowrap font-medium text-xs">
+                  <td class="px-2 py-3 whitespace-nowrap font-medium text-xs dark:text-gray-300">
                     ${{ pedido.total }}
                   </td>
                   <td class="px-2 py-3 whitespace-nowrap text-center">
                     <div class="flex justify-center gap-1">
                       <button
                         @click="imprimirTicketIndividual(pedido)"
-                        class="text-blue-600 hover:text-blue-900"
+                        class="text-blue-600 dark:text-blue-400 hover:text-blue-900 dark:hover:text-blue-300"
                         title="Imprimir ticket"
                       >
                         <svg
@@ -334,7 +334,7 @@
                       </button>
                       <button
                         @click="verDetalle(pedido)"
-                        class="text-blue-600 hover:text-blue-900"
+                        class="text-blue-600 dark:text-blue-400 hover:text-blue-900 dark:hover:text-blue-300"
                         title="Ver detalles"
                       >
                         <svg
@@ -364,7 +364,7 @@
                 <tr v-if="pedidosConcluidos.length === 0">
                   <td
                     colspan="4"
-                    class="px-2 py-4 text-center text-sm text-gray-500"
+                    class="px-2 py-4 text-center text-sm text-gray-500 dark:text-gray-400"
                   >
                     No hay pedidos completados
                   </td>
@@ -380,11 +380,11 @@
       v-if="mostrarModalConfirmacion && pedidoACompletar"
       class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
     >
-      <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-md">
+      <div class="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-6 w-full max-w-md">
         <div class="text-center">
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            class="h-16 w-16 text-green-500 mx-auto mb-4"
+            class="h-16 w-16 text-green-500 dark:text-green-400 mx-auto mb-4"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -396,8 +396,8 @@
               d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
             />
           </svg>
-          <h3 class="text-xl font-bold text-gray-800 mb-2">Confirmar acción</h3>
-          <p class="text-gray-600 mb-6">
+          <h3 class="text-xl font-bold text-gray-800 dark:text-gray-100 mb-2">Confirmar acción</h3>
+          <p class="text-gray-600 dark:text-gray-300 mb-6">
             ¿Estás seguro de que deseas marcar como completado el pedido
             <span class="font-bold">
               #{{
@@ -410,13 +410,13 @@
           <div class="flex justify-center gap-3">
             <button
               @click="mostrarModalConfirmacion = false"
-              class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition"
+              class="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition"
             >
               Cancelar
             </button>
             <button
               @click="cambiarEstadoPedido"
-              class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition"
+              class="px-4 py-2 bg-green-600 dark:bg-green-700 text-white rounded-lg hover:bg-green-700 dark:hover:bg-green-600 transition"
             >
               Confirmar
             </button>

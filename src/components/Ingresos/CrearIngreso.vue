@@ -4,11 +4,11 @@
     class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
   >
     <div
-      class="bg-white rounded-lg shadow-xl p-6 w-full max-w-4xl h-[80vh] flex flex-col"
+      class="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-6 w-full max-w-4xl h-[80vh] flex flex-col"
     >
       <div class="flex justify-between items-center mb-4">
-        <h2 class="text-xl font-bold text-gray-800">Nuevo Ingreso</h2>
-        <button @click="cerrar" class="text-gray-500 hover:text-gray-700">
+        <h2 class="text-xl font-bold text-gray-800 dark:text-gray-100">Nuevo Ingreso</h2>
+        <button @click="cerrar" class="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300">
           <span class="text-2xl">&times;</span>
         </button>
       </div>
@@ -16,7 +16,7 @@
       <!-- Mensaje de error -->
       <div
         v-if="errorMensaje"
-        class="mb-4 p-3 bg-red-100 text-red-700 rounded-lg"
+        class="mb-4 p-3 bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-300 rounded-lg"
       >
         {{ errorMensaje }}
       </div>
@@ -24,7 +24,7 @@
       <form @submit.prevent="guardar" class="flex flex-col h-full">
         <div class="mb-4">
           <label
-            class="block text-gray-700 text-sm font-bold mb-2"
+            class="block text-gray-700 dark:text-gray-300 text-sm font-bold mb-2"
             for="usuario"
           >
             Usuario
@@ -34,7 +34,7 @@
             id="usuario"
             required
             disabled
-            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400 bg-gray-100"
+            class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400 dark:focus:ring-red-500 bg-gray-100 dark:bg-gray-700 dark:text-gray-100"
           >
             <option value="" disabled>Seleccione un usuario</option>
             <option
@@ -48,14 +48,14 @@
         </div>
 
         <!-- Formulario para agregar producto -->
-        <div class="mb-4 bg-gray-50 p-4 rounded-lg border border-gray-200">
-          <h3 class="text-lg font-semibold text-gray-700 mb-3">
+        <div class="mb-4 bg-gray-50 dark:bg-gray-700 p-4 rounded-lg border border-gray-200 dark:border-gray-600">
+          <h3 class="text-lg font-semibold text-gray-700 dark:text-gray-200 mb-3">
             Agregar Producto
           </h3>
 
           <div class="grid grid-cols-1 md:grid-cols-12 gap-3">
             <div class="col-span-5">
-              <label class="block text-gray-700 text-xs font-medium mb-1">
+              <label class="block text-gray-700 dark:text-gray-300 text-xs font-medium mb-1">
                 Producto <span class="text-red-500">*</span>
               </label>
               <div class="relative">
@@ -63,10 +63,10 @@
                   v-model="nuevoDetalle.busqueda"
                   type="text"
                   placeholder="Buscar producto..."
-                  class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400 text-sm"
+                  class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400 dark:focus:ring-red-500 text-sm dark:bg-gray-800 dark:text-gray-100"
                   :class="{
                     'border-red-300': !nuevoDetalle.producto_id,
-                    'border-gray-300': nuevoDetalle.producto_id,
+                    'border-gray-300 dark:border-gray-600': nuevoDetalle.producto_id,
                   }"
                   @input="filtrarProductosNuevo"
                   @focus="nuevoDetalle.mostrarLista = true"
@@ -76,12 +76,12 @@
                     nuevoDetalle.mostrarLista &&
                     nuevoDetalle.productosFiltrados.length > 0
                   "
-                  class="absolute z-50 w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg max-h-40 overflow-y-auto"
+                  class="absolute z-50 w-full mt-1 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg shadow-lg max-h-40 overflow-y-auto"
                 >
                   <div
                     v-for="producto in nuevoDetalle.productosFiltrados"
                     :key="producto.id"
-                    class="px-3 py-2 hover:bg-gray-100 cursor-pointer text-sm"
+                    class="px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer text-sm dark:text-gray-200"
                     :class="{
                       'opacity-50 cursor-not-allowed': productoYaSeleccionado(
                         producto.id,
@@ -112,7 +112,7 @@
             </div>
 
             <div class="col-span-2">
-              <label class="block text-gray-700 text-xs font-medium mb-1">
+              <label class="block text-gray-700 dark:text-gray-300 text-xs font-medium mb-1">
                 Cantidad <span class="text-red-500">*</span>
               </label>
               <input
@@ -120,12 +120,12 @@
                 type="number"
                 min="1"
                 required
-                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400 text-sm"
+                class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400 dark:focus:ring-red-500 text-sm dark:bg-gray-800 dark:text-gray-100"
               />
             </div>
 
             <div class="col-span-2">
-              <label class="block text-gray-700 text-xs font-medium mb-1">
+              <label class="block text-gray-700 dark:text-gray-300 text-xs font-medium mb-1">
                 Precio Unitario <span class="text-red-500">*</span>
               </label>
               <input
@@ -134,19 +134,19 @@
                 min="1"
                 step="1"
                 required
-                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400 text-sm"
+                class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400 dark:focus:ring-red-500 text-sm dark:bg-gray-800 dark:text-gray-100"
               />
             </div>
 
             <div class="col-span-3 flex items-end">
               <div class="flex justify-between w-full">
-                <div class="text-md font-medium text-gray-700 mb-2">
+                <div class="text-md font-medium text-gray-700 dark:text-gray-200 mb-2">
                   Subtotal: ${{ calcularSubtotalNuevo.toFixed(2) }}
                 </div>
                 <button
                   type="button"
                   @click="agregarDetalleALista"
-                  class="px-3 py-1 bg-red-600 text-white rounded-lg hover:bg-red-700 transition flex items-center gap-1 text-sm"
+                  class="px-3 py-1 bg-red-600 dark:bg-red-700 text-white rounded-lg hover:bg-red-700 dark:hover:bg-red-600 transition flex items-center gap-1 text-sm"
                   :disabled="!nuevoDetalleValido"
                   :class="{
                     'opacity-50 cursor-not-allowed': !nuevoDetalleValido,
@@ -173,15 +173,15 @@
 
         <!-- Lista de detalles agregados -->
         <div class="flex-grow flex flex-col overflow-hidden">
-          <h3 class="text-lg font-semibold text-gray-700 mb-2">
+          <h3 class="text-lg font-semibold text-gray-700 dark:text-gray-200 mb-2">
             Productos Agregados
           </h3>
           <div
-            class="bg-gray-200 p-2 rounded-lg h-52 overflow-y-auto flex-grow border border-gray-300"
+            class="bg-gray-200 dark:bg-gray-700 p-2 rounded-lg h-52 overflow-y-auto flex-grow border border-gray-300 dark:border-gray-600"
           >
             <div
               v-if="formData.detalles.length === 0"
-              class="text-center py-4 text-gray-500"
+              class="text-center py-4 text-gray-500 dark:text-gray-400"
             >
               No hay productos agregados. Complete el formulario superior y haga
               clic en "Agregar".
@@ -191,45 +191,45 @@
               <div
                 v-for="(detalle, index) in formData.detalles"
                 :key="index"
-                class="bg-white px-4 p-2 rounded-lg shadow-sm border border-gray-200"
+                class="bg-white dark:bg-gray-800 px-4 p-2 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700"
               >
                 <div class="flex items-center justify-between">
                   <div class="grid grid-cols-12 gap-3 w-full">
                     <div class="col-span-5 flex items-center">
-                      <span class="font-medium text-gray-700">
+                      <span class="font-medium text-gray-700 dark:text-gray-200">
                         {{ obtenerNombreProducto(detalle.producto_id) }}
                       </span>
                     </div>
 
                     <div class="col-span-2">
                       <div class="flex flex-col">
-                        <label class="text-xs text-gray-500">Cantidad</label>
+                        <label class="text-xs text-gray-500 dark:text-gray-400">Cantidad</label>
                         <input
                           v-model.number="detalle.cantidad"
                           type="number"
                           min="1"
                           required
-                          class="w-full px-2 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-red-400 text-sm"
+                          class="w-full px-2 py-1 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-1 focus:ring-red-400 dark:focus:ring-red-500 text-sm dark:bg-gray-700 dark:text-gray-100"
                         />
                       </div>
                     </div>
 
                     <div class="col-span-2">
                       <div class="flex flex-col">
-                        <label class="text-xs text-gray-500">Precio</label>
+                        <label class="text-xs text-gray-500 dark:text-gray-400">Precio</label>
                         <input
                           v-model.number="detalle.precio_unitario"
                           type="number"
                           min="1"
                           step="1"
                           required
-                          class="w-full px-2 py-1 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-red-400 text-sm"
+                          class="w-full px-2 py-1 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-1 focus:ring-red-400 dark:focus:ring-red-500 text-sm dark:bg-gray-700 dark:text-gray-100"
                         />
                       </div>
                     </div>
 
                     <div class="col-span-2 flex items-center justify-between">
-                      <div class="text-sm font-medium text-gray-700">
+                      <div class="text-sm font-medium text-gray-700 dark:text-gray-200">
                         ${{
                           (detalle.cantidad * detalle.precio_unitario).toFixed(
                             2
@@ -239,7 +239,7 @@
                       <button
                         type="button"
                         @click="eliminarDetalle(index)"
-                        class="text-red-500 hover:text-red-700 ml-2"
+                        class="text-red-500 hover:text-red-700 dark:hover:text-red-400 ml-2"
                       >
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
@@ -266,20 +266,20 @@
           <div class="flex gap-2 justify-end">
             <div
               v-if="formData.detalles.length > 0"
-              class="text-2xl font-bold text-gray-800"
+              class="text-2xl font-bold text-gray-800 dark:text-gray-200"
             >
               Total: ${{ calcularTotal().toFixed(2) }}
             </div>
             <button
               type="button"
               @click="cerrar"
-              class="flex px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition"
+              class="flex px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition"
             >
               Cancelar
             </button>
             <button
               type="submit"
-              class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition flex items-center gap-2"
+              class="px-4 py-2 bg-red-600 dark:bg-red-700 text-white rounded-lg hover:bg-red-700 dark:hover:bg-red-600 transition flex items-center gap-2"
               :disabled="!formularioValido"
               :class="{ 'opacity-50 cursor-not-allowed': !formularioValido }"
             >
