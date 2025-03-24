@@ -146,7 +146,7 @@
             </div>
           </div>
 
-          <div v-if="props.pedido?.id == 0" class="ml-auto mr-auto">
+          <div class="ml-auto mr-auto">
             <label class="block text-gray-700 dark:text-gray-200 text-sm font-bold mb-2">
               Para llevar 🛵
             </label>
@@ -571,7 +571,7 @@
                     <span class="font-bold">Mesa:</span>
                     {{
                       mesaStore.mesas.find((m) => m.id === formData.mesa_id)
-                        ?.numero || ""
+                        ?.numero || props.pedido?.mesa?.numero
                     }}
                   </p>
                 </div>
@@ -1108,6 +1108,8 @@ const confirmarPedido = async () => {
       guardando.value = false;
       return;
     }
+    console.log('PEDIDO A GUARDAR',formData.value);
+    
 
     const pedidoData = {
       ...(formData.value.id ? { id: formData.value.id } : {}),
