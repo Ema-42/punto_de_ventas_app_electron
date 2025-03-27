@@ -82,16 +82,30 @@ export const getPedidosHoy = async () => {
   try {
     // Obtener la fecha actual y configurar el inicio y fin del día
     const hoy = new Date();
-    const inicioDia = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate(), 0, 0, 0);
-    const finDia = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate(), 23, 59, 59);
+    const inicioDia = new Date(
+      hoy.getFullYear(),
+      hoy.getMonth(),
+      hoy.getDate(),
+      0,
+      0,
+      0
+    );
+    const finDia = new Date(
+      hoy.getFullYear(),
+      hoy.getMonth(),
+      hoy.getDate(),
+      23,
+      59,
+      59
+    );
 
     const pedidos = await prisma.pedido.findMany({
-      where: { 
+      where: {
         eliminado: false,
         fecha_creacion: {
           gte: inicioDia,
-          lte: finDia
-        }
+          lte: finDia,
+        },
       },
       select: {
         id: true,
@@ -132,7 +146,7 @@ export const getPedidosHoy = async () => {
                 nombre: true,
                 imagen_url: true,
                 maneja_stock: true,
-                categoria:true
+                categoria: true,
               },
             },
             cantidad: true,
@@ -255,6 +269,14 @@ export const cambiarEstadoPedido = async (id: number, estado: EstadoPedido) => {
     }
     const pedido = await prisma.pedido.update({
       where: { id },
+      data,
+    });
+    // Actualizar fecha_concluido para todos los pedidos hijos
+    await prisma.pedido.updateMany({
+      where: {
+        pedido_padre_id: id,
+        fecha_concluido: null, // Solo actualizar aquellos que no tienen valor en fecha_concluido
+      },
       data,
     });
     //cambiar estado de la mesa a libre si se esta completando el pedido

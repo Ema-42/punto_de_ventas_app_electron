@@ -2367,8 +2367,22 @@ const getPedidos = async () => {
 const getPedidosHoy = async () => {
   try {
     const hoy = /* @__PURE__ */ new Date();
-    const inicioDia = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate(), 0, 0, 0);
-    const finDia = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate(), 23, 59, 59);
+    const inicioDia = new Date(
+      hoy.getFullYear(),
+      hoy.getMonth(),
+      hoy.getDate(),
+      0,
+      0,
+      0
+    );
+    const finDia = new Date(
+      hoy.getFullYear(),
+      hoy.getMonth(),
+      hoy.getDate(),
+      23,
+      59,
+      59
+    );
     const pedidos = await prisma$1.pedido.findMany({
       where: {
         eliminado: false,
@@ -2546,6 +2560,14 @@ const cambiarEstadoPedido = async (id, estado) => {
     }
     const pedido = await prisma$1.pedido.update({
       where: { id },
+      data
+    });
+    await prisma$1.pedido.updateMany({
+      where: {
+        pedido_padre_id: id,
+        fecha_concluido: null
+        // Solo actualizar aquellos que no tienen valor en fecha_concluido
+      },
       data
     });
     estado === EstadoPedido.COMPLETADO && pedido.mesa_id ? cambiarEstadoMesa(pedido.mesa_id, EstadosMesa.LIBRE) : "";

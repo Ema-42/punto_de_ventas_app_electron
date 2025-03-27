@@ -124,11 +124,11 @@
                 <span class="font-medium text-gray-700 dark:text-gray-200">{{
                   mesero.mesasAsignadas
                 }}</span>
-                mesas /
+                activas /
                 <span class="font-medium text-gray-700 dark:text-gray-200">{{
                   mesero.mesasAtendidas
                 }}</span>
-                atendidas
+                completadas
               </div>
             </div>
           </div>

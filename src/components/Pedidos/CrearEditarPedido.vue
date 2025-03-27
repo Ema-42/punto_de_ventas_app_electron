@@ -17,7 +17,10 @@
             En la mesa: {{ pedido.mesa?.numero }}
           </span>
         </h2>
-        <button @click="cerrar" class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200">
+        <button
+          @click="cerrar"
+          class="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
+        >
           <span class="text-2xl">&times;</span>
         </button>
       </div>
@@ -25,7 +28,7 @@
       <form @submit.prevent="guardar">
         <!-- Información básica del pedido -->
         <div class="grid grid-cols-1 md:grid-cols-5 gap-4 mb-4">
-          <div>
+          <div v-if="pedido?.id === 0">
             <label
               class="block text-gray-700 dark:text-gray-200 text-sm font-bold mb-2"
               for="mesa"
@@ -37,8 +40,10 @@
               id="mesa"
               class="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400 dark:focus:ring-red-500 dark:bg-gray-700 dark:text-gray-100"
               :class="{
-                'bg-green-300 dark:bg-green-800 cursor-not-allowed': pedido?.pedido_padre_id,
-                'bg-white dark:bg-gray-700 cursor-pointer': !pedido?.pedido_padre_id,
+                'bg-green-300 dark:bg-green-800 cursor-not-allowed':
+                  pedido?.pedido_padre_id,
+                'bg-white dark:bg-gray-700 cursor-pointer':
+                  !pedido?.pedido_padre_id,
               }"
               :disabled="!!pedido?.pedido_padre_id || formData.para_llevar"
             >
@@ -115,7 +120,9 @@
           </div>
 
           <div class="ml-auto mr-auto">
-            <label class="block text-gray-700 dark:text-gray-200 text-sm font-bold mb-2">
+            <label
+              class="block text-gray-700 dark:text-gray-200 text-sm font-bold mb-2"
+            >
               Tipo de Pago 💵
             </label>
             <div class="flex">
@@ -147,7 +154,9 @@
           </div>
 
           <div class="ml-auto mr-auto">
-            <label class="block text-gray-700 dark:text-gray-200 text-sm font-bold mb-2">
+            <label
+              class="block text-gray-700 dark:text-gray-200 text-sm font-bold mb-2"
+            >
               Para llevar 🛵
             </label>
             <div class="flex">
@@ -181,7 +190,9 @@
 
         <!-- Estado (solo visible al editar) -->
         <div v-if="pedido?.id && !pedido.pedido_padre_id" class="mb-6">
-          <label class="block text-gray-700 dark:text-gray-200 text-sm font-bold mb-2">
+          <label
+            class="block text-gray-700 dark:text-gray-200 text-sm font-bold mb-2"
+          >
             Estado
           </label>
           <div class="flex gap-4">
@@ -192,7 +203,9 @@
                 value="EN_ATENCION"
                 class="form-radio h-5 w-5 text-yellow-600 dark:text-yellow-500"
               />
-              <span class="ml-2 text-gray-700 dark:text-gray-200">En Atención</span>
+              <span class="ml-2 text-gray-700 dark:text-gray-200"
+                >En Atención</span
+              >
             </label>
             <label class="inline-flex items-center">
               <input
@@ -201,7 +214,9 @@
                 value="CONCLUIDO"
                 class="form-radio h-5 w-5 text-green-600 dark:text-green-500"
               />
-              <span class="ml-2 text-gray-700 dark:text-gray-200">Concluido</span>
+              <span class="ml-2 text-gray-700 dark:text-gray-200"
+                >Concluido</span
+              >
             </label>
           </div>
         </div>
@@ -210,7 +225,9 @@
         <div class="flex flex-col md:flex-row gap-6 mb-4">
           <!-- Columna izquierda: Productos -->
           <div class="w-full md:w-1/2">
-            <h3 class="text-lg font-semibold mb-2 dark:text-gray-100">Productos</h3>
+            <h3 class="text-lg font-semibold mb-2 dark:text-gray-100">
+              Productos
+            </h3>
 
             <!-- Categorías de productos -->
             <div class="mb-4">
@@ -314,7 +331,9 @@
                     >
                       {{ producto.nombre }}
                     </p>
-                    <div class="border-t border-gray-300 dark:border-gray-600 pb-1"></div>
+                    <div
+                      class="border-t border-gray-300 dark:border-gray-600 pb-1"
+                    ></div>
 
                     <span
                       class="text-red-600 dark:text-red-400 text-sm px-2 rounded-lg font-bold"
@@ -329,10 +348,16 @@
 
           <!-- Columna derecha: Detalles del pedido -->
           <div class="w-full md:w-1/2">
-            <h3 class="text-lg font-semibold mb-2 dark:text-gray-100">Detalles del Pedido</h3>
-            <div class="border dark:border-gray-600 rounded-lg h-[calc(100vh-400px)] flex flex-col">
+            <h3 class="text-lg font-semibold mb-2 dark:text-gray-100">
+              Detalles del Pedido
+            </h3>
+            <div
+              class="border dark:border-gray-600 rounded-lg h-[calc(100vh-400px)] flex flex-col"
+            >
               <div class="overflow-y-auto flex-grow rounded-lg">
-                <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700 table-fixed">
+                <table
+                  class="min-w-full divide-y divide-gray-200 dark:divide-gray-700 table-fixed"
+                >
                   <thead class="bg-red-600 dark:bg-red-700 sticky top-0">
                     <tr>
                       <th
@@ -362,7 +387,9 @@
                       </th>
                     </tr>
                   </thead>
-                  <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                  <tbody
+                    class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700"
+                  >
                     <tr
                       v-for="(detalle, index) in detallesActivos"
                       :key="index"
@@ -508,7 +535,9 @@
                   </tbody>
                 </table>
               </div>
-              <div class="bg-gray-50 dark:bg-gray-700 p-4 border-t dark:border-gray-600">
+              <div
+                class="bg-gray-50 dark:bg-gray-700 p-4 border-t dark:border-gray-600"
+              >
                 <div class="flex justify-between items-center">
                   <span class="font-bold dark:text-gray-200">Total:</span>
                   <span class="text-xl font-bold text-red-600 dark:text-red-400"
@@ -536,7 +565,10 @@
             class="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-6 w-full max-w-md max-h-[90vh] overflow-y-auto"
           >
             <div class="flex justify-between items-center mb-4"></div>
-            <div class="bg-white dark:bg-gray-800 font-mono text-sm dark:text-gray-200" id="ticket-preview">
+            <div
+              class="bg-white dark:bg-gray-800 font-mono text-sm dark:text-gray-200"
+              id="ticket-preview"
+            >
               <!-- Información del restaurante (solo visible cuando el pedido está guardado) -->
               <div v-if="pedidoGuardado" class="text-center mb-4">
                 <p class="font-bold text-lg">CHICHARRONERIA 6 DE AGOSTO</p>
@@ -570,8 +602,10 @@
                   <p v-if="formData.mesa_id">
                     <span class="font-bold">Mesa:</span>
                     {{
+                      props.pedido?.mesa?.numero ||
                       mesaStore.mesas.find((m) => m.id === formData.mesa_id)
-                        ?.numero || props.pedido?.mesa?.numero
+                        ?.numero ||
+                      props.pedido?.mesa?.numero
                     }}
                   </p>
                 </div>
@@ -587,7 +621,9 @@
                 </div>
               </div>
 
-              <div class="border-t border-b border-gray-300 dark:border-gray-600 py-2 mb-4">
+              <div
+                class="border-t border-b border-gray-300 dark:border-gray-600 py-2 mb-4"
+              >
                 <div class="grid grid-cols-12 font-bold">
                   <div class="col-span-6">Producto</div>
                   <div class="col-span-2 text-center">Cant</div>
@@ -618,7 +654,9 @@
                 </div>
               </div>
 
-              <div class="border-t border-gray-300 dark:border-gray-600 pt-2 mb-4">
+              <div
+                class="border-t border-gray-300 dark:border-gray-600 pt-2 mb-4"
+              >
                 <div class="flex justify-between font-bold">
                   <span>TOTAL:</span>
                   <span>Bs. {{ calcularTotal() }}</span>
@@ -651,7 +689,9 @@
                 </div>
                 <div class="mb-3">
                   <label class="block text-sm font-bold mb-1">Cambio:</label>
-                  <div class="text-xl font-bold text-green-600 dark:text-green-400">
+                  <div
+                    class="text-xl font-bold text-green-600 dark:text-green-400"
+                  >
                     {{ calcularCambio() }} Bs.
                   </div>
                 </div>
@@ -1108,13 +1148,23 @@ const confirmarPedido = async () => {
       guardando.value = false;
       return;
     }
-    console.log('PEDIDO A GUARDAR',formData.value);
-    
+    console.log(
+      "PEDIDO A GUARDAR",
+      formData.value,
+      "PEDIDO PADRE: ",
+      props.pedido
+    );
 
     const pedidoData = {
       ...(formData.value.id ? { id: formData.value.id } : {}),
       pedido_padre_id: formData.value.pedido_padre_id,
-      mesa_id: formData.value.para_llevar ? null : formData.value.mesa_id,
+      //corregir la mesa  props.pedido.id !== 0 ? props.pedido.mesa.id : formData.value.para_llevar ? null : formData.value.mesa_id
+      mesa_id:
+        props.pedido?.id !== 0
+          ? props.pedido?.mesa?.id
+          : formData.value.para_llevar
+          ? null
+          : formData.value.mesa_id,
       num_pedido_dia: formData.value.num_pedido_dia,
       mesera_id: formData.value.mesera_id,
       cajero_id: formData.value.cajero_id,

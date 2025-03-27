@@ -17,7 +17,7 @@
     <DetallePedido
       :mostrar="mostrarModalDetalle"
       :pedido="pedidoDetalle"
-      @cerrar="mostrarModalDetalle = false"
+      @cerrar="cerrarDetallesPedidos"
     />
 
     <!-- Encabezado con título y buscador -->
@@ -101,7 +101,7 @@
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4">
           <h2 class="text-lg font-semibold mb-4 dark:text-gray-100">Pedidos Activos</h2>
           <div
-            class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 max-h-[calc(100vh-220px)] overflow-y-auto"
+            class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 max-h-[calc(100vh-220px)] overflow-y-auto"
           >
             <div
               v-for="pedido in pedidosFiltrados"
@@ -139,7 +139,7 @@
                       pedidosHijos[pedido.id] &&
                       pedidosHijos[pedido.id].length > 0
                     "
-                    class="mt-1 bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-200 text-xs font-medium px-2 py-1 rounded-full flex items-center"
+                    class="mt-1  text-xs font-medium px-2 py-1 rounded-full flex items-center"
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -155,7 +155,15 @@
                         d="M13 5l7 7-7 7M5 5l7 7-7 7"
                       />
                     </svg>
-                    {{ pedidosHijos[pedido.id].length }} pedido(s) agregado(s)
+                    <span class=" p-1 rounded-md bg-gray-200 dark:bg-gray-500 text-gray-800 dark:text-gray-200">
+                      {{ pedidosHijos[pedido.id].length }} agregados
+                    </span>
+                    <span v-if="pedidosHijos[pedido.id].filter(hijo => hijo.para_llevar).length!==0" class="ml-2 p-1 rounded-md bg-sky-600 text-white font-medium dark:bg-sky-700/50 dark:text-sky-200">                     {{
+                      pedidosHijos[pedido.id].filter(hijo => hijo.para_llevar).length
+                    }} Para Llevar
+                    {{ '✔️'.repeat(pedidosHijos[pedido.id].filter(hijo => hijo.para_llevar && hijo.fecha_concluido).length) }}
+                    {{ '⏳'.repeat(pedidosHijos[pedido.id].filter(hijo => hijo.para_llevar && !hijo.fecha_concluido).length) }}
+                   </span>
                   </div>
                 </div>
                 <div class="flex flex-col items-end">
@@ -599,6 +607,11 @@ const cargarMesas = async () => {
 const buscarPedidos = () => {
   // La búsqueda se realiza automáticamente a través del computed pedidosFiltrados
 };
+const cerrarDetallesPedidos = () => {
+  mostrarModalDetalle.value = false;
+  cargarPedidos();
+};
+
 
 const crearNuevoPedido = async () => {
   const data = await cargarMesasLibresApi();
@@ -681,7 +694,7 @@ const formatearFecha = (fecha?: string) => {
 
 const getEstadoEtiqueta = (estado?: string) => {
   const estados: { [key: string]: string } = {
-    "EN PREPARACION": "En Preparación",
+    "EN PREPARACION": "Preparación",
     COMPLETADO: "Completado",
   };
   return estados[estado || ""] || estado || "";
